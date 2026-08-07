@@ -1,0 +1,47 @@
+.card {
+    display: inline-block;
+
+    background-color: rgb(35, 35, 35);
+    color: white;
+
+    border: none;
+    border-radius: 10px;
+}
+
+.name {
+    text-align: center;
+
+    padding: 10px 0px;
+}
+
+img {
+    max-width: 200px;
+    max-height: 150px;
+}
+
+.effect {
+    text-align: center;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.atk {
+    color: red;
+
+    padding-bottom: 10px;
+}
+
+.cost {
+    color: lightseagreen;
+
+    padding-bottom: 10px;
+}
+
+.hp {
+    color: lime;
+    
+    padding-bottom: 10px;
+}

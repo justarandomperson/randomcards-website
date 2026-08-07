@@ -1,9 +1,10 @@
+import Hand from './components/Hand/Hand.js'
 import './App.css';
 
 
 function App() {
   return (
-    <div></div>
+    <Hand/>
   );
 }
 
