@@ -1,10 +1,10 @@
-import Hand from './components/Hand/Hand.js'
+import GamePage from './pages/GamePage/GamePage.js'
 import './App.css';
 
 
 function App() {
   return (
-    <Hand/>
+    <GamePage/>
   );
 }
 

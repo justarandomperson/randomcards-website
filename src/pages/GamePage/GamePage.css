@@ -1,0 +1,10 @@
+.game-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.board-shop-area {
+    display: flex;
+    align-items: center;
+}

@@ -1,0 +1,12 @@
+.board {
+    display: flex;
+    flex-direction: column;
+}
+
+.opponent-row {
+    display: flex;
+}
+
+.user-row {
+    display: flex;
+}

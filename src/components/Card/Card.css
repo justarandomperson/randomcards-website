@@ -1,5 +1,9 @@
 .card {
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
+    width: 175px;
+    height: 250px;
+    overflow: hidden;
 
     background-color: rgb(35, 35, 35);
     color: white;
@@ -8,15 +12,32 @@
     border-radius: 10px;
 }
 
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+
+    padding: 10px;
+}
+
 .name {
     text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
 
-    padding: 10px 0px;
+.cost {
+    color: lightseagreen;
+    flex-shrink: 0;
 }
 
 img {
-    max-width: 200px;
-    max-height: 150px;
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
 }
 
 .effect {
@@ -26,22 +47,16 @@ img {
 .footer {
     display: flex;
     justify-content: space-evenly;
+    align-items: center;
+    margin-top: auto;
+
+    padding-bottom: 10px;
 }
 
 .atk {
     color: red;
-
-    padding-bottom: 10px;
-}
-
-.cost {
-    color: lightseagreen;
-
-    padding-bottom: 10px;
 }
 
 .hp {
     color: lime;
-    
-    padding-bottom: 10px;
 }
