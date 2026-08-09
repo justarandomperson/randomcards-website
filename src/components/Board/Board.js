@@ -1,4 +1,4 @@
-import BoardSlot from '../BoardSlot/BoardSlot.js'
+import CardSlot from '../CardSlot/CardSlot.js'
 import './Board.css'
 
 
@@ -10,12 +10,12 @@ function Board () {
         <div className="board">
             <div className="opponent-row">
                 {Array.from({ length: SLOTS_PER_ROW }).map((_, i) => (
-                    <BoardSlot key={i} />
+                    <CardSlot key={i} />
                 ))}
             </div>
             <div className="user-row">
                 {Array.from({ length: SLOTS_PER_ROW }).map((_, i) => (
-                    <BoardSlot key={i} />
+                    <CardSlot key={i} />
                 ))}
             </div>
         </div>

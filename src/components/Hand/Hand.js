@@ -27,6 +27,30 @@ function Hand () {
             type: "spell",
             cost: "3",
             effect: "although i may look like it, im not dog. have a wonderful rest of your day!"
+        }, {
+            instanceId: uuidv4(),
+            name: `cat`,
+            type: "spell",
+            cost: "3",
+            effect: "although i may look like it, im not dog. have a wonderful rest of your day!"
+        }, {
+            instanceId: uuidv4(),
+            name: `cat`,
+            type: "spell",
+            cost: "3",
+            effect: "although i may look like it, im not dog. have a wonderful rest of your day!"
+        }, {
+            instanceId: uuidv4(),
+            name: `cat`,
+            type: "spell",
+            cost: "3",
+            effect: "although i may look like it, im not dog. have a wonderful rest of your day!"
+        }, {
+            instanceId: uuidv4(),
+            name: `cat`,
+            type: "spell",
+            cost: "3",
+            effect: "although i may look like it, im not dog. have a wonderful rest of your day!"
         }
     ]);
 
