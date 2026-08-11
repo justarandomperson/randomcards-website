@@ -1,9 +1,14 @@
+import Artifact from '../Artifact/Artifact.js'
 import './Shop.css'
 
 
-function Shop () {
+function Shop ({ artifacts }) {
     return (
-        <div className="shop"></div>
+        <div className="shop">
+            {artifacts.map((artifact) => (
+                <Artifact key={artifact.id} {...artifact} />
+            ))}
+        </div>
     );
 }
 

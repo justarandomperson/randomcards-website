@@ -1,0 +1,21 @@
+.artifact {
+    height: 50px;
+    width: 50px;
+
+    background-color: rgb(0, 240, 0);
+
+    border: 1px solid rgb(0, 0, 0);
+
+    cursor: pointer;
+}
+
+.artifact-bought {
+    height: 50px;
+    width: 50px;
+
+    background-color: rgb(0, 0, 0); 
+
+    border: 1px solid rgb(0, 0, 0);
+
+    cursor: pointer;
+}

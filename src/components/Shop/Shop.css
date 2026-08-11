@@ -1,4 +1,7 @@
 .shop {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
     width: 400px;
     height: 200px;
 
