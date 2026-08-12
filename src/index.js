@@ -5,17 +5,23 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import AppLayout from './components/AppLayout/AppLayout';
-import Homepage from './pages/Homepage';
-import GachaPage from './pages/GachaPage';
+import Homepage from './pages/HomePage/HomePage';
+import GachaPage from './pages/GachaPage/GachaPage';
+import GamePage from './pages/GamePage/GamePage';
 
 const router = createBrowserRouter([{
   path: "/",
   Component: AppLayout,
   children: [
     {index: true, Component: Homepage},
-    {path: "gacha", Component: GachaPage}
-  ]
-}]);
+    {path: "gacha", Component: GachaPage},
+  ],
+},
+{
+  path: "/game",
+  Component: GamePage
+}
+]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
