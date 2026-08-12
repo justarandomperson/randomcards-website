@@ -1,35 +1,46 @@
-.game-page {
+.game_page {
     height: 97vh;
 
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
+
+    margin: 10px;
 }
 
-.play-area {
+.play_area {
     height: 97vh;
-    
+    width: 50%;
+
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    
     gap: 20px;
 }
 
-.main-components-container {
+.main_components_container {
     position: relative;
 }
 
-.bench-container {
+.bench_container {
     position: absolute;
     right: 104%;
     top: 50%;
     transform: translateY(-35%) scale(0.75);
 }
 
-.shop-container {
+.shop_container {
     position: absolute;
     left: 104%;
     top: 50%;
     transform: translateY(-50%);
+}
+
+.hand_container {
+    display: flex;
+    align-items: center;
+
+    gap: 20px;
 }

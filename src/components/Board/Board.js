@@ -1,5 +1,5 @@
 import CardSlot from '../CardSlot/CardSlot.js'
-import './Board.css'
+import Styles from './Board.module.css'
 
 
 const SLOTS_PER_ROW = 4;
@@ -7,13 +7,13 @@ const SLOTS_PER_ROW = 4;
 
 function Board () {
     return (
-        <div className="board">
-            <div className="opponent-row">
+        <div className={Styles.board}>
+            <div className={Styles.opponent_row}>
                 {Array.from({ length: SLOTS_PER_ROW }).map((_, i) => (
                     <CardSlot key={i} />
                 ))}
             </div>
-            <div className="user-row">
+            <div className={Styles.user_row}>
                 {Array.from({ length: SLOTS_PER_ROW }).map((_, i) => (
                     <CardSlot key={i} />
                 ))}

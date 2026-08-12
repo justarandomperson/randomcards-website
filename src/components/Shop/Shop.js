@@ -1,12 +1,15 @@
 import Artifact from '../Artifact/Artifact.js'
-import './Shop.css'
+import Styles from './Shop.module.css'
 
 
-function Shop ({ artifacts }) {
+function Shop({ artifacts }) {
     return (
-        <div className="shop">
+        <div className={Styles.shop}>
             {artifacts.map((artifact) => (
-                <Artifact key={artifact.id} {...artifact} />
+                <div className={Styles.shop_item} key={artifact.id}>
+                    <Artifact {...artifact} />
+                    <p className={Styles.artifact_cost}>{`${artifact.cost}$`}</p>
+                </div>
             ))}
         </div>
     );

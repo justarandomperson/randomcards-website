@@ -3,10 +3,10 @@
     flex-direction: column;
 }
 
-.opponent-row {
+.opponent_row {
     display: flex;
 }
 
-.user-row {
+.user_row {
     display: flex;
 }

@@ -1,18 +1,38 @@
 import { useState } from 'react'
-import './PlayerBar.css'
+import Styles from './PlayerBar.module.css'
 
 
 const STARTING_HEALTH = 20;
+const TURN_NUMBER_MULTIPIER = 2;
 
 
-function PlayerBar ({ name }) {
-    const [health] = useState(STARTING_HEALTH);
+function PlayerBar ({ name, isOpponent }) {
+    const health = useState(STARTING_HEALTH);
+    const [turnNumber, setTurnNumber] = useState(0);
+    const [money, setMoney] = useState(0);
+
+    function endTurn () {
+        setTurnNumber(turnNumber + 1);
+        setMoney(money + TURN_NUMBER_MULTIPIER * turnNumber);
+    }
 
     return (
-        <div className="player-bar">
+        <div className={Styles.player_bar}>
             <p>{name}</p>
-            <p className="health">{health}</p>
-            <button>Settings</button>
+
+            <div className={Styles.player_data_container}>
+                <p className={Styles.health}>{health}</p>
+                <p className={Styles.money}>{`${money}$`}</p>
+            </div>
+
+            <div className={Styles.turn_container}>
+                <p>Turn {turnNumber}</p>
+                {!isOpponent &&
+                    <div className={Styles.end_turn_btn_container}>
+                        <button onClick={endTurn}>End Turn</button>
+                    </div>    
+                }
+            </div>
         </div>
     );
 }

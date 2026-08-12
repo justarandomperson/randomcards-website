@@ -11,3 +11,13 @@
 
     
 }
+
+.shop_item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.artifact_cost {
+    color: rgb(240, 240, 25)
+}

@@ -1,39 +1,42 @@
 import { useState } from 'react'
-import Artifact from '../../components/Artifact/Artifact.js'
 import Bench from '../../components/Bench/Bench.js'
 import Board from '../../components/Board/Board.js'
 import PlayerBar from '../../components/PlayerBar/PlayerBar.js'
 import Shop from '../../components/Shop/Shop.js'
 import Hand from '../../components/Hand/Hand.js'
-import './GamePage.css'
+import Styles from './GamePage.module.css'
 
 
 function GamePage () {
     const [artifacts] = useState([
-        { id: 1, name: "Ember Core", effect: "...", isBought: false },
-        { id: 2, name: "Frost Sigil", effect: "...", isBought: false },
-        { id: 3, name: "Iron Bulwark", effect: "...", isBought: false }
+        { id: 1, name: "Ember Core", effect: "...", isBought: false, cost: 1 },
+        { id: 2, name: "Frost Sigil", effect: "...", isBought: false, cost: 12 },
+        { id: 3, name: "Iron Bulwark", effect: "...", isBought: false, cost: 0 }
     ]);
 
     return (
-        <div className="game-page">
-            <div className="play-area">
-                <div className="main-components-container">
-                    <div className="bench-container">
+        <div className={Styles.game_page}>
+            <div className={Styles.play_area}>
+                <div className={Styles.main_components_container}>
+                    <div className={Styles.bench_container}>
                         <Bench/>
                     </div>
 
                     <div>
+                        <PlayerBar name="TinG hater" isOpponent={true}/>
                         <Board/>
-                        <PlayerBar name="TinG"/>
+                        <PlayerBar name="TinG" isOpponent={false}/>
                     </div>
 
-                    <div className="shop-container">
+                    <div className={Styles.shop_container}>
                         <Shop artifacts={artifacts}/>
                     </div>
                 </div>
 
-                <Hand/>
+                <div className={Styles.hand_container}>
+                    <Hand/>
+                    <button>Draw Card</button>
+                </div>
             </div>
         </div>
     );

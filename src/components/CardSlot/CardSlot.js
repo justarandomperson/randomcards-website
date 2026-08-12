@@ -1,9 +1,9 @@
-import './CardSlot.css'
+import Styles from './CardSlot.module.css'
 
 
 function CardSlot () {
     return (
-        <div className="card-slot"></div>
+        <div className={Styles.card_slot}></div>
     );
 }
 

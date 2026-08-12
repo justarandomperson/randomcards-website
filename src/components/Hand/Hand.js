@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid';
 import Card from '../Card/Card.js'
-import './Hand.css' 
+import Styles from './Hand.module.css' 
 
 
 function getCardList(cardsList) {
@@ -56,7 +56,7 @@ function Hand () {
 
     return (
         <>
-            <div className="hand">
+            <div className={Styles.hand}>
                 {getCardList(cardsList)}
             </div>
         </>
