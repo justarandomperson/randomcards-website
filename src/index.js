@@ -3,12 +3,24 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import AppLayout from './components/AppLayout/AppLayout';
+import Homepage from './pages/Homepage';
+import GachaPage from './pages/GachaPage';
 
+const router = createBrowserRouter([{
+  path: "/",
+  Component: AppLayout,
+  children: [
+    {index: true, Component: Homepage},
+    {path: "gacha", Component: GachaPage}
+  ]
+}]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router}/>
   </React.StrictMode>
 );
 
