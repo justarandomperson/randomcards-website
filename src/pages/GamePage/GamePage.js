@@ -4,6 +4,7 @@ import Board from '../../components/Board/Board.js'
 import PlayerBar from '../../components/PlayerBar/PlayerBar.js'
 import Shop from '../../components/Shop/Shop.js'
 import Hand from '../../components/Hand/Hand.js'
+import DrawPile from '../../components/DrawPile/DrawPile.js'
 import Styles from './GamePage.module.css'
 
 
@@ -35,7 +36,7 @@ function GamePage () {
 
                 <div className={Styles.hand_container}>
                     <Hand/>
-                    <button>Draw Card</button>
+                    <DrawPile cardsInPileAmount={6}/>
                 </div>
             </div>
         </div>
