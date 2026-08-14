@@ -6,8 +6,14 @@ const STARTING_HEALTH = 20;
 const TURN_NUMBER_MULTIPIER = 2;
 
 
-function PlayerBar ({ name, isOpponent }) {
-    const health = useState(STARTING_HEALTH);
+type Props = {
+    name: string,
+    isOpponent: boolean
+}
+
+
+const PlayerBar: React.FC<Props> = ({ name, isOpponent }) => {
+    const [health, _] = useState<number>(STARTING_HEALTH);
     const [turnNumber, setTurnNumber] = useState(0);
     const [money, setMoney] = useState(0);
 

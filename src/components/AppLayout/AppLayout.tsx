@@ -2,8 +2,8 @@ import { Outlet } from "react-router-dom"
 import Topbar from "../Topbar/Topbar"
 import styles from "./AppLayout.module.css"
 
-export default function AppLayout()
-{
+
+const AppLayout: React.FC = ({ }) => {
     return (
         <div className={styles.AppLayoutContainer}>
             <Topbar/>
@@ -11,3 +11,6 @@ export default function AppLayout()
         </div>
     )
 }
+
+
+export default AppLayout

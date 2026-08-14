@@ -5,7 +5,7 @@ import Styles from './Bench.module.css'
 const BENCH_SLOTS = 8;
 
 
-function Bench () {
+const Bench: React.FC = ({ }) => {
     return (
         <div className={Styles.bench}>
             {Array.from({ length: BENCH_SLOTS }).map((_, i) => (

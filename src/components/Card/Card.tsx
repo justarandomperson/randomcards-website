@@ -1,8 +1,8 @@
 import cardImg from './Card.png';
 import Styles from './Card.module.css'
 
-export type CardType = 
-{
+
+export type CardData = {
     instanceId: string;
     name: string;
     type: string;
@@ -12,14 +12,13 @@ export type CardType =
     effect: string;
 }
 
-type Props =
-{
-    cardData: CardType
+
+type Props = {
+    cardData: CardData
 }
 
 
 export const Card: React.FC<Props> = ({ cardData }) => {
-    // cardData holds name, cost, effect, atk and hp
     return (
         <div className={Styles.card}>
             <div className={Styles.header}>

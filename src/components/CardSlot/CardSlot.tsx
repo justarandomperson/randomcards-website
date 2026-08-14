@@ -1,7 +1,7 @@
 import Styles from './CardSlot.module.css'
 
 
-function CardSlot () {
+const CardSlot: React.FC = ({ }) => {
     return (
         <div className={Styles.card_slot}></div>
     );

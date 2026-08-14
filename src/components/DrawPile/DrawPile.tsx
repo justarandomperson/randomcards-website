@@ -1,7 +1,12 @@
 import Styles from './DrawPile.module.css'
 
 
-function DrawPile ({ cardsInPileAmount }) {
+type Props = {
+    cardsInPileAmount: number 
+}
+
+
+const DrawPile: React.FC<Props> = ({ cardsInPileAmount }) => {
     return (
         <div className={Styles.draw_pile}>
             <button>Draw Card</button>

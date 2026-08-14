@@ -8,11 +8,11 @@ import DrawPile from '../../components/DrawPile/DrawPile.js'
 import Styles from './GamePage.module.css'
 
 
-function GamePage () {
+const GamePage: React.FC = ({ }) => {
     const [artifacts] = useState([
-        { id: 1, name: "Ember Core", effect: "...", isBought: false, cost: 1 },
-        { id: 2, name: "Frost Sigil", effect: "...", isBought: false, cost: 12 },
-        { id: 3, name: "Iron Bulwark", effect: "...", isBought: false, cost: 0 }
+        { id: 1, name: "Ember Core", effect: "...", cost: 1 },
+        { id: 2, name: "Frost Sigil", effect: "...",  cost: 12 },
+        { id: 3, name: "Iron Bulwark", effect: "...", cost: 0 }
     ]);
 
     return (

@@ -5,7 +5,7 @@ import Styles from './Board.module.css'
 const SLOTS_PER_ROW = 4;
 
 
-function Board () {
+const Board: React.FC = ({ }) => {
     return (
         <div className={Styles.board}>
             <div className={Styles.opponent_row}>

@@ -1,19 +1,19 @@
 import { useState } from 'react'
 import { v4 as uuidv4 } from 'uuid';
 import Card from '../Card/Card.js'
+import { CardData } from '../Card/Card.js';
 import Styles from './Hand.module.css' 
 
-import { CardType } from '../Card/Card.js';
 
-function getCardList(cardsList: CardType[]) {
+function getCardList(cardsList: CardData[]) {
     return cardsList.map((card) => (
         <Card cardData={card}/>
     ));
 }
 
 
-function Hand () {
-    const [cardsList] = useState<CardType[]>([
+const Hand: React.FC = ({ }) => {
+    const [cardsList] = useState<CardData[]>([
         {
             instanceId: uuidv4(),
             name: `dog`,

@@ -1,8 +1,8 @@
 import { NavLink } from 'react-router-dom'
 import styles from './Topbar.module.css'
 
-export default function Topbar()
-{
+ 
+const Topbar: React.FC = ({ }) => {
     return (
         <div className={styles.Topbar}>
             <nav className={styles.nav}>
@@ -12,3 +12,6 @@ export default function Topbar()
         </div>
     )
 }
+
+
+export default Topbar

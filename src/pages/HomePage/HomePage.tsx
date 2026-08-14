@@ -2,8 +2,8 @@ import QueueButton from "../../components/QueueButton/QueueButton"
 import styles from "./HomePage.module.css"
 import { useNavigate } from "react-router-dom"
 
-export default function HomePage()
-{
+
+const HomePage: React.FC = ({ }) => {
     const navigate = useNavigate()
 
     const queueUp = () => {
@@ -16,3 +16,6 @@ export default function HomePage()
         </div>
     )
 }
+
+
+export default HomePage
