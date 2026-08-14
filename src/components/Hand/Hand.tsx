@@ -3,8 +3,9 @@ import { v4 as uuidv4 } from 'uuid';
 import Card from '../Card/Card.js'
 import Styles from './Hand.module.css' 
 
+import { CardType } from '../Card/Card.js';
 
-function getCardList(cardsList) {
+function getCardList(cardsList: CardType[]) {
     return cardsList.map((card) => (
         <Card cardData={card}/>
     ));
@@ -12,7 +13,7 @@ function getCardList(cardsList) {
 
 
 function Hand () {
-    const [cardsList] = useState([
+    const [cardsList] = useState<CardType[]>([
         {
             instanceId: uuidv4(),
             name: `dog`,

@@ -1,8 +1,24 @@
 import cardImg from './Card.png';
 import Styles from './Card.module.css'
 
+export type CardType = 
+{
+    instanceId: string;
+    name: string;
+    type: string;
+    hp?: string | undefined;
+    atk?: string | undefined;
+    cost: string;
+    effect: string;
+}
 
-function Card ({ cardData }) {
+type Props =
+{
+    cardData: CardType
+}
+
+
+export const Card: React.FC<Props> = ({ cardData }) => {
     // cardData holds name, cost, effect, atk and hp
     return (
         <div className={Styles.card}>

@@ -1,6 +1,11 @@
 import styles from "./QueueButton.module.css"
 
-export default function QueueButton({ queueUp })
+type Props =
+{
+    queueUp: () => void;
+}
+
+const QueueButton: React.FC<Props> = ({ queueUp }) =>
 {
     return (
         <div className={styles.QueueButtonContainer}>
@@ -8,3 +13,5 @@ export default function QueueButton({ queueUp })
         </div>
     )
 }
+
+export default QueueButton
