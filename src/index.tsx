@@ -7,13 +7,33 @@ import AppLayout from './components/AppLayout/AppLayout';
 import Homepage from './pages/HomePage/HomePage';
 import GachaPage from './pages/GachaPage/GachaPage';
 import GamePage from './pages/GamePage/GamePage';
+import SignupPage from './pages/SignupPage/SignupPage';
+
+import { AuthProvider } from './contexts/AuthContext/AuthContext';
+
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+import PublicRoute from './components/PublicRoute/PublicRoute';
+import LoginPage from './pages/LoginPage/LoginPage';
 
 const router = createBrowserRouter([{
   path: "/",
   Component: AppLayout,
   children: [
-    {index: true, Component: Homepage},
-    {path: "gacha", Component: GachaPage},
+     {
+        element: <ProtectedRoute />,
+        children: [
+            {index: true, Component: Homepage},
+            { path: "gacha", Component: GachaPage },
+            { path: "game", Component: GamePage },
+        ],
+    },
+    {
+      element: <PublicRoute/>,
+      children: [
+        {path: "signup", Component: SignupPage},
+        {path: "login", Component: LoginPage}
+      ]
+    }
   ],
 },
 {
@@ -25,7 +45,9 @@ const router = createBrowserRouter([{
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router}/>
+    <AuthProvider>
+      <RouterProvider router={router}/>
+    </AuthProvider> 
   </React.StrictMode>
 );
 
