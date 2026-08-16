@@ -1,16 +1,6 @@
+import { CardData } from '../../contexts/GameContext/Hand'
 import cardImg from './Card.png';
 import Styles from './Card.module.css'
-
-
-export type CardData = {
-    instanceId: string;
-    name: string;
-    type: string;
-    hp?: string | undefined;
-    atk?: string | undefined;
-    cost: string;
-    effect: string;
-}
 
 
 type Props = {

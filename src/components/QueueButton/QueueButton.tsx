@@ -1,5 +1,6 @@
 import styles from "./QueueButton.module.css"
 
+
 type Props = {
     queueUp: () => void;
 }
@@ -12,5 +13,6 @@ const QueueButton: React.FC<Props> = ({ queueUp }) => {
         </div>
     )
 }
+
 
 export default QueueButton

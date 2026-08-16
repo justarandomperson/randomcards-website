@@ -1,21 +1,18 @@
 import Artifact from '../Artifact/Artifact.js'
-import { ArtifactData } from '../Artifact/Artifact.js'
+import { useGameContext } from '../../contexts/GameContext/GameContext'
 import Styles from './Shop.module.css'
 
 
-type Props = {
-    artifacts: ArtifactData[]
-}
+const Shop: React.FC = () => {
+    const shop = useGameContext().shopContext.shop;
 
-
-const Shop: React.FC<Props> = ({ artifacts }) => {
     return (
         <div className={Styles.shop}>
 
-            {artifacts.map((artifact) => (
+            {shop.artifacts.map((artifact, index) => (
 
-                <div className={Styles.shop_item}>
-                    <Artifact artifactData={artifact} />
+                <div className={Styles.shop_item} key={index}>
+                    <Artifact artifactData={artifact} index={index} />
                     <p className={Styles.artifact_cost}>{`${artifact.cost}$`}</p>
                 </div>
                 

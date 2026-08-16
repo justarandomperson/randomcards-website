@@ -1,4 +1,6 @@
-import { usePlayersContext, PlayersActionType, PlayersActionTarget } from '../../contexts/PlayersContext/PlayersContext'
+import { useGameContext } from '../../contexts/GameContext/GameContext'
+import { PlayersActionType, PlayersActionTarget } from '../../contexts/GameContext/Players'
+import { ShopActionType } from '../../contexts/GameContext/Shop'
 import Styles from './PlayerBar.module.css'
 
 
@@ -11,23 +13,25 @@ type Props = {
 
 
 const PlayerBar: React.FC<Props> = ({ isOpponent }) => {
-    const { players, dispatch } = usePlayersContext();
-    const player = isOpponent ? players.opponent : players.player;
-
+    const { playersContext, shopContext } = useGameContext();
+    const player = isOpponent ? playersContext.players.opponent : playersContext.players.player;
 
     const endTurn = () => {
-        dispatch({
+        playersContext.dispatch({
             type: PlayersActionType.END_TURN,
             target: isOpponent ? PlayersActionTarget.OPPONENT : PlayersActionTarget.PLAYER
         })
 
-        dispatch({
+        playersContext.dispatch({
             type: PlayersActionType.ADD_MONEY,
             target: isOpponent ? PlayersActionTarget.OPPONENT : PlayersActionTarget.PLAYER,
             amount: TURN_NUMBER_MULTIPIER * (player.turn + 1) // increment player.turn to match new turn
         })
-    }
 
+        shopContext.dispatch({
+            type: ShopActionType.REFILL_SHOP
+        })
+    }
 
     return (
         <div className={Styles.player_bar}>

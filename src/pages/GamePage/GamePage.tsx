@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { PlayersProvider } from '../../contexts/PlayersContext/PlayersContext'
+import { GameProvider } from '../../contexts/GameContext/GameContext'
 import Bench from '../../components/Bench/Bench.js'
 import Board from '../../components/Board/Board.js'
 import PlayerBar from '../../components/PlayerBar/PlayerBar.js'
@@ -11,17 +10,11 @@ import Styles from './GamePage.module.css'
 
 const GamePage: React.FC = ({ }) => {
 
-    const [artifacts] = useState([
-        { id: 1, name: "Ember Core", effect: "...", cost: 1 },
-        { id: 2, name: "Frost Sigil", effect: "...",  cost: 12 },
-        { id: 3, name: "Iron Bulwark", effect: "...", cost: 0 }
-    ]);
-
     return (
         <div className={Styles.game_page}>
             <div className={Styles.play_area}>
 
-                <PlayersProvider>            
+                <GameProvider>            
 
                     <div className={Styles.main_components_container}>
                         <div className={Styles.bench_container}>
@@ -29,22 +22,22 @@ const GamePage: React.FC = ({ }) => {
                         </div>
 
                         <div>
-                            <PlayerBar name="TinG hater" isOpponent={true}/>
+                            <PlayerBar isOpponent={true}/>
                             <Board/>
-                            <PlayerBar name="TinG" isOpponent={false}/>
+                            <PlayerBar isOpponent={false}/>
                         </div>
 
                             <div className={Styles.shop_container}>
-                                <Shop artifacts={artifacts}/>
+                                <Shop/>
                             </div>
                     </div>
 
                     <div className={Styles.hand_container}>
                         <Hand/>
-                        <DrawPile cardsInPileAmount={6}/>
+                        <DrawPile/>
                     </div>
 
-                </PlayersProvider>
+                </GameProvider>
 
             </div>
         </div>

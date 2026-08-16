@@ -1,25 +1,43 @@
 import { useState } from 'react'
+import { useGameContext } from '../../contexts/GameContext/GameContext'
+import { ArtifactData, ShopActionType } from '../../contexts/GameContext/Shop'
+import { PlayersActionType, PlayersActionTarget } from '../../contexts/GameContext/Players'
 import Styles from './Artifact.module.css'
 
 
-export type ArtifactData = {
-    id: number;
-    name: string;
-    effect: string;
-    cost: number;
-}
-
-
 type Props = {
-    artifactData: ArtifactData;
+    artifactData: ArtifactData
+    index: number
 }
 
 
-const Artifact: React.FC<Props> = ({ artifactData }) => {
-    const [isBought, setIsBought] = useState(false); // wouldnt be sold at first
+const Artifact: React.FC<Props> = ({ artifactData, index }) => {
+    const { playersContext, shopContext } = useGameContext();
+    const isBought = artifactData.id === 0;
 
     function buyArtifact() {
-        setIsBought(true);
+        if (isBought) {
+            return; 
+        }
+
+        const buyer = PlayersActionTarget.PLAYER; // TODO: not always player, could be opponent too
+        const currentMoney = playersContext.players[buyer].money;
+
+        if (currentMoney < artifactData.cost) {
+            return;
+        }
+
+        shopContext.dispatch({
+            type: ShopActionType.BUY_ARTIFACT,
+            index: index,
+            money_amount: currentMoney
+        });
+
+        playersContext.dispatch({
+            type: PlayersActionType.REMOVE_MONEY,
+            target: buyer,
+            amount: artifactData.cost
+        });
     }
 
     return (
