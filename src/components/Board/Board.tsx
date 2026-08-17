@@ -1,21 +1,24 @@
+import { useGameContext } from '../../contexts/GameContext/GameContext'
+import { MAX_CARDS_PER_ROW } from '../../contexts/GameContext/Board'
 import CardSlot from '../CardSlot/CardSlot.js'
 import Styles from './Board.module.css'
 
 
-const SLOTS_PER_ROW = 4;
 
 
 const Board: React.FC = ({ }) => {
+    const board = useGameContext().boardContext.board
+
     return (
         <div className={Styles.board}>
             <div className={Styles.opponent_row}>
-                {Array.from({ length: SLOTS_PER_ROW }).map((_, i) => (
-                    <CardSlot key={i} />
+                {Array.from({ length: MAX_CARDS_PER_ROW }).map((_, i) => (
+                    <CardSlot cardData={board.opponentCards[i]} key={i} />
                 ))}
             </div>
             <div className={Styles.user_row}>
-                {Array.from({ length: SLOTS_PER_ROW }).map((_, i) => (
-                    <CardSlot key={i} />
+                {Array.from({ length: MAX_CARDS_PER_ROW }).map((_, i) => (
+                    <CardSlot cardData={board.playerCards[i]} key={i} />
                 ))}
             </div>
         </div>

@@ -1,10 +1,11 @@
-import { CardData } from '../../contexts/GameContext/Hand'
+import { UnitData } from '../../contexts/GameContext/Bench'
+import { SpellData } from '../../contexts/GameContext/Hand'
 import cardImg from './Card.png';
 import Styles from './Card.module.css'
 
 
 type Props = {
-    cardData: CardData
+    cardData: UnitData | SpellData
 }
 
 
@@ -25,7 +26,7 @@ export const Card: React.FC<Props> = ({ cardData }) => {
             </div>
 
             <div className={Styles.footer}>
-                { cardData.type.toLowerCase() === "unit" && 
+                {cardData.type === 'unit' && 
                     <>
                         <span className={Styles.atk}>{cardData.atk}</span>
                         <span className={Styles.hp}>{cardData.hp}</span>

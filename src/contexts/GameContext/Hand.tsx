@@ -1,22 +1,18 @@
-import { MAX } from "uuid";
-
 const MAX_HAND_SIZE = 6;
 const MAX_DRAW_PILE_SIZE = 12;
 
 
-type CardData = {
+type SpellData = {
     instanceId: string;
     name: string;
-    type: string;
-    hp?: string | undefined;
-    atk?: string | undefined;
     cost: string;
     effect: string;
+    type: 'spell';
 }
 
 type Hand = {
-    cardsInHand: CardData[], // max 6
-    cardsInDrawPile: CardData[] // max 12
+    cardsInHand: SpellData[], // max 6
+    cardsInDrawPile: SpellData[] // max 12
 };
 
 type HandContextType = {
@@ -58,6 +54,6 @@ const handReducer = (state: Hand, action: HandAction ) => {
 }
 
 
-export type { CardData, HandContextType }
+export type { SpellData, HandContextType }
 export { HandActionType, handReducer }
 export { MAX_DRAW_PILE_SIZE }

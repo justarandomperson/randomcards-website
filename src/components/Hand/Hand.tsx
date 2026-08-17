@@ -1,10 +1,10 @@
 import { useGameContext } from '../../contexts/GameContext/GameContext'
-import { CardData } from '../../contexts/GameContext/Hand';
+import { SpellData } from '../../contexts/GameContext/Hand';
 import Card from '../Card/Card.js'
 import Styles from './Hand.module.css' 
 
 
-function getCardList(cardsList: CardData[]) {
+function getCardList(cardsList: SpellData[]) {
     return cardsList.map((card) => (
         <Card cardData={card}/>
     ));
