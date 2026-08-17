@@ -3,14 +3,14 @@ import { useAuth } from "../../contexts/AuthContext/AuthContext";
 import styles from "./Topbar.module.css";
 
 const Topbar: React.FC = () => {
-    const { user, logout } = useAuth();
+    const { isLoggedIn, logout } = useAuth();
 
 
     return (
         <div className={styles.Topbar}>
             <nav className={styles.nav}>
 
-                {user && (
+                {isLoggedIn && (
                <> 
                     <NavLink to="/">home</NavLink>
                     <NavLink to="/gacha">
@@ -20,7 +20,7 @@ const Topbar: React.FC = () => {
                     </>
                 )}
 
-                {!user && (
+                {!isLoggedIn && (
                     <>
                     <NavLink to="/signup">
                         signup
