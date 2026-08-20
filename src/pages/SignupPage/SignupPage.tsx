@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { signup } from "../../api/axiosInstance";
+import { useAuth } from "../../contexts/AuthContext/AuthContext";
 
 type SignupForm = {
     username: string;
@@ -12,12 +13,14 @@ const SignupPage: React.FC = () => {
         handleSubmit,
         formState: { errors, isSubmitting },
     } = useForm<SignupForm>();
+    const { login } = useAuth()
 
     const onSubmit = async (data: SignupForm) => {
         const res = await signup(data.username, data.password);
         if (res.status == 201)
         {
-            localStorage.setItem("token", res.data.access_token)
+            const token =  res.data.access_token
+            login(token, data.username)
         }
     };
 
