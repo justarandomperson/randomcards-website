@@ -1,17 +1,38 @@
+import { useDraggable } from '@dnd-kit/core'
+import { CSS } from '@dnd-kit/utilities'
 import { UnitData } from '../../contexts/GameContext/Bench'
 import { SpellData } from '../../contexts/GameContext/Hand'
+import { CardLocation } from '../../types/dnd/Card'
 import cardImg from './Card.png';
 import Styles from './Card.module.css'
 
 
 type Props = {
-    cardData: UnitData | SpellData
+    cardData: UnitData | SpellData,
+    location: CardLocation
 }
 
 
-export const Card: React.FC<Props> = ({ cardData }) => {
+export const Card: React.FC<Props> = ({ cardData, location }) => {
+    const isDraggable = location.insideOf !== 'board'; // board cards arent draggable
+
+    const { attributes, listeners, setNodeRef, transform } = useDraggable(
+        { 
+            id: `${location.insideOf}-${location.index}`, 
+            data: {cardData, location},
+            disabled: !isDraggable
+        }
+    );
+
+    const style = {
+        transform: CSS.Translate.toString(transform),
+    };
+
+    // how do i integrate isDraggable here nicely?
     return (
-        <div className={Styles.card}>
+        <div className={Styles.card} ref={setNodeRef} style={style} {...(isDraggable ? attributes : {})} 
+        {...(isDraggable ? listeners : {})}>
+
             <div className={Styles.header}>
                 <span className={Styles.name}>{cardData.name}</span>
                 <span className={Styles.cost}>{cardData.cost}</span>
@@ -33,6 +54,7 @@ export const Card: React.FC<Props> = ({ cardData }) => {
                     </>
                 }
             </div>
+
         </div>
     );
 }

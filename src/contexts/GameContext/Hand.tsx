@@ -22,11 +22,13 @@ type HandContextType = {
 
 
 enum HandActionType {
-    DRAW_CARD = 'DRAW_CARD'
+    DRAW_CARD = 'DRAW_CARD',
+    REMOVE_CARD = 'REMOVE_CARD'
 }
 
 type HandAction = 
-    { type: HandActionType.DRAW_CARD }
+    | { type: HandActionType.DRAW_CARD }
+    | { type: HandActionType.REMOVE_CARD; index: number }
 
 
 const handReducer = (state: Hand, action: HandAction ) => {
@@ -46,6 +48,13 @@ const handReducer = (state: Hand, action: HandAction ) => {
                 cardsInHand: [...state.cardsInHand, drawnCard],
                 cardsInDrawPile: remainingDrawPile
             };
+        }
+
+        case HandActionType.REMOVE_CARD: {
+            return {
+                ...state,
+                cardsInHand: state.cardsInHand.filter((_, index) => index !== action.index)
+            }
         }
             
         default:

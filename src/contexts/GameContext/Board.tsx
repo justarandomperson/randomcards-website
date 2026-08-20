@@ -23,13 +23,24 @@ type BoardContextType = {
 
 
 enum BoardActionType {
+    PLACE_CARD = 'PLACE_CARD'
 }
 
 type BoardAction = 
-    {type: ""}
+    | {type: BoardActionType.PLACE_CARD; card: UnitData; index: number}
+
 
 const boardReducer = (state: Board, action: BoardAction ) => {
     switch (action.type) {
+        case BoardActionType.PLACE_CARD: {
+            const newPlayerCards = [...state.playerCards];
+            newPlayerCards[action.index] = action.card;
+
+            return {
+                ...state,
+                playerCards: newPlayerCards
+            };
+        }
             
         default:
             throw new Error('boardReducer does not have this type. ');

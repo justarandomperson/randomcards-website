@@ -63,7 +63,7 @@ const GameProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
 
     // bench
-    const cardsInBench: UnitData[] = Array.from({ length: MAX_BENCH_SIZE }, () => ({
+    const cardsInBench: UnitData[] = Array.from({ length: MAX_BENCH_SIZE - 4 }, () => ({
         instanceId: uuidv4(),
         name: `dog`,
         type: "unit",
@@ -79,8 +79,8 @@ const GameProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
     // board
     const [board, boardDispatch] = useReducer(boardReducer, {
-        playerCards: [],
-        opponentCards: []
+        playerCards: [null, null, null, null],
+        opponentCards: [null, null, null, null]
     })
 
 
