@@ -11,7 +11,7 @@ const Bench: React.FC = ({ }) => {
     return (        
         <div className={Styles.bench}>
             {Array.from({ length: MAX_BENCH_SIZE }, (_, i) => (
-                <CardSlot cardData={bench.cards[i]} location={{ insideOf: 'bench', index: i }} key={i}/>
+                <CardSlot cardData={bench.cards[i]} location={{ insideOf: 'bench', index: i }} activeCardDrag={null} key={i}/>
             ))}
         </div>
     );

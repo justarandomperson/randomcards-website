@@ -2,7 +2,6 @@
     max-width: 100%;
     display: flex;
     align-self: flex-start;
-    overflow-x: auto;
-
+    
     gap: 10px;
 }

@@ -1,21 +1,22 @@
 import { useDroppable } from '@dnd-kit/core'
 import { UnitData } from '../../contexts/GameContext/Bench'
 import { SpellData } from '../../contexts/GameContext/Hand'
-import { CardLocation } from '../../types/dnd/Card'
+import { CardLocation, DraggedCard } from '../../types/dnd/Card'
 import Card from '../Card/Card'
 import Styles from './CardSlot.module.css'
 
 
 type Props = {
-    cardData?: UnitData | SpellData | null,
-    location: CardLocation
+    cardData: UnitData | SpellData | null,
+    location: CardLocation,
+    activeCardDrag: DraggedCard | null,
 }
 
 
-const CardSlot: React.FC<Props> = ({ cardData, location }) => {
+const CardSlot: React.FC<Props> = ({ cardData, location, activeCardDrag }) => {
     const isDroppable = location.insideOf === 'board'; // only board slots are droppable
 
-    const { setNodeRef } = useDroppable(
+    const { setNodeRef, isOver } = useDroppable(
         {
             id: `${location.insideOf}-${location.index}`,
             data: location,
@@ -23,10 +24,20 @@ const CardSlot: React.FC<Props> = ({ cardData, location }) => {
         }
     );
 
+    const showCardOver = !cardData && isOver && activeCardDrag?.cardData.type === 'unit';
+
     return (
         <div ref={isDroppable ? setNodeRef : undefined} className={Styles.card_slot}>
+            {/* if the slot is taken... */}
             {cardData && (
                 <Card cardData={cardData} location={location}/>
+            )}
+
+            {/* if a card is hovered over this slot and can be placed */}
+            {showCardOver && (
+                <div style={{ opacity: 0.4 }}>
+                    <Card cardData={activeCardDrag.cardData} location={location} />
+                </div>
             )} 
         </div>
     );

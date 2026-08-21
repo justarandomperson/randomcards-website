@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { DndContext, DragEndEvent, DragStartEvent, DragOverlay, rectIntersection } from '@dnd-kit/core';
+import { DndContext, DragEndEvent, DragStartEvent, DragOverEvent, DragOverlay, rectIntersection } from '@dnd-kit/core';
 import { CardLocation, DraggedCard } from '../../types/dnd/Card'
 import { useGameContext } from '../../contexts/GameContext/GameContext'
 import { BenchActionType } from '../../contexts/GameContext/Bench'
@@ -21,13 +21,20 @@ const GameLayout: React.FC = ({ }) => {
     const benchDispatch = useGameContext().benchContext.dispatch
 
     const [activeCardDrag, setActiveCardDrag] = useState<DraggedCard | null>(null);
+    const [cardOverLocation, setCardOverLocation] = useState<CardLocation | null>(null);
 
     const handleDragCardStart = (event: DragStartEvent) => {
         setActiveCardDrag(event.active.data.current as DraggedCard);
     }
 
+    const handleDragCardOver = (event: DragOverEvent) => {
+        const { over } = event;
+        setCardOverLocation(over ? (over.data.current as CardLocation) : null);
+   }
+
     const handleCardDragEnd = (event: DragEndEvent) => {
         setActiveCardDrag(null);
+        setCardOverLocation(null);
 
         const { active, over } = event;
         if (!over) { // not inside a droppable 
@@ -64,7 +71,8 @@ const GameLayout: React.FC = ({ }) => {
     }
 
     return (
-        <DndContext collisionDetection={rectIntersection} onDragStart={handleDragCardStart} onDragEnd={handleCardDragEnd}>
+        <DndContext collisionDetection={rectIntersection} onDragStart={handleDragCardStart} onDragOver={handleDragCardOver}
+        onDragEnd={handleCardDragEnd}>
             <div className={Styles.main_components_container}>
                 <div className={Styles.bench_container}>
                     <Bench/>
@@ -72,7 +80,7 @@ const GameLayout: React.FC = ({ }) => {
 
                 <div>
                     <PlayerBar isOpponent={true}/>
-                    <Board/>
+                    <Board activeCardDrag={activeCardDrag}/>
                     <PlayerBar isOpponent={false}/>
                 </div>
 

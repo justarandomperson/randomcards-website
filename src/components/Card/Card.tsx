@@ -16,7 +16,7 @@ type Props = {
 export const Card: React.FC<Props> = ({ cardData, location }) => {
     const isDraggable = location.insideOf !== 'board'; // board cards arent draggable
 
-    const { attributes, listeners, setNodeRef, transform } = useDraggable(
+    const { attributes, listeners, setNodeRef, isDragging } = useDraggable(
         { 
             id: `${location.insideOf}-${location.index}`, 
             data: {cardData, location},
@@ -25,7 +25,7 @@ export const Card: React.FC<Props> = ({ cardData, location }) => {
     );
 
     const style = {
-        transform: CSS.Translate.toString(transform),
+        opacity: isDragging ? 0.4 : 1,
     };
 
     // how do i integrate isDraggable here nicely?

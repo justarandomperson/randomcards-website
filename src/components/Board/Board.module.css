@@ -3,6 +3,12 @@
     flex-direction: column;
 }
 
+.board_opacitated {
+    display: flex;
+    flex-direction: column; 
+    opacity: 0.75;
+}
+
 .opponent_row {
     display: flex;
 }
