@@ -24,17 +24,18 @@ const GameProvider: React.FC<PropsWithChildren> = ({ children }) => {
         player: {
             name: "TinG",
             health: STARTING_HEALTH,
-             money: STARTING_MONEY,
-            turn: STARTING_TURN
+            money: STARTING_MONEY,
+            turn: STARTING_TURN,
+            artifacts: []
         },
         opponent: {
             name: "TinG hater",
             health: STARTING_HEALTH,
             money: STARTING_MONEY,
-            turn: STARTING_TURN
+            turn: STARTING_TURN,
+            artifacts: []
         }
     });
-
 
     // shop
     const [shop, shopDispatch] = useReducer(shopReducer, {
@@ -46,7 +47,6 @@ const GameProvider: React.FC<PropsWithChildren> = ({ children }) => {
             { id: 6, name: "the win", effect: "...", cost: 7 }
         ]
     })
-
 
     // hand
     const drawPile: SpellData[] = Array.from({ length: MAX_DRAW_PILE_SIZE }, () => ({
@@ -60,7 +60,6 @@ const GameProvider: React.FC<PropsWithChildren> = ({ children }) => {
         cardsInHand: [],
         cardsInDrawPile: drawPile
     })
-
 
     // bench
     const cardsInBench: UnitData[] = Array.from({ length: MAX_BENCH_SIZE - 4 }, () => ({
@@ -76,13 +75,11 @@ const GameProvider: React.FC<PropsWithChildren> = ({ children }) => {
         cards: cardsInBench
     })
 
-
     // board
     const [board, boardDispatch] = useReducer(boardReducer, {
         playerCards: [null, null, null, null],
         opponentCards: [null, null, null, null]
     })
-
 
     // value
     const value = {
@@ -94,7 +91,6 @@ const GameProvider: React.FC<PropsWithChildren> = ({ children }) => {
     }
 
     return <GameContext.Provider value={value}> {children} </GameContext.Provider>
-    
 }
 
 

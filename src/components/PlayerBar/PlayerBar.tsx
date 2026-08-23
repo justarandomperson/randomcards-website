@@ -35,7 +35,10 @@ const PlayerBar: React.FC<Props> = ({ isOpponent }) => {
 
     return (
         <div className={Styles.player_bar}>
-            <p>{player.name}</p>
+            <div>
+                <span className={Styles.player_name}>{player.name}</span>
+                <span>{`Artifacts: ${player.artifacts.length}`}</span>
+            </div>
 
             <div className={Styles.player_data_container}>
                 <p className={Styles.health}>{player.health}</p>

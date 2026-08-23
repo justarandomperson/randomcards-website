@@ -38,6 +38,12 @@ const Artifact: React.FC<Props> = ({ artifactData, index }) => {
             target: buyer,
             amount: artifactData.cost
         });
+
+        playersContext.dispatch({
+            type: PlayersActionType.ADD_ARTIFACT,
+            target: buyer,
+            artifact: artifactData
+        })
     }
 
     return (

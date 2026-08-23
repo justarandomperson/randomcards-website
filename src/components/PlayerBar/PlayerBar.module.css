@@ -19,6 +19,10 @@
     gap: 10px;
 }
 
+.player_name {
+    margin-right: 20px;
+}
+
 .health {
     color: rgb(0, 240, 0);
 }

@@ -1,3 +1,6 @@
+import { ArtifactData } from '../GameContext/Shop'
+
+
 const STARTING_HEALTH = 20;
 const STARTING_MONEY = 0;
 const STARTING_TURN = 0;
@@ -7,7 +10,8 @@ type Player = {
     name: string;
     health: number;
     money: number;
-    turn: number
+    turn: number;
+    artifacts: ArtifactData[];
 };
 
 type Players = {
@@ -24,7 +28,8 @@ type PlayersContextType = {
 enum PlayersActionType {
     END_TURN = 'END_TURN',
     ADD_MONEY = 'ADD_MONEY',
-    REMOVE_MONEY = 'REMOVE_MONEY'
+    REMOVE_MONEY = 'REMOVE_MONEY',
+    ADD_ARTIFACT = 'ADD_ARTIFACT'
 }
 
 enum PlayersActionTarget {
@@ -36,6 +41,7 @@ type PlayersAction =
     | { type: PlayersActionType.END_TURN; target: PlayersActionTarget.PLAYER | PlayersActionTarget.OPPONENT }
     | { type: PlayersActionType.ADD_MONEY; target: PlayersActionTarget.PLAYER | PlayersActionTarget.OPPONENT; amount: number }
     | { type: PlayersActionType.REMOVE_MONEY; target: PlayersActionTarget.PLAYER | PlayersActionTarget.OPPONENT; amount: number }
+    | { type: PlayersActionType.ADD_ARTIFACT; target: PlayersActionTarget.PLAYER | PlayersActionTarget.OPPONENT; artifact: ArtifactData}
 
 
 
@@ -69,6 +75,16 @@ const playersReducer = (state: Players, action: PlayersAction ) => {
                 [action.target]: {
                     ...player,
                     money: player.money - action.amount
+                }
+            }
+        }
+
+        case PlayersActionType.ADD_ARTIFACT: {
+            return {
+                ...state,
+                [action.target]: {
+                    ...player,
+                    artifacts: [...player.artifacts, action.artifact]
                 }
             }
         }
