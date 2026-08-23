@@ -5,7 +5,6 @@ import {
     useState,
 } from "react";
 import { validate } from "../../api/axiosInstance";
-import { useNavigate } from "react-router-dom";
 
 
 type User = {
@@ -20,6 +19,7 @@ type AuthContextType = {
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
+
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);

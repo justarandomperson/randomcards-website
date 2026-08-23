@@ -11,23 +11,18 @@ const Topbar: React.FC = () => {
             <nav className={styles.nav}>
 
                 {isLoggedIn && (
-               <> 
-                    <NavLink to="/">home</NavLink>
-                    <NavLink to="/gacha">
-                        gacha
-                    </NavLink>
-                    <button onClick={logout}>logout</button>
+                    <> 
+                        <NavLink to="/">home</NavLink>
+                        <NavLink to="/decks">decks</NavLink>
+                        <NavLink to="/gacha">gacha</NavLink>
+                        <button onClick={logout}>logout</button>
                     </>
                 )}
 
                 {!isLoggedIn && (
                     <>
-                    <NavLink to="/signup">
-                        signup
-                    </NavLink>
-                       <NavLink to="/login">
-                        login
-                    </NavLink>
+                        <NavLink to="/signup">signup</NavLink>
+                        <NavLink to="/login">login</NavLink>
                     </>
                 )}
             </nav>

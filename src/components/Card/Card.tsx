@@ -1,5 +1,4 @@
 import { useDraggable } from '@dnd-kit/core'
-import { CSS } from '@dnd-kit/utilities'
 import { UnitData } from '../../contexts/GameContext/Bench'
 import { SpellData } from '../../contexts/GameContext/Hand'
 import { CardLocation } from '../../types/dnd/Card'
@@ -9,16 +8,16 @@ import Styles from './Card.module.css'
 
 type Props = {
     cardData: UnitData | SpellData,
-    location: CardLocation
+    location?: CardLocation
 }
 
 
 export const Card: React.FC<Props> = ({ cardData, location }) => {
-    const isDraggable = location.insideOf !== 'board'; // board cards arent draggable
+    const isDraggable = location?.insideOf !== 'board'; // board cards arent draggable
 
     const { attributes, listeners, setNodeRef, isDragging } = useDraggable(
         { 
-            id: `${location.insideOf}-${location.index}`, 
+            id: `${location?.insideOf}-${location?.index}`, 
             data: {cardData, location},
             disabled: !isDraggable
         }

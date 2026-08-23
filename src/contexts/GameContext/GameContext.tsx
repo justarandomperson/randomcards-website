@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { useReducer, createContext, type PropsWithChildren, useContext } from 'react'
+import { useDeckContext } from '../DeckContext/DeckContext';
 import { PlayersContextType, playersReducer, STARTING_HEALTH, STARTING_MONEY, STARTING_TURN } from './Players'
 import { ShopContextType, shopReducer } from './Shop'
 import { SpellData, HandContextType, handReducer, MAX_DRAW_PILE_SIZE } from './Hand'
@@ -19,6 +20,8 @@ const GameContext = createContext<GameContextType | null>(null);
 
 
 const GameProvider: React.FC<PropsWithChildren> = ({ children }) => {
+    const deck = useDeckContext().deckContext.deck;
+
     // players
     const [players, playersDispatch] = useReducer(playersReducer, {
         player: {
@@ -49,28 +52,14 @@ const GameProvider: React.FC<PropsWithChildren> = ({ children }) => {
     })
 
     // hand
-    const drawPile: SpellData[] = Array.from({ length: MAX_DRAW_PILE_SIZE }, () => ({
-        instanceId: uuidv4(),
-        name: `cat`,
-        cost: "3",
-        effect: "although i may look like it, im not dog. have a wonderful rest of your day!",
-        type: "spell"
-    }));
+    const drawPile = deck.spells
     const [hand, handDispatch] = useReducer(handReducer, {
         cardsInHand: [],
         cardsInDrawPile: drawPile
     })
 
     // bench
-    const cardsInBench: UnitData[] = Array.from({ length: MAX_BENCH_SIZE - 4 }, () => ({
-        instanceId: uuidv4(),
-        name: `dog`,
-        type: "unit",
-        hp: "1",
-        atk: "2",
-        cost: "3",
-        effect: "im dog"
-    }));
+    const cardsInBench = deck.units
     const [bench, benchDispatch] = useReducer(benchReducer, {
         cards: cardsInBench
     })

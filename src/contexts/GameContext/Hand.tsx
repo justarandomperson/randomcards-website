@@ -31,7 +31,7 @@ type HandAction =
     | { type: HandActionType.REMOVE_CARD; index: number }
 
 
-const handReducer = (state: Hand, action: HandAction ) => {
+const handReducer = (state: Hand, action: HandAction) => {
     switch (action.type) {
         case HandActionType.DRAW_CARD: {
             if (state.cardsInDrawPile.length === 0) {
