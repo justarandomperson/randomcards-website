@@ -1,11 +1,6 @@
-type ArtifactData = {
-    id: number;
-    name: string;
-    effect: string;
-    cost: number;
-};
+import { ArtifactData } from '../../types/artifact'
+import { NULL_ARTIFACT } from '../../constants/game';
 
-const noArtifact: ArtifactData = {id: 0, name: "", effect: "", cost: 0}; // empty shop slot
 
 type Shop = {
     artifacts: [ArtifactData, ArtifactData, ArtifactData, ArtifactData, ArtifactData] // 5 artifacts in shop
@@ -40,7 +35,7 @@ const shopReducer = (state: Shop, action: ShopAction ) => {
             }
 
             const newArtifacts = [...state.artifacts] as Shop['artifacts'];
-            newArtifacts[action.index] = noArtifact; // set to id0
+            newArtifacts[action.index] = NULL_ARTIFACT
 
             return {
                 ...state,
@@ -71,5 +66,5 @@ const getRandomArtifact = () => {
 }
 
 
-export type { ArtifactData, ShopContextType };
+export type { ShopContextType };
 export { ShopActionType, shopReducer };

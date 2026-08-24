@@ -1,14 +1,6 @@
-const MAX_HAND_SIZE = 6;
-const MAX_DRAW_PILE_SIZE = 12;
+import { SpellData } from '../../types/card'
+import { MAX_HAND_SIZE } from '../../constants/game';
 
-
-type SpellData = {
-    instanceId: string;
-    name: string;
-    cost: string;
-    effect: string;
-    type: 'spell';
-}
 
 type Hand = {
     cardsInHand: SpellData[], // max 6
@@ -63,6 +55,5 @@ const handReducer = (state: Hand, action: HandAction) => {
 }
 
 
-export type { SpellData, HandContextType }
+export type { HandContextType }
 export { HandActionType, handReducer }
-export { MAX_DRAW_PILE_SIZE }

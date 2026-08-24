@@ -1,10 +1,10 @@
-import { v4 as uuidv4 } from 'uuid';
 import { useReducer, createContext, type PropsWithChildren, useContext } from 'react'
 import { useDeckContext } from '../DeckContext/DeckContext';
-import { PlayersContextType, playersReducer, STARTING_HEALTH, STARTING_MONEY, STARTING_TURN } from './Players'
+import { STARTING_HEALTH, STARTING_MONEY, STARTING_TURN } from '../../constants/game';
+import { PlayersContextType, playersReducer } from './Players'
 import { ShopContextType, shopReducer } from './Shop'
-import { SpellData, HandContextType, handReducer, MAX_DRAW_PILE_SIZE } from './Hand'
-import { UnitData, BenchContextType, benchReducer, MAX_BENCH_SIZE } from './Bench'
+import { HandContextType, handReducer } from './Hand'
+import { BenchContextType, benchReducer } from './Bench'
 import { BoardContextType, boardReducer } from './Board'
 
 
@@ -90,7 +90,7 @@ const useGameContext = () => {
         throw new Error('useGameContext must be used within a GameProvider');
     }
         
-    return context; // { playersContext, shopContext }
+    return context;
 }
 
 

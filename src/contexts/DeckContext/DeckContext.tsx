@@ -1,11 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { useReducer, createContext, type PropsWithChildren, useContext } from 'react'
-import { UnitData } from '../GameContext/Bench'
-import { SpellData } from '../GameContext/Hand'
-
-
-const UNITS_IN_DECK = 8;
-const SPELLS_IN_DECK = 12;
+import { UnitData, SpellData } from '../../types/card'
+import { UNITS_IN_DECK, SPELLS_IN_DECK } from '../../constants/game';
 
 
 type Storage = {

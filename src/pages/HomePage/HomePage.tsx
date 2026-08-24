@@ -1,4 +1,4 @@
-import QueueButton from "../../components/QueueButton/QueueButton"
+import QueueButton from "../../components/app/QueueButton/QueueButton"
 import styles from "./HomePage.module.css"
 import { useNavigate } from "react-router-dom"
 

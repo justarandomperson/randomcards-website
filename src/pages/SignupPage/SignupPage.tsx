@@ -2,10 +2,12 @@ import { useForm } from "react-hook-form";
 import { signup } from "../../api/axiosInstance";
 import { useAuth } from "../../contexts/AuthContext/AuthContext";
 
+
 type SignupForm = {
     username: string;
     password: string;
 };
+
 
 const SignupPage: React.FC = () => {
     const {
@@ -61,5 +63,6 @@ const SignupPage: React.FC = () => {
         </form>
     );
 };
+
 
 export default SignupPage;

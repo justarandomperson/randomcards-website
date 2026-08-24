@@ -8,6 +8,7 @@ type LoginForm = {
     password: string;
 };
 
+
 const LoginPage: React.FC = () => {
     const {
         register,
@@ -63,5 +64,6 @@ const LoginPage: React.FC = () => {
         </form>
     );
 };
+
 
 export default LoginPage;

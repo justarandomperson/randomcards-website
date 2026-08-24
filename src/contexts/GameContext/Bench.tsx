@@ -1,15 +1,5 @@
-const MAX_BENCH_SIZE = 8
+import { UnitData } from '../../types/card'
 
-
-type UnitData = {
-    instanceId: string;
-    name: string;
-    hp: string;
-    atk: string;
-    cost: string;
-    effect: string;
-    type: 'unit';
-}
 
 type Bench = {
     cards: (UnitData | null)[] // max 8
@@ -59,6 +49,5 @@ const benchReducer = (state: Bench, action: BenchAction ) => {
 }
 
 
-export type { UnitData, BenchContextType }
+export type { BenchContextType }
 export { BenchActionType, benchReducer }
-export { MAX_BENCH_SIZE }

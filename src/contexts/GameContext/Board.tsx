@@ -1,15 +1,5 @@
-const MAX_CARDS_PER_ROW = 4;
+import { UnitData } from '../../types/card'
 
-
-type UnitData = {
-    instanceId: string;
-    name: string;
-    hp: string;
-    atk: string;
-    cost: string;
-    effect: string;
-    type: 'unit';
-}
 
 type Board = {
     playerCards: (UnitData | null)[] // max 4
@@ -48,6 +38,5 @@ const boardReducer = (state: Board, action: BoardAction ) => {
 }
 
 
-export type { UnitData, BoardContextType }
+export type { BoardContextType }
 export { BoardActionType, boardReducer }
-export { MAX_CARDS_PER_ROW }

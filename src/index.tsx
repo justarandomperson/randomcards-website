@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import AppLayout from './components/AppLayout/AppLayout';
+import AppLayout from './components/app/AppLayout/AppLayout';
 import Homepage from './pages/HomePage/HomePage';
 import DecksPage from './pages/DecksPage/DecksPage';
 import GachaPage from './pages/GachaPage/GachaPage';
@@ -11,9 +11,10 @@ import SignupPage from './pages/SignupPage/SignupPage';
 
 import { AuthProvider } from './contexts/AuthContext/AuthContext';
 
-import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
-import PublicRoute from './components/PublicRoute/PublicRoute';
+import ProtectedRoute from './components/app/ProtectedRoute/ProtectedRoute';
+import PublicRoute from './components/app/PublicRoute/PublicRoute';
 import LoginPage from './pages/LoginPage/LoginPage';
+
 
 const router = createBrowserRouter([{
   path: "/",
@@ -42,6 +43,7 @@ const router = createBrowserRouter([{
   Component: GamePage
 }
 ]);
+
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(

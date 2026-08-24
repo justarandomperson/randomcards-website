@@ -1,10 +1,4 @@
-import { ArtifactData } from '../GameContext/Shop'
-
-
-const STARTING_HEALTH = 20;
-const STARTING_MONEY = 0;
-const STARTING_TURN = 0;
-
+import { ArtifactData } from "../../types/artifact";
 
 type Player = {
     name: string;
@@ -97,4 +91,3 @@ const playersReducer = (state: Players, action: PlayersAction ) => {
 
 export type { PlayersContextType }
 export { PlayersActionType, PlayersActionTarget, playersReducer };
-export { STARTING_HEALTH, STARTING_MONEY, STARTING_TURN }
