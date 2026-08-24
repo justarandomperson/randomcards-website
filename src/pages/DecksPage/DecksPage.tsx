@@ -1,5 +1,5 @@
 import { DeckProvider } from "../../contexts/DeckContext/DeckContext";
-import CardList from '../../components/game/CardList/CardList'
+import CardList from '../../components/decks/CardList/CardList'
 
 
 const DecksPage: React.FC = ({ }) => {

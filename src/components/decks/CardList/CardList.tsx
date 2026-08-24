@@ -1,5 +1,5 @@
 import { useDeckContext } from '../../../contexts/DeckContext/DeckContext'
-import Card from '../Card/Card'
+import DecksCard from '../DecksCard/DecksCard'
 import Styles from './CardList.module.css'
 
 
@@ -15,7 +15,7 @@ const CardList: React.FC<Props> = ({ location, type }) => {
     return (
         <ul className={Styles.card_list}>
             {items.map((item) => {
-                return (<Card cardData={item}></Card>);
+                return (<DecksCard cardData={item}></DecksCard>);
             })}
         </ul>
     );

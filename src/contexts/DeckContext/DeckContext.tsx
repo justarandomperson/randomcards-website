@@ -48,9 +48,25 @@ const DeckProvider: React.FC<PropsWithChildren> = ({ children }) => {
                     type: "spell"
                 }))
             },
+
+            // TODO: obviously we dont generate the players storage like that. its temporary
             storage: {
-                units: [],
-                spells: []
+                units: Array.from({ length: UNITS_IN_DECK }, (): UnitData => ({
+                    instanceId: uuidv4(),
+                    name: `dog`,
+                    type: "unit",
+                    hp: "1",
+                    atk: "2",
+                    cost: "3",
+                    effect: "im dog"
+                })),            
+                spells: Array.from({ length: SPELLS_IN_DECK }, (): SpellData => ({
+                    instanceId: uuidv4(),
+                    name: `cat`,
+                    cost: "3",
+                    effect: "although i may look like it, im not dog. have a wonderful rest of your day!",
+                    type: "spell"
+                }))
             }
         }
     )

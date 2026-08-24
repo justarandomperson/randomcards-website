@@ -1,7 +1,7 @@
 import { useDroppable } from '@dnd-kit/core'
 import { UnitData, SpellData } from '../../../types/card'
 import { CardLocation, DraggedCard } from '../../../types/card'
-import Card from '../Card/Card'
+import GameCard from '../GameCard/GameCard'
 import Styles from './CardSlot.module.css'
 
 
@@ -29,13 +29,13 @@ const CardSlot: React.FC<Props> = ({ cardData, location, activeCardDrag }) => {
         <div ref={isDroppable ? setNodeRef : undefined} className={Styles.card_slot}>
             {/* if the slot is taken... */}
             {cardData && (
-                <Card cardData={cardData} location={location}/>
+                <GameCard cardData={cardData} location={location}/>
             )}
 
             {/* if a card is hovered over this slot and can be placed */}
             {showCardOver && (
                 <div style={{ opacity: 0.4 }}>
-                    <Card cardData={activeCardDrag.cardData} location={location} />
+                    <GameCard cardData={activeCardDrag.cardData} location={location} />
                 </div>
             )} 
         </div>

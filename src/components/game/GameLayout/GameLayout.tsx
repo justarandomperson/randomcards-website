@@ -11,7 +11,7 @@ import PlayerBar from '../PlayerBar/PlayerBar'
 import Shop from '../Shop/Shop'
 import Hand from '../Hand/Hand'
 import DrawPile from '../DrawPile/DrawPile'
-import Card from '../Card/Card'
+import GameCard from '../GameCard/GameCard'
 import Styles from './GameLayout.module.css'
 
 
@@ -88,7 +88,7 @@ const GameLayout: React.FC = ({ }) => {
 
             <DragOverlay>
                 {activeCardDrag && (
-                    <Card cardData={activeCardDrag.cardData} location={activeCardDrag.location}/>
+                    <GameCard cardData={activeCardDrag.cardData} location={activeCardDrag.location}/>
                 )}
             </DragOverlay>
                 

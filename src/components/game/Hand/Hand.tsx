@@ -1,5 +1,5 @@
 import { useGameContext } from '../../../contexts/GameContext/GameContext'
-import Card from '../Card/Card.js'
+import GameCard from '../GameCard/GameCard.js'
 import Styles from './Hand.module.css' 
 
 
@@ -10,7 +10,7 @@ const Hand: React.FC = ({ }) => {
         <>
             <div className={Styles.hand}>
                 {hand.cardsInHand.map((card, i) => (
-                    <Card cardData={card} location={{ insideOf: 'hand', index: i }} />
+                    <GameCard cardData={card} location={{ insideOf: 'hand', index: i }} />
                 ))}
             </div>
         </>
