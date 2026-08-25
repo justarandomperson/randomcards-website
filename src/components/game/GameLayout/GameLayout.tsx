@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { DndContext, DragEndEvent, DragStartEvent, DragOverEvent, DragOverlay, rectIntersection } from '@dnd-kit/core';
+import { useAuth } from '../../../contexts/AuthContext/AuthContext'; 
 import { useGameContext } from '../../../contexts/GameContext/GameContext'
 import { BenchActionType } from '../../../contexts/GameContext/Bench'
 import { HandActionType } from '../../../contexts/GameContext/Hand'

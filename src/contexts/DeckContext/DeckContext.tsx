@@ -103,6 +103,61 @@ type DeckAction =
 
 const DeckReducer = (state: DeckState, action: DeckAction) => {
     switch (action.type) {
+        case DeckActionType.ADD_CARD: {
+            if (action.card.type === 'unit') {
+                return {
+                    ...state,
+                    storage: {
+                        ...state.storage,
+                        units: state.storage.units.filter(u => u.instanceId !== action.card.instanceId)
+                    },
+                    deck: {
+                        ...state.deck,
+                        units: [...state.deck.units, action.card]
+                    }
+                };
+            } else {
+                return {
+                    ...state,
+                    storage: {
+                        ...state.storage,
+                        spells: state.storage.spells.filter(s => s.instanceId !== action.card.instanceId)
+                    },
+                    deck: {
+                        ...state.deck,
+                        spells: [...state.deck.spells, action.card]
+                    }
+                };
+            }
+        }
+
+        case DeckActionType.REMOVE_CARD: {
+            if (action.card.type === 'unit') {
+                return {
+                    ...state,
+                    deck: {
+                        ...state.deck,
+                        units: state.deck.units.filter(u => u.instanceId !== action.card.instanceId)
+                    },
+                    storage: {
+                        ...state.storage,
+                        units: [...state.storage.units, action.card]
+                    }
+                };
+            } else {
+                return {
+                    ...state,
+                    deck: {
+                        ...state.deck,
+                        spells: state.deck.spells.filter(s => s.instanceId !== action.card.instanceId)
+                    },
+                    storage: {
+                        ...state.storage,
+                        spells: [...state.storage.spells, action.card]
+                    }
+                };
+            }
+        }
 
         default:
             throw new Error('DeckReducer does not have this type. ');
@@ -110,4 +165,5 @@ const DeckReducer = (state: DeckState, action: DeckAction) => {
 }
 
 
+export { DeckActionType }
 export { DeckContext, DeckProvider, useDeckContext}

@@ -10,6 +10,7 @@ import GamePage from './pages/GamePage/GamePage';
 import SignupPage from './pages/SignupPage/SignupPage';
 
 import { AuthProvider } from './contexts/AuthContext/AuthContext';
+import { DeckProvider } from './contexts/DeckContext/DeckContext';
 
 import ProtectedRoute from './components/app/ProtectedRoute/ProtectedRoute';
 import PublicRoute from './components/app/PublicRoute/PublicRoute';
@@ -49,7 +50,9 @@ const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
   <React.StrictMode>
     <AuthProvider>
+    <DeckProvider>
       <RouterProvider router={router}/>
+    </DeckProvider>
     </AuthProvider> 
   </React.StrictMode>
 );

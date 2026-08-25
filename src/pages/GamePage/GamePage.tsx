@@ -10,15 +10,11 @@ const GamePage: React.FC = ({ }) => {
         <div className={Styles.game_page}>
             <div className={Styles.play_area}>
 
-                <AuthProvider>
-                <DeckProvider>
                 <GameProvider>            
 
                     <GameLayout/>
 
                 </GameProvider>
-                </DeckProvider>
-                </AuthProvider>
 
             </div>
         </div>
