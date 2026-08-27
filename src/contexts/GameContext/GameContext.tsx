@@ -1,4 +1,5 @@
 import { useReducer, createContext, type PropsWithChildren, useContext } from 'react'
+import { useAuth } from '../AuthContext/AuthContext'; 
 import { useDeckContext } from '../DeckContext/DeckContext';
 import { STARTING_HEALTH, STARTING_MONEY, STARTING_TURN } from '../../constants/game';
 import { PlayersContextType, playersReducer } from './Players'
@@ -18,21 +19,21 @@ type GameContextType = {
 
 const GameContext = createContext<GameContextType | null>(null);
 
-
 const GameProvider: React.FC<PropsWithChildren> = ({ children }) => {
+    const player_name = useAuth().user?.username ?? 'TinG';
     const deck = useDeckContext().deckContext.deck;
 
     // players
     const [players, playersDispatch] = useReducer(playersReducer, {
         player: {
-            name: "TinG",
+            name: player_name,
             health: STARTING_HEALTH,
             money: STARTING_MONEY,
             turn: STARTING_TURN,
             artifacts: []
         },
         opponent: {
-            name: "TinG hater",
+            name: "TinG hater", // TODO: all this will change obv
             health: STARTING_HEALTH,
             money: STARTING_MONEY,
             turn: STARTING_TURN,
@@ -82,7 +83,6 @@ const GameProvider: React.FC<PropsWithChildren> = ({ children }) => {
     return <GameContext.Provider value={value}> {children} </GameContext.Provider>
 }
 
-
 const useGameContext = () => {
     const context = useContext(GameContext);
         
@@ -92,6 +92,5 @@ const useGameContext = () => {
         
     return context;
 }
-
 
 export { GameContext, GameProvider, useGameContext}

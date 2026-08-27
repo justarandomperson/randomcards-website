@@ -1,5 +1,6 @@
 import { ArtifactData } from "../../types/artifact";
 
+
 type Player = {
     name: string;
     health: number;
@@ -17,6 +18,8 @@ type PlayersContextType = {
     players: Players;
     dispatch: React.Dispatch<PlayersAction>;
 };
+
+export type { PlayersContextType }
 
 
 enum PlayersActionType {
@@ -37,57 +40,67 @@ type PlayersAction =
     | { type: PlayersActionType.REMOVE_MONEY; target: PlayersActionTarget.PLAYER | PlayersActionTarget.OPPONENT; amount: number }
     | { type: PlayersActionType.ADD_ARTIFACT; target: PlayersActionTarget.PLAYER | PlayersActionTarget.OPPONENT; artifact: ArtifactData}
 
+const endTurn = (state: Players, target: PlayersActionTarget, player: Player): Players => {
+    return {
+        ...state,
+        [target]: {
+            ...player,
+            turn: player.turn + 1
+        }
+    };
+}
+
+const addMoney = (state: Players, target: PlayersActionTarget, amount: number, player: Player): Players => {
+    return {
+        ...state,
+        [target]: {
+            ...player,
+            money: player.money + amount
+        }
+    }
+}
+
+const removeMoney = (state: Players, target: PlayersActionTarget, amount: number, player: Player): Players => {
+    return {
+        ...state,
+        [target]: {
+            ...player,
+            money: player.money - amount
+        }
+    }
+}
+
+const addArtifact = (state: Players, target: PlayersActionTarget, artifact: ArtifactData, player: Player): Players => {
+    return {
+        ...state,
+        [target]: {
+            ...player,
+            artifacts: [...player.artifacts, artifact]
+        }
+    }
+}
+
+export { PlayersActionType, PlayersActionTarget }
 
 
-const playersReducer = (state: Players, action: PlayersAction ) => {
+const playersReducer = (state: Players, action: PlayersAction): Players => {
     const player = state[action.target];
 
     switch (action.type) {
-        case PlayersActionType.END_TURN: {
-            return {
-                ...state,
-                [action.target]: {
-                    ...player,
-                    turn: player.turn + 1
-                }
-            };
-        }
+        case PlayersActionType.END_TURN: 
+            return endTurn(state, action.target, player);
 
-        case PlayersActionType.ADD_MONEY: {
-            return {
-                ...state,
-                [action.target]: {
-                    ...player,
-                    money: player.money + action.amount
-                }
-            }
-        }
+        case PlayersActionType.ADD_MONEY:
+            return addMoney(state, action.target, action.amount, player);
 
-        case PlayersActionType.REMOVE_MONEY: {
-            return {
-                ...state,
-                [action.target]: {
-                    ...player,
-                    money: player.money - action.amount
-                }
-            }
-        }
+        case PlayersActionType.REMOVE_MONEY: 
+            return removeMoney(state, action.target, action.amount, player);
 
-        case PlayersActionType.ADD_ARTIFACT: {
-            return {
-                ...state,
-                [action.target]: {
-                    ...player,
-                    artifacts: [...player.artifacts, action.artifact]
-                }
-            }
-        }
+        case PlayersActionType.ADD_ARTIFACT:
             
         default:
             throw new Error('playersReducer does not have this type. ');
     }
 }
 
-
-export type { PlayersContextType }
-export { PlayersActionType, PlayersActionTarget, playersReducer };
+export { playersReducer }

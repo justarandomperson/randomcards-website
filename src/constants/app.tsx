@@ -1,3 +1,2 @@
-const GAMEPAGE_PATH = "/game";
+export const GAMEPAGE_PATH = "/game";
 
-export { GAMEPAGE_PATH }

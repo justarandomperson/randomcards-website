@@ -90,6 +90,8 @@ const useDeckContext = () => {
     return context;
 }
 
+export { DeckContext, DeckProvider, useDeckContext}
+
 
 enum DeckActionType {
     ADD_CARD = 'ADD_CARD',
@@ -100,64 +102,76 @@ type DeckAction =
     | { type: DeckActionType.ADD_CARD; card: UnitData | SpellData }
     | { type: DeckActionType.REMOVE_CARD; card: UnitData | SpellData }
 
+const addCard = (state: DeckState, card: UnitData | SpellData): DeckState => {
+    if (card.type === 'unit') {
+        if (isUnitsDeckFull(state.deck)) return state;
 
-const DeckReducer = (state: DeckState, action: DeckAction) => {
+        return {
+            ...state,
+            storage: {
+                ...state.storage,
+                units: state.storage.units.filter(u => u.instanceId !== card.instanceId)
+            },
+            deck: {
+                ...state.deck,
+                units: [...state.deck.units, card]
+            }
+        };
+    } else {
+        if (isSpellsDeckFull(state.deck)) return state;
+
+        return {
+            ...state,
+            storage: {
+                ...state.storage,
+                spells: state.storage.spells.filter(s => s.instanceId !== card.instanceId)
+            },
+            deck: {
+                ...state.deck,
+                spells: [...state.deck.spells, card]
+            }
+        };
+    }
+}
+
+const removeCard = (state: DeckState, card: UnitData | SpellData): DeckState => {
+    if (card.type === 'unit') {
+        return {
+            ...state,
+            deck: {
+                ...state.deck,
+                units: state.deck.units.filter(u => u.instanceId !== card.instanceId)
+            },
+            storage: {
+                ...state.storage,
+                units: [...state.storage.units, card]
+            }
+        };
+    } else {
+        return {
+            ...state,
+            deck: {
+                ...state.deck,
+                spells: state.deck.spells.filter(s => s.instanceId !== card.instanceId)
+            },
+            storage: {
+                ...state.storage,
+                spells: [...state.storage.spells, card]
+            }
+        };
+    }
+}
+
+export { DeckActionType }
+
+
+const DeckReducer = (state: DeckState, action: DeckAction): DeckState => {
     switch (action.type) {
-        case DeckActionType.ADD_CARD: {
-            if (action.card.type === 'unit') {
-                return {
-                    ...state,
-                    storage: {
-                        ...state.storage,
-                        units: state.storage.units.filter(u => u.instanceId !== action.card.instanceId)
-                    },
-                    deck: {
-                        ...state.deck,
-                        units: [...state.deck.units, action.card]
-                    }
-                };
-            } else {
-                return {
-                    ...state,
-                    storage: {
-                        ...state.storage,
-                        spells: state.storage.spells.filter(s => s.instanceId !== action.card.instanceId)
-                    },
-                    deck: {
-                        ...state.deck,
-                        spells: [...state.deck.spells, action.card]
-                    }
-                };
-            }
-        }
+        case DeckActionType.ADD_CARD:
+            return addCard(state, action.card);
 
-        case DeckActionType.REMOVE_CARD: {
-            if (action.card.type === 'unit') {
-                return {
-                    ...state,
-                    deck: {
-                        ...state.deck,
-                        units: state.deck.units.filter(u => u.instanceId !== action.card.instanceId)
-                    },
-                    storage: {
-                        ...state.storage,
-                        units: [...state.storage.units, action.card]
-                    }
-                };
-            } else {
-                return {
-                    ...state,
-                    deck: {
-                        ...state.deck,
-                        spells: state.deck.spells.filter(s => s.instanceId !== action.card.instanceId)
-                    },
-                    storage: {
-                        ...state.storage,
-                        spells: [...state.storage.spells, action.card]
-                    }
-                };
-            }
-        }
+        case DeckActionType.REMOVE_CARD:
+            return removeCard(state, action.card);
 
         default:
             throw new Error('DeckReducer does not have this type. ');
@@ -165,5 +179,12 @@ const DeckReducer = (state: DeckState, action: DeckAction) => {
 }
 
 
-export { DeckActionType }
-export { DeckContext, DeckProvider, useDeckContext}
+const isUnitsDeckFull = (deck: Deck): boolean => {
+    return deck.units.length >= UNITS_IN_DECK;
+}
+
+const isSpellsDeckFull = (deck: Deck): boolean => {
+    return deck.spells.length >= SPELLS_IN_DECK;
+}
+
+export { isUnitsDeckFull, isSpellsDeckFull }

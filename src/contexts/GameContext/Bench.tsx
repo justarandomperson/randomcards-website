@@ -10,6 +10,8 @@ type BenchContextType = {
     dispatch: React.Dispatch<BenchAction>;
 };
 
+export type { BenchContextType }
+
 
 enum BenchActionType {
     MOVE_CARD = 'MOVE_CARD',
@@ -21,33 +23,40 @@ type BenchAction =
     | { type: BenchActionType.REMOVE_CARD; index: number }
 
 
-const benchReducer = (state: Bench, action: BenchAction ) => {
+const moveCard = (state: Bench, from: number, to: number): Bench => {
+    const newCards = [...state.cards];
+    [newCards[from], newCards[to]] = [newCards[to], newCards[from]];
+
+    return {
+        ...state,
+        cards: newCards
+    };
+}
+
+const removeCard = (state: Bench, index: number): Bench => {
+    const newCards = [...state.cards];
+    newCards[index] = null;
+
+    return {
+        ...state,
+        cards: newCards
+    };
+}
+
+export { BenchActionType }
+
+
+const benchReducer = (state: Bench, action: BenchAction): Bench => {
     switch (action.type) {
-        case BenchActionType.MOVE_CARD: {
-            const newCards = [...state.cards];
-            [newCards[action.from], newCards[action.to]] = [newCards[action.to], newCards[action.from]];
+        case BenchActionType.MOVE_CARD: 
+            return moveCard(state, action.from, action.to);
 
-            return {
-                ...state,
-                cards: newCards
-            };
-        }
-
-        case BenchActionType.REMOVE_CARD: {
-            const newCards = [...state.cards];
-            newCards[action.index] = null;
-
-            return {
-                ...state,
-                cards: newCards
-            };
-        }
+        case BenchActionType.REMOVE_CARD:
+            return removeCard(state, action.index);
 
         default:
             throw new Error('benchReducer does not have this type. ');
     }
 }
 
-
-export type { BenchContextType }
-export { BenchActionType, benchReducer }
+export { benchReducer }
