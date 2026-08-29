@@ -1,89 +1,50 @@
-import { useReducer, createContext, type PropsWithChildren, useContext } from 'react'
-import { useAuth } from '../AuthContext/AuthContext'; 
-import { useDeckContext } from '../DeckContext/DeckContext';
-import { STARTING_HEALTH, STARTING_MONEY, STARTING_TURN } from '../../constants/game';
-import { PlayersContextType, playersReducer } from './Players'
-import { ShopContextType, shopReducer } from './Shop'
-import { HandContextType, handReducer } from './Hand'
-import { BenchContextType, benchReducer } from './Bench'
-import { BoardContextType, boardReducer } from './Board'
+import { ReactNode, createContext, useContext, useState } from "react";
+import { ClientGameState, GameAction, GameActionType } from './types'
+import { getPlaceholderGameState } from "../../shared/functions/game";
 
 
 type GameContextType = {
-    playersContext: PlayersContextType
-    shopContext: ShopContextType
-    handContext: HandContextType
-    benchContext: BenchContextType
-    boardContext: BoardContextType
+    state: ClientGameState,
+    isConnected: boolean,
+    sendAction: (action: GameAction) => void
 }
 
-const GameContext = createContext<GameContextType | null>(null);
+const GameContext = createContext<GameContextType>({
+    state: getPlaceholderGameState(),
+    isConnected: false,
+    sendAction: () => {}
+});
 
-const GameProvider: React.FC<PropsWithChildren> = ({ children }) => {
-    const player_name = useAuth().user?.username ?? 'TinG';
-    const deck = useDeckContext().deckContext.deck;
 
-    // players
-    const [players, playersDispatch] = useReducer(playersReducer, {
-        player: {
-            name: player_name,
-            health: STARTING_HEALTH,
-            money: STARTING_MONEY,
-            turn: STARTING_TURN,
-            artifacts: []
-        },
-        opponent: {
-            name: "TinG hater", // TODO: all this will change obv
-            health: STARTING_HEALTH,
-            money: STARTING_MONEY,
-            turn: STARTING_TURN,
-            artifacts: []
-        }
-    });
+type GameProviderProps = {
+    // TODO: add matchId and stuff
+    // matchId: number ,
+    children: ReactNode
+}
 
-    // shop
-    const [shop, shopDispatch] = useReducer(shopReducer, {
-        artifacts: [
-            { id: 1, name: "Ember Core", effect: "...", cost: 1 },
-            { id: 9, name: "Lucas ball", effect: "...", cost: 9 },
-            { id: 2, name: "Frost Sigil", effect: "...",  cost: 12 },
-            { id: 3, name: "Iron Bulwark", effect: "...", cost: 0 },
-            { id: 6, name: "the win", effect: "...", cost: 7 }
-        ]
-    })
 
-    // hand
-    const drawPile = deck.spells
-    const [hand, handDispatch] = useReducer(handReducer, {
-        cardsInHand: [],
-        cardsInDrawPile: drawPile
-    })
+export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
+    const [state, setState] = useState<ClientGameState>(getPlaceholderGameState());
+    const [isConnected, setIsConnected] = useState(false);
 
-    // bench
-    const cardsInBench = deck.units
-    const [bench, benchDispatch] = useReducer(benchReducer, {
-        cards: cardsInBench
-    })
+    // TODO: connect to socket, set up state and match id
 
-    // board
-    const [board, boardDispatch] = useReducer(boardReducer, {
-        playerCards: [null, null, null, null],
-        opponentCards: [null, null, null, null]
-    })
+    const sendAction = (action: GameAction) => {
+        // TODO: call server to run the intended action and use it
 
-    // value
-    const value = {
-        playersContext: {players, dispatch: playersDispatch},
-        shopContext: {shop, dispatch: shopDispatch},
-        handContext: {hand, dispatch: handDispatch},
-        benchContext: {bench, dispatch: benchDispatch},
-        boardContext: {board, dispatch: boardDispatch}
+        console.log("sendAction:", action);
     }
 
-    return <GameContext.Provider value={value}> {children} </GameContext.Provider>
+    return (
+        <GameContext.Provider value={{ state, isConnected, sendAction }}>
+            {children}
+        </GameContext.Provider>
+    );
+
 }
 
-const useGameContext = () => {
+
+export const useGameContext = () => {
     const context = useContext(GameContext);
         
     if (!context) {
@@ -93,4 +54,25 @@ const useGameContext = () => {
     return context;
 }
 
-export { GameContext, GameProvider, useGameContext}
+
+export const useGameActions = () => {
+    const { sendAction } = useGameContext();
+
+    return {
+        placeUnit: (instanceId: string, boardIndex: number) => sendAction(
+            { type: GameActionType.PLACE_UNIT, instanceId, boardIndex }
+        ),
+
+        playSpell: (instanceId: string) => sendAction(
+            { type: GameActionType.PLAY_SPELL, instanceId }
+        ),
+
+        buyArtifact: (instanceId: number) => sendAction(
+            { type: GameActionType.BUY_ARTIFACT, instanceId }
+        ),
+
+        endTurn: () => sendAction(
+            { type: GameActionType.END_TURN }
+        )
+    };
+};

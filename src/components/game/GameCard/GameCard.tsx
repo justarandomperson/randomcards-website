@@ -1,6 +1,6 @@
 import { useDraggable } from '@dnd-kit/core'
-import { UnitData, SpellData } from '../../../types/card'
-import { CardLocation } from '../../../types/card'
+import { UnitData, SpellData } from '../../../shared/types/card'
+import { CardLocation } from '../../../shared/types/card'
 import Card from '../Card/Card'
 
 

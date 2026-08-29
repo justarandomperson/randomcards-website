@@ -1,4 +1,4 @@
-import { STARTING_HEALTH } from "../../constants/game";
+import { STARTING_HEALTH } from "../../../shared/constants/game";
 import Styles from './Health.module.css'
 
 

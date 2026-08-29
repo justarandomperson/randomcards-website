@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { DndContext, DragEndEvent, DragStartEvent, DragOverlay, rectIntersection } from '@dnd-kit/core';
-import { CardLocation, DraggedCard } from '../../../types/card'
+import { CardLocation, CardType, DraggedCard } from '../../../shared/types/card'
 import Bench from '../Bench/Bench'
 import Board from '../Board/Board'
 import PlayerBar from '../PlayerBar/PlayerBar'
@@ -9,13 +9,12 @@ import Hand from '../Hand/Hand'
 import DrawPile from '../DrawPile/DrawPile'
 import GameCard from '../GameCard/GameCard'
 import Styles from './GameLayout.module.css'
-import { PlayersActionTarget } from '../../../contexts/GameContext/Players';
-import { useGameLogic } from '../../../contexts/GameContext/GameLogic';
+import { useGameActions } from '../../../contexts/GameContext/GameContext';
 
 
 const GameLayout: React.FC = ({ }) => {
     const [activeCardDrag, setActiveCardDrag] = useState<DraggedCard | null>(null);
-    const { placeUnit, playSpell } = useGameLogic();
+    const { placeUnit, playSpell } = useGameActions();
 
     const handleDragCardStart = (event: DragStartEvent) => {
         setActiveCardDrag(event.active.data.current as DraggedCard);
@@ -32,12 +31,12 @@ const GameLayout: React.FC = ({ }) => {
         const card = active.data.current as DraggedCard;
         const to = over.data.current as CardLocation;
 
-        if (card.cardData.type === 'unit') {
-            placeUnit(PlayersActionTarget.PLAYER, card, to);
+        if (card.cardData.type === CardType.UNIT) {
+            placeUnit(card.cardData.instanceId, to.index);
         }
 
-        else if (card.cardData.type === 'spell') {
-            playSpell(PlayersActionTarget.PLAYER, card);
+        else if (card.cardData.type === CardType.SPELL) {
+            playSpell(card.cardData.instanceId);
         }
     }
 

@@ -1,17 +1,19 @@
 import { useDeckContext } from '../../../contexts/DeckContext/DeckContext'
-import { CardLocation } from '../../../types/decks'
+import { CardType } from '../../../shared/types/card'
+import { CardLocation } from '../../../shared/types/decks'
 import DecksCard from '../DecksCard/DecksCard'
 import Styles from './CardList.module.css'
 
 
 type Props = {
     location: CardLocation,
-    type: 'units' | 'spells'
+    type: CardType
 }
 
 
 const CardList: React.FC<Props> = ({ location, type }) => {
-    const items = useDeckContext().deckContext[location][type]
+    const deckStateLocation = useDeckContext().state[location];
+    const items = type === CardType.UNIT ? deckStateLocation.units : deckStateLocation.spells;
 
     return (
         <ul className={Styles.card_list}>

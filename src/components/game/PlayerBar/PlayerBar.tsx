@@ -1,9 +1,5 @@
-import { useGameContext } from '../../../contexts/GameContext/GameContext'
-import { useGameLogic } from '../../../contexts/GameContext/GameLogic'
-import { PlayersActionType, PlayersActionTarget } from '../../../contexts/GameContext/Players'
-import { ShopActionType } from '../../../contexts/GameContext/Shop'
-import { TURN_NUMBER_MONEY_MULT } from '../../../constants/game'
-import Health from '../../Health/Health'
+import { useGameActions, useGameContext } from '../../../contexts/GameContext/GameContext'
+import Health from '../Health/Health'
 import Styles from './PlayerBar.module.css'
 
 type Props = {
@@ -12,28 +8,28 @@ type Props = {
 
 
 const PlayerBar: React.FC<Props> = ({ isOpponent }) => {
-    const players = useGameContext().playersContext.players;
+    const players = useGameContext().state.players;
     const player = isOpponent ? players.opponent : players.player;
-    const { endTurn } = useGameLogic();
+    const { endTurn } = useGameActions();
 
     return (
         <div className={Styles.player_bar}>
             <div>
-                <span className={Styles.player_name}>{player.name}</span>
-                <span>{`Artifacts: ${player.artifacts.length}`}</span>
+                <span className={Styles.player_name}>{player.data.name}</span>
+                <span>{`Artifacts: ${player.data.artifacts.length}`}</span>
             </div>
 
             <div className={Styles.player_data_container}>
-                <Health health={player.health}/>
-                <p className={Styles.money}>{`${player.money}$`}</p>
+                <Health health={player.data.health}/>
+                <p className={Styles.money}>{`${player.data.money}$`}</p>
             </div>
 
             <div className={Styles.turn_container}>
-                <p>Turn {player.turn}</p>
+                <p>Turn {player.data.turn}</p>
 
                 {!isOpponent &&
                     <div className={Styles.end_turn_btn_container}>
-                        <button onClick={() => endTurn(isOpponent)}>
+                        <button onClick={endTurn}>
                             End Turn
                         </button>
                     </div>    

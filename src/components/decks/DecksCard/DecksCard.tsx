@@ -1,7 +1,8 @@
-import { useDeckContext, DeckActionType } from '../../../contexts/DeckContext/DeckContext'
-import { isUnitsDeckFull, isSpellsDeckFull } from '../../../contexts/DeckContext/DeckContext'
-import { UnitData, SpellData } from '../../../types/card'
-import { CardLocation } from '../../../types/decks'
+import { useDeckContext } from '../../../contexts/DeckContext/DeckContext'
+import { DeckActionType } from '../../../contexts/DeckContext/reducer'
+import { isDeckTypeFull } from '../../../shared/functions/decks'
+import { UnitData, SpellData } from '../../../shared/types/card'
+import { CardLocation } from '../../../shared/types/decks'
 import Card from '../../game/Card/Card'
 import Styles from './DecksCard.module.css'
 
@@ -13,7 +14,7 @@ type Props = {
 
 
 const DecksCard: React.FC<Props> = ({ cardData, location }) => {
-    const { deckContext, dispatch } = useDeckContext();
+    const { state, dispatch } = useDeckContext();
 
     const handleChangeLocation = () => {
         if (location === 'deck') {
@@ -31,16 +32,7 @@ const DecksCard: React.FC<Props> = ({ cardData, location }) => {
         }
     }
 
-    const isDeckTypeFull = (cardType: 'unit' | 'spell' ): boolean => {
-        if (cardType === 'unit') {
-            return isUnitsDeckFull(deckContext.deck);
-        }
-
-        return isSpellsDeckFull(deckContext.deck);
-    }
-
-    const isDisabled = (location === 'storage' && isDeckTypeFull(cardData.type));
-
+    const isDisabled = (location === 'storage' && isDeckTypeFull(cardData.type, state.deck));
 
     return (
         <button onClick={handleChangeLocation} disabled={isDisabled} className={!isDisabled ? Styles.decks_card : undefined}>

@@ -1,14 +1,13 @@
 import { useGameContext } from '../../../contexts/GameContext/GameContext'
-import { HandActionType } from '../../../contexts/GameContext/Hand'
 import Styles from './DrawPile.module.css'
 
 
 const DrawPile: React.FC = () => {
-    const { hand, dispatch } = useGameContext().handContext;
+    const { drawPile } = useGameContext().state.players.player.cards;
 
     return (
         <div className={Styles.draw_pile}>
-            <p>{`${hand.cardsInDrawPile.length} Cards`}</p>
+            <p>{`${drawPile.length} Cards`}</p>
         </div>
     );
 }

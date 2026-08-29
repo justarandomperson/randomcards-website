@@ -1,0 +1,1 @@
+export const GAMEPAGE_PATH = "/game";

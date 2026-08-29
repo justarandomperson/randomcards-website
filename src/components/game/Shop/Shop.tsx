@@ -4,7 +4,7 @@ import Styles from './Shop.module.css'
 
 
 const Shop: React.FC = () => {
-    const shop = useGameContext().shopContext.shop;
+    const shop = useGameContext().state.shop;
 
     return (
         <div className={Styles.shop}>
@@ -12,7 +12,7 @@ const Shop: React.FC = () => {
             {shop.artifacts.map((artifact, index) => (
 
                 <div className={Styles.shop_item} key={index}>
-                    <Artifact artifactData={artifact} index={index} />
+                    <Artifact artifactData={artifact}/>
                     <p className={Styles.artifact_cost}>{`${artifact.cost}$`}</p>
                 </div>
                 

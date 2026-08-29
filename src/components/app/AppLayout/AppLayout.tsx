@@ -1,5 +1,5 @@
 import { Outlet, useLocation } from "react-router-dom"
-import { GAMEPAGE_PATH } from "../../../constants/app"
+import { GAMEPAGE_PATH } from "../../../shared/constants/app"
 import Topbar from "../Topbar/Topbar"
 import styles from "./AppLayout.module.css"
 

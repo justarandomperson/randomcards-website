@@ -1,4 +1,4 @@
-import { UnitData, SpellData } from '../../../types/card'
+import { UnitData, SpellData, CardType } from '../../../shared/types/card'
 import cardImg from './Card.png';
 import Styles from './Card.module.css'
 
@@ -27,7 +27,7 @@ const Card: React.FC<Props> = ({ cardData }) => {
             </div>
 
             <div className={Styles.footer}>
-                {cardData.type === 'unit' && 
+                {cardData.type === CardType.UNIT && 
                     <>
                         <span className={Styles.atk}>{cardData.atk}</span>
                         <span className={Styles.hp}>{cardData.hp}</span>

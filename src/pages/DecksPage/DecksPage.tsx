@@ -1,11 +1,12 @@
 import CardList from '../../components/decks/CardList/CardList'
 import { useDeckContext } from '../../contexts/DeckContext/DeckContext';
-import { UNITS_IN_DECK, SPELLS_IN_DECK } from '../../constants/game';
+import { UNITS_IN_DECK, SPELLS_IN_DECK } from '../../shared/constants/game';
+import { CardType } from '../../shared/types/card';
 import Styles from './DecksPage.module.css'
 
 
 const DecksPage: React.FC = ({ }) => {
-    const deck = useDeckContext().deckContext.deck
+    const deck = useDeckContext().state.deck
 
     return (
         <div>
@@ -18,7 +19,7 @@ const DecksPage: React.FC = ({ }) => {
                         <h3>Units</h3>
                         <p>{`${deck.units.length}/${UNITS_IN_DECK}`}</p>
                     </div>
-                    <CardList location='deck' type='units'/>
+                    <CardList location='deck' type={CardType.UNIT}/>
                 </div>
 
                 <div>
@@ -26,7 +27,7 @@ const DecksPage: React.FC = ({ }) => {
                         <h3>Spells</h3>
                         <p>{`${deck.spells.length}/${SPELLS_IN_DECK}`}</p>
                     </div>
-                    <CardList location='deck' type='spells'/>
+                    <CardList location='deck' type={CardType.SPELL}/>
                 </div>
             </div>
 
@@ -35,12 +36,12 @@ const DecksPage: React.FC = ({ }) => {
 
                 <div>
                     <h3>Units</h3>
-                    <CardList location='storage' type='units'/>         
+                    <CardList location='storage' type={CardType.UNIT}/>         
                 </div>
 
                 <div>
                     <h3>Spells</h3>
-                    <CardList location='storage' type='spells'/>
+                    <CardList location='storage' type={CardType.SPELL}/>
                 </div>
             </div>
 

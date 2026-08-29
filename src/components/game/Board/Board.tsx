@@ -1,6 +1,6 @@
 import { useGameContext } from '../../../contexts/GameContext/GameContext'
-import { MAX_CARDS_PER_BOARD_ROW } from '../../../constants/game'
-import { DraggedCard } from '../../../types/card'
+import { MAX_CARDS_PER_BOARD_ROW } from '../../../shared/constants/game'
+import { DraggedCard } from '../../../shared/types/card'
 import CardSlot from '../CardSlot/CardSlot.js'
 import Styles from './Board.module.css'
 
@@ -11,21 +11,21 @@ type Props = {
 
 
 const Board: React.FC<Props> = ({ activeCardDrag }) => {
-    const board = useGameContext().boardContext.board;
+    const board = useGameContext().state.board;
 
     return (
         <div className={activeCardDrag ? Styles.board_opacitated : Styles.board}>
 
             <div className={Styles.opponent_row}>
                 {Array.from({ length: MAX_CARDS_PER_BOARD_ROW }).map((_, i) => (
-                    <CardSlot cardData={board.opponentCards[i]} location={{ insideOf: 'board', index: i }}
+                    <CardSlot cardData={board.opponent[i]} location={{ insideOf: 'board', index: i }}
                     activeCardDrag={null} key={i}/>
                 ))}
             </div>
 
             <div className={Styles.user_row}>
                 {Array.from({ length: MAX_CARDS_PER_BOARD_ROW }).map((_, i) => (
-                    <CardSlot cardData={board.playerCards[i]} location={{ insideOf: 'board', index: i }}
+                    <CardSlot cardData={board.player[i]} location={{ insideOf: 'board', index: i }}
                     activeCardDrag={activeCardDrag} key={i}/>
                 ))}
             </div>
