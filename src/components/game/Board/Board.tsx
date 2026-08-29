@@ -1,6 +1,7 @@
 import { useGameContext } from '../../../contexts/GameContext/GameContext'
 import { MAX_CARDS_PER_BOARD_ROW } from '../../../shared/constants/game'
-import { DraggedCard } from '../../../shared/types/card'
+import { CardZone, DraggedCard } from '../../../shared/types/card'
+import Card from '../Card/Card'
 import CardSlot from '../CardSlot/CardSlot.js'
 import Styles from './Board.module.css'
 
@@ -18,14 +19,14 @@ const Board: React.FC<Props> = ({ activeCardDrag }) => {
 
             <div className={Styles.opponent_row}>
                 {Array.from({ length: MAX_CARDS_PER_BOARD_ROW }).map((_, i) => (
-                    <CardSlot cardData={board.opponent[i]} location={{ insideOf: 'board', index: i }}
+                    <CardSlot cardData={board.opponent[i]} location={{ insideOf: CardZone.BOARD, index: i }}
                     activeCardDrag={null} key={i}/>
                 ))}
             </div>
 
             <div className={Styles.user_row}>
                 {Array.from({ length: MAX_CARDS_PER_BOARD_ROW }).map((_, i) => (
-                    <CardSlot cardData={board.player[i]} location={{ insideOf: 'board', index: i }}
+                    <CardSlot cardData={board.player[i]} location={{ insideOf: CardZone.BOARD, index: i }}
                     activeCardDrag={activeCardDrag} key={i}/>
                 ))}
             </div>

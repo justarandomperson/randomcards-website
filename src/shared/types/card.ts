@@ -24,7 +24,11 @@ export type SpellData = {
 
 
 // drag and drop
-export type CardZone = 'hand' | 'bench' | 'board';
+export enum CardZone {
+    HAND = 'hand',
+    BENCH = 'bench',
+    BOARD = 'board'
+}
 
 export type CardLocation = {
     insideOf: CardZone;
