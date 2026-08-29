@@ -1,4 +1,11 @@
 .card_list {
     display: flex;
     gap: 20px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+
+    flex-wrap: wrap;
+
+    overflow: hidden;
 }

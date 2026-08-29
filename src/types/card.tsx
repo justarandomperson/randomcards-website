@@ -1,9 +1,9 @@
 type UnitData = {
     instanceId: string;
     name: string;
-    hp: string;
-    atk: string;
-    cost: string;
+    hp: number;
+    atk: number;
+    cost: number;
     effect: string;
     type: 'unit';
 }
@@ -11,7 +11,7 @@ type UnitData = {
 type SpellData = {
     instanceId: string;
     name: string;
-    cost: string;
+    cost: number;
     effect: string;
     type: 'spell';
 }

@@ -3,6 +3,7 @@ import { isUnitsDeckFull, isSpellsDeckFull } from '../../../contexts/DeckContext
 import { UnitData, SpellData } from '../../../types/card'
 import { CardLocation } from '../../../types/decks'
 import Card from '../../game/Card/Card'
+import Styles from './DecksCard.module.css'
 
 
 type Props = {
@@ -12,8 +13,8 @@ type Props = {
 
 
 const DecksCard: React.FC<Props> = ({ cardData, location }) => {
-    const { deckContext, dispatch } = useDeckContext()
-    
+    const { deckContext, dispatch } = useDeckContext();
+
     const handleChangeLocation = () => {
         if (location === 'deck') {
             dispatch({ 
@@ -38,8 +39,11 @@ const DecksCard: React.FC<Props> = ({ cardData, location }) => {
         return isSpellsDeckFull(deckContext.deck);
     }
 
+    const isDisabled = (location === 'storage' && isDeckTypeFull(cardData.type));
+
+
     return (
-        <button onClick={handleChangeLocation} disabled={location === 'storage' && isDeckTypeFull(cardData.type)}>
+        <button onClick={handleChangeLocation} disabled={isDisabled} className={!isDisabled ? Styles.decks_card : undefined}>
             <Card cardData={cardData}/>
         </button>
     );

@@ -1,9 +1,10 @@
 import { useGameContext } from '../../../contexts/GameContext/GameContext'
+import { useGameLogic } from '../../../contexts/GameContext/GameLogic'
 import { PlayersActionType, PlayersActionTarget } from '../../../contexts/GameContext/Players'
 import { ShopActionType } from '../../../contexts/GameContext/Shop'
 import { TURN_NUMBER_MONEY_MULT } from '../../../constants/game'
+import Health from '../../Health/Health'
 import Styles from './PlayerBar.module.css'
-
 
 type Props = {
     isOpponent: boolean
@@ -11,25 +12,9 @@ type Props = {
 
 
 const PlayerBar: React.FC<Props> = ({ isOpponent }) => {
-    const { playersContext, shopContext } = useGameContext();
-    const player = isOpponent ? playersContext.players.opponent : playersContext.players.player;
-
-    const endTurn = () => {
-        playersContext.dispatch({
-            type: PlayersActionType.END_TURN,
-            target: isOpponent ? PlayersActionTarget.OPPONENT : PlayersActionTarget.PLAYER
-        })
-
-        playersContext.dispatch({
-            type: PlayersActionType.ADD_MONEY,
-            target: isOpponent ? PlayersActionTarget.OPPONENT : PlayersActionTarget.PLAYER,
-            amount: TURN_NUMBER_MONEY_MULT * (player.turn + 1) // increment player.turn to match new turn
-        })
-
-        shopContext.dispatch({
-            type: ShopActionType.REFILL_SHOP
-        })
-    }
+    const players = useGameContext().playersContext.players;
+    const player = isOpponent ? players.opponent : players.player;
+    const { endTurn } = useGameLogic();
 
     return (
         <div className={Styles.player_bar}>
@@ -39,7 +24,7 @@ const PlayerBar: React.FC<Props> = ({ isOpponent }) => {
             </div>
 
             <div className={Styles.player_data_container}>
-                <p className={Styles.health}>{player.health}</p>
+                <Health health={player.health}/>
                 <p className={Styles.money}>{`${player.money}$`}</p>
             </div>
 
@@ -48,7 +33,7 @@ const PlayerBar: React.FC<Props> = ({ isOpponent }) => {
 
                 {!isOpponent &&
                     <div className={Styles.end_turn_btn_container}>
-                        <button onClick={endTurn}>
+                        <button onClick={() => endTurn(isOpponent)}>
                             End Turn
                         </button>
                     </div>    

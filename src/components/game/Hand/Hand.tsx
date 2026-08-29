@@ -10,7 +10,7 @@ const Hand: React.FC = ({ }) => {
         <>
             <div className={Styles.hand}>
                 {hand.cardsInHand.map((card, i) => (
-                    <GameCard cardData={card} location={{ insideOf: 'hand', index: i }} />
+                    <GameCard cardData={card} location={{ insideOf: 'hand', index: i }} key={i} />
                 ))}
             </div>
         </>

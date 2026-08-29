@@ -8,11 +8,11 @@ type Props = {
 }
 
 
-
 const Card: React.FC<Props> = ({ cardData }) => {
 
     return (
         <div className={Styles.card}>
+
             <div className={Styles.header}>
                 <span className={Styles.name}>{cardData.name}</span>
                 <span className={Styles.cost}>{cardData.cost}</span>
@@ -34,6 +34,7 @@ const Card: React.FC<Props> = ({ cardData }) => {
                     </>
                 }
             </div>
+
         </div>
     );
 }

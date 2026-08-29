@@ -1,10 +1,5 @@
 import { useState } from 'react'
-import { DndContext, DragEndEvent, DragStartEvent, DragOverEvent, DragOverlay, rectIntersection } from '@dnd-kit/core';
-import { useAuth } from '../../../contexts/AuthContext/AuthContext'; 
-import { useGameContext } from '../../../contexts/GameContext/GameContext'
-import { BenchActionType } from '../../../contexts/GameContext/Bench'
-import { HandActionType } from '../../../contexts/GameContext/Hand'
-import { BoardActionType } from '../../../contexts/GameContext/Board'
+import { DndContext, DragEndEvent, DragStartEvent, DragOverlay, rectIntersection } from '@dnd-kit/core';
 import { CardLocation, DraggedCard } from '../../../types/card'
 import Bench from '../Bench/Bench'
 import Board from '../Board/Board'
@@ -14,14 +9,13 @@ import Hand from '../Hand/Hand'
 import DrawPile from '../DrawPile/DrawPile'
 import GameCard from '../GameCard/GameCard'
 import Styles from './GameLayout.module.css'
+import { PlayersActionTarget } from '../../../contexts/GameContext/Players';
+import { useGameLogic } from '../../../contexts/GameContext/GameLogic';
 
 
 const GameLayout: React.FC = ({ }) => {
-    const { board, dispatch: boardDispatch } = useGameContext().boardContext
-    const handDispatch = useGameContext().handContext.dispatch
-    const benchDispatch = useGameContext().benchContext.dispatch
-
     const [activeCardDrag, setActiveCardDrag] = useState<DraggedCard | null>(null);
+    const { placeUnit, playSpell } = useGameLogic();
 
     const handleDragCardStart = (event: DragStartEvent) => {
         setActiveCardDrag(event.active.data.current as DraggedCard);
@@ -35,32 +29,15 @@ const GameLayout: React.FC = ({ }) => {
             return;
         }
 
-        const from = active.data.current as DraggedCard;
+        const card = active.data.current as DraggedCard;
         const to = over.data.current as CardLocation;
 
-        // do the thing
-        if (from.cardData.type === 'spell') {
-            handDispatch({ 
-                type: HandActionType.REMOVE_CARD,
-                index: from.location.index
-            });
+        if (card.cardData.type === 'unit') {
+            placeUnit(PlayersActionTarget.PLAYER, card, to);
         }
 
-        else if (from.cardData.type === 'unit') {
-            if (board.playerCards[to.index] !== null) { // board slot is taken
-                return;
-            }
-            
-            benchDispatch({ 
-                type: BenchActionType.REMOVE_CARD,
-                index: from.location.index
-            });
-
-            boardDispatch({
-                type: BoardActionType.PLACE_CARD,
-                card: from.cardData,
-                index: to.index
-            });
+        else if (card.cardData.type === 'spell') {
+            playSpell(PlayersActionTarget.PLAYER, card);
         }
     }
 

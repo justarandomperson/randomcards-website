@@ -97,6 +97,7 @@ const playersReducer = (state: Players, action: PlayersAction): Players => {
             return removeMoney(state, action.target, action.amount, player);
 
         case PlayersActionType.ADD_ARTIFACT:
+            return addArtifact(state, action.target, action.artifact, player);
             
         default:
             throw new Error('playersReducer does not have this type. ');
@@ -104,3 +105,11 @@ const playersReducer = (state: Players, action: PlayersAction): Players => {
 }
 
 export { playersReducer }
+
+
+const isMoneySufficient = (moneyAvailable: number, cost: number): boolean => {
+    return moneyAvailable >= cost;
+}
+
+export { isMoneySufficient }
+

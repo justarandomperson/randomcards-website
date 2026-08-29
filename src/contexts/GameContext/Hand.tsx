@@ -41,10 +41,10 @@ const drawCard = (state: Hand): Hand => {
     };
 }
 
-const removeCard = (state: Hand, index: number): Hand => {
+const removeCard = (state: Hand, indexToRemove: number): Hand => {
     return {
         ...state,
-        cardsInHand: state.cardsInHand.filter((_, index) => index !== index)
+        cardsInHand: state.cardsInHand.filter((_, i) => i !== indexToRemove)
     }
 }
 

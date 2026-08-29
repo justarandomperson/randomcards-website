@@ -1,0 +1,4 @@
+.deck_row_header {
+    display: flex;
+    gap: 10px;
+}

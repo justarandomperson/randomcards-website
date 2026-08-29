@@ -15,22 +15,19 @@ export type { ShopContextType };
 
 
 enum ShopActionType {
-    BUY_ARTIFACT = 'BUY_ARTIFACT',
+    GET_ARTIFACT = 'GET_ARTIFACT',
     REFILL_SHOP = 'REFILL_SHOP'
 }
 
 type ShopAction =
-    | { type: ShopActionType.BUY_ARTIFACT; index: number; money_amount: number } 
+    | { type: ShopActionType.GET_ARTIFACT; index: number } 
     | { type: ShopActionType.REFILL_SHOP }
 
-const buyArtifact = (state: Shop, index: number, money_amount: number): Shop => {
-   const artifactToBuy = state.artifacts[index];
+const getArtifact = (state: Shop, index: number): Shop => {
+   const artifactToGet = state.artifacts[index];
 
-    if (artifactToBuy.id === 0) {
+    if (artifactToGet.id === 0) {
         return state; // id0 is an empty slot 
-    }
-    if (money_amount < artifactToBuy.cost) {
-        return state; // cant afford
     }
 
     const newArtifacts = [...state.artifacts] as Shop['artifacts'];
@@ -58,8 +55,8 @@ export {ShopActionType }
 
 const shopReducer = (state: Shop, action: ShopAction): Shop => {
     switch (action.type) {
-        case ShopActionType.BUY_ARTIFACT:
-            return buyArtifact(state, action.index, action.money_amount);
+        case ShopActionType.GET_ARTIFACT:
+            return getArtifact(state, action.index);
 
         case ShopActionType.REFILL_SHOP:
             return refillShop(state);

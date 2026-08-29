@@ -13,8 +13,7 @@ type Props = {
 const GameCard: React.FC<Props> = ({ cardData, location }) => {
     const isDraggable = location.insideOf !== 'board'; // board cards arent draggable
 
-    const { attributes, listeners, setNodeRef, isDragging } = useDraggable(
-        { 
+    const { attributes, listeners, setNodeRef, isDragging } = useDraggable({ 
             id: `${location.insideOf}-${location.index}`, 
             data: {cardData, location},
             disabled: !isDraggable

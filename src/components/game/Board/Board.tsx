@@ -12,7 +12,6 @@ type Props = {
 
 const Board: React.FC<Props> = ({ activeCardDrag }) => {
     const board = useGameContext().boardContext.board;
-    
 
     return (
         <div className={activeCardDrag ? Styles.board_opacitated : Styles.board}>

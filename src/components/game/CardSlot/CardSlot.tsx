@@ -15,8 +15,7 @@ type Props = {
 const CardSlot: React.FC<Props> = ({ cardData, location, activeCardDrag }) => {
     const isDroppable = location.insideOf === 'board'; // only board slots are droppable
 
-    const { setNodeRef, isOver } = useDroppable(
-        {
+    const { setNodeRef, isOver } = useDroppable({
             id: `${location.insideOf}-${location.index}`,
             data: location,
             disabled: !isDroppable
