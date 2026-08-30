@@ -1,6 +1,7 @@
-import { ReactNode, createContext, useContext, useState } from "react";
+import { ReactNode, createContext, useContext, useState, useEffect, useRef } from "react"
+import io, { Socket } from 'socket.io-client'
 import { ClientGameState, GameAction, GameActionType } from './types'
-import { getPlaceholderGameState } from "../../shared/functions/game";
+import { getPlaceholderGameState } from "../../shared/functions/game"
 
 
 type GameContextType = {
@@ -18,7 +19,7 @@ const GameContext = createContext<GameContextType>({
 
 type GameProviderProps = {
     // TODO: add matchId and stuff
-    // matchId: number ,
+    // matchId: number,
     children: ReactNode
 }
 
@@ -26,13 +27,26 @@ type GameProviderProps = {
 export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     const [state, setState] = useState<ClientGameState>(getPlaceholderGameState());
     const [isConnected, setIsConnected] = useState(false);
+    const socketRef = useRef<Socket | null>(null);
 
-    // TODO: connect to socket, set up state and match id
+    useEffect(() => {
+        const socket = io(""); // TODO: listen to the real server
+        socketRef.current = socket;
+
+        socket.on('connect', () => setIsConnected(true));
+        socket.on('disconnect', () => setIsConnected(false));
+
+        // TODO: listen for game state updates
+
+        return () => {
+            socket.disconnect();
+            socketRef.current = null;
+        };
+    }, []);
 
     const sendAction = (action: GameAction) => {
-        // TODO: call server to run the intended action and use it
-
-        console.log("sendAction:", action);
+        socketRef.current?.emit('action', action);
+        console.log("sendAction:", action); //* debug
     }
 
     return (
@@ -45,13 +59,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
 
 
 export const useGameContext = () => {
-    const context = useContext(GameContext);
-        
-    if (!context) {
-        throw new Error('useGameContext must be used within a GameProvider');
-    }
-        
-    return context;
+   return useContext(GameContext);
 }
 
 
