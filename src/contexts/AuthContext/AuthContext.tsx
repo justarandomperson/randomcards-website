@@ -9,6 +9,7 @@ import { validate } from "../../api/axiosInstance";
 
 type User = {
     username: string;
+    token: string;
 };
 
 type AuthContextType = {
@@ -38,6 +39,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
                     setUser({
                         username: res.data.payload.username,
+                        token: token
                     });
 
                 } catch {
@@ -51,7 +53,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const login = (token: string, username: string) => {
         localStorage.setItem("token", token);
-        setUser({username: username});
+        setUser({username: username, token: token});
     };
 
     const logout = () => {

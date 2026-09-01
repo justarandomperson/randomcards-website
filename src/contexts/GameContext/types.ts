@@ -19,7 +19,7 @@ export type PlayerState = {
         },
         bench: (UnitData | null)[],
         hand: SpellData[],
-        drawPile: SpellData[]
+        drawPileCount: number
     },
     data: {
         name: string,
@@ -41,16 +41,44 @@ export type OpponentState = {
 }
 
 
-// actions
-export enum GameActionType {
-    PLACE_UNIT = "PLACE_UNIT",
-    PLAY_SPELL = "PLAY_SPELL",
-    BUY_ARTIFACT = "BUY_ARTIFACT",
-    END_TURN = "END_TURN"
-}
+// actions and events
+export const SOCKET_EVENT_NAMES = { // this is used both on 'emit' and on 'on'
+    CONNECT: 'connect',
+    DISCONNECT: 'disconnect',
 
-export type GameAction =
-    | { type: GameActionType.PLACE_UNIT, instanceId: string, boardIndex: number }
-    | { type: GameActionType.PLAY_SPELL, instanceId: string  }
-    | { type: GameActionType.BUY_ARTIFACT, instanceId: number }
-    | { type: GameActionType.END_TURN }
+    PLAY_UNIT: 'play_unit',
+    PLAY_SPELL: 'play_spell',
+    BUY_ARTIFACT: 'buy_artifact',
+    END_TURN: 'end_turn'
+};
+
+
+// from client to server
+export type PlayUnitPayload =
+    { instanceId: string, boardIndex: number }    
+
+export type PlaySpellPayload =
+    { instanceId: string }
+
+export type BuyArtifactPayload = 
+    { instanceId: string }
+
+
+// from server to client
+export type GameSocketEvents = {
+    onConnect: () => void;
+    onDisconnect: () => void;
+
+    onPlayUnit: () => void;
+    onPlaySpell: () => void;
+    onBuyArtifact: () => void;
+    onEndTurn: () => void;
+
+    onStartTurn: () => void;
+    onRefillShop: () => void;
+    onUpdateGamePhase: () => void;
+    onUpdateHand: () => void;
+    onUpdateBench: () => void;
+    onUpdateBoard: () => void;
+    onUpdatePlayerMoney: () => void;
+};

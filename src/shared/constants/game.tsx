@@ -12,7 +12,7 @@ export const MAX_CARDS_PER_BOARD_ROW = 4;
 
 export const MAX_HAND_SIZE = 6;
 
-export const NULL_ARTIFACT_ID = 0;
-export const NULL_ARTIFACT: ArtifactData = { instanceId: NULL_ARTIFACT_ID, name: "", effect: "", cost: 0 }; // empty shop slot
+export const NULL_ARTIFACT_ID = "0";
+export const NULL_ARTIFACT: ArtifactData = { instanceId: "0", name: "", effect: "", cost: 0 }; // empty shop slot
 
 export const TURN_NUMBER_MONEY_MULT = 2;
