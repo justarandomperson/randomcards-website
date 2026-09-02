@@ -1,4 +1,4 @@
-import { useGameActions, useGameContext } from '../../../contexts/GameContext/GameContext'
+import { useGameContext } from '../../../contexts/GameContext/GameContext'
 import Health from '../Health/Health'
 import Styles from './PlayerBar.module.css'
 
@@ -8,9 +8,8 @@ type Props = {
 
 
 const PlayerBar: React.FC<Props> = ({ isOpponent }) => {
-    const players = useGameContext().state.players;
-    const player = isOpponent ? players.opponent : players.player;
-    const { endTurn } = useGameActions();
+    const { state, endTurn } = useGameContext();
+    const player = isOpponent ? state.players.opponent : state.players.player;
 
     return (
         <div className={Styles.player_bar}>

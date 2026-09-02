@@ -1,11 +1,8 @@
 import io, { Socket } from 'socket.io-client';
 import { GameSocketEvents, SOCKET_EVENT_NAMES } from './types';
-import { useAuth } from '../AuthContext/AuthContext';
 
 
-export const createGameSocket = (events: GameSocketEvents): Socket => {
-    const token = useAuth().user?.token;
-
+export const createGameSocket = (events: GameSocketEvents, token: string): Socket => {
     const socket = io("http://localhost:3000", {
         auth: {
             token: token
@@ -13,15 +10,16 @@ export const createGameSocket = (events: GameSocketEvents): Socket => {
     });
 
     // attach all listeners (from server to client)
-    socket.on(SOCKET_EVENT_NAMES.CONNECT,       events.onConnect);
-    socket.on(SOCKET_EVENT_NAMES.DISCONNECT,    events.onDisconnect);
+    socket.on(SOCKET_EVENT_NAMES.CONNECT,           events.onConnect);
+    socket.on(SOCKET_EVENT_NAMES.DISCONNECT,        events.onDisconnect);
 
-    socket.on(SOCKET_EVENT_NAMES.PLAY_UNIT,     events.onPlayUnit);
-    socket.on(SOCKET_EVENT_NAMES.PLAY_SPELL,    events.onPlaySpell);
-    socket.on(SOCKET_EVENT_NAMES.BUY_ARTIFACT,  events.onBuyArtifact);
-    socket.on(SOCKET_EVENT_NAMES.END_TURN,      events.onEndTurn);
-
-    // TODO: add listeners to all other events
+    socket.on(SOCKET_EVENT_NAMES.START_TURN,        events.onStartTurn);
+    socket.on(SOCKET_EVENT_NAMES.REFILL_SHOP,       events.onRefillShop);
+    socket.on(SOCKET_EVENT_NAMES.UPDATE_GAME_PHASE, events.onUpdateGamePhase);
+    socket.on(SOCKET_EVENT_NAMES.UPDATE_HAND,       events.onUpdateHand);    
+    socket.on(SOCKET_EVENT_NAMES.UPDATE_BENCH,      events.onUpdateBench);
+    socket.on(SOCKET_EVENT_NAMES.UPDATE_BOARD,      events.onUpdateBoard);
+    socket.on(SOCKET_EVENT_NAMES.UPDATE_MONEY,      events.onUpdateMoney);
 
     return socket;
 }

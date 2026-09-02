@@ -1,4 +1,4 @@
-import { useGameActions, useGameContext } from '../../../contexts/GameContext/GameContext'
+import { useGameContext } from '../../../contexts/GameContext/GameContext'
 import { NULL_ARTIFACT_ID } from '../../../shared/constants/game';
 import { ArtifactData } from "../../../shared/types/game";
 import Styles from './Artifact.module.css'
@@ -10,8 +10,7 @@ type Props = {
 
 
 const Artifact: React.FC<Props> = ({ artifactData }) => {
-    const { state } = useGameContext();
-    const { buyArtifact } = useGameActions();
+    const { state, buyArtifact } = useGameContext();
     const isBought = artifactData.instanceId === NULL_ARTIFACT_ID;
  
     const handleBuyArtifact = () => {
@@ -19,7 +18,7 @@ const Artifact: React.FC<Props> = ({ artifactData }) => {
             return; 
         }
 
-        buyArtifact(artifactData.instanceId);
+        buyArtifact({instanceId: artifactData.instanceId});
     }
 
     return (

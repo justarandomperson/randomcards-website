@@ -9,17 +9,18 @@ import Hand from '../Hand/Hand'
 import DrawPile from '../DrawPile/DrawPile'
 import GameCard from '../GameCard/GameCard'
 import Styles from './GameLayout.module.css'
-import { useGameActions } from '../../../contexts/GameContext/GameContext';
+import { useGameContext } from '../../../contexts/GameContext/GameContext';
 
 
 const GameLayout: React.FC = ({ }) => {
     const [activeCardDrag, setActiveCardDrag] = useState<DraggedCard | null>(null);
-    const { placeUnit, playSpell } = useGameActions();
+    const { playUnit, playSpell } = useGameContext();
 
     const handleDragCardStart = (event: DragStartEvent) => {
         setActiveCardDrag(event.active.data.current as DraggedCard);
     }
 
+    // TODO: refactor this so that logic stays outside of the component (created dndHandlers.ts file for that)
     const handleCardDragEnd = (event: DragEndEvent) => {
         setActiveCardDrag(null);
 
@@ -32,11 +33,11 @@ const GameLayout: React.FC = ({ }) => {
         const to = over.data.current as CardLocation;
 
         if (card.cardData.type === CardType.UNIT) {
-            placeUnit(card.cardData.instanceId, to.index);
+            playUnit({instanceId: card.cardData.instanceId, boardIndex: to.index});
         }
 
         else if (card.cardData.type === CardType.SPELL) {
-            playSpell(card.cardData.instanceId);
+            playSpell({instanceId: card.cardData.instanceId});
         }
     }
 

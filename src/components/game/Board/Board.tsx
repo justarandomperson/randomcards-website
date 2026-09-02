@@ -1,7 +1,6 @@
 import { useGameContext } from '../../../contexts/GameContext/GameContext'
 import { MAX_CARDS_PER_BOARD_ROW } from '../../../shared/constants/game'
 import { CardZone, DraggedCard } from '../../../shared/types/card'
-import Card from '../Card/Card'
 import CardSlot from '../CardSlot/CardSlot.js'
 import Styles from './Board.module.css'
 

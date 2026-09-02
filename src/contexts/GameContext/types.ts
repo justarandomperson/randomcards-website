@@ -49,7 +49,15 @@ export const SOCKET_EVENT_NAMES = { // this is used both on 'emit' and on 'on'
     PLAY_UNIT: 'play_unit',
     PLAY_SPELL: 'play_spell',
     BUY_ARTIFACT: 'buy_artifact',
-    END_TURN: 'end_turn'
+    END_TURN: 'end_turn',
+
+    START_TURN: 'start_turn',
+    REFILL_SHOP: 'refill_shop',
+    UPDATE_GAME_PHASE: 'update_game_phase',
+    UPDATE_HAND: 'update_hand',
+    UPDATE_BENCH: 'update_bench',
+    UPDATE_BOARD: 'update_board',
+    UPDATE_MONEY: 'update_money'
 };
 
 
@@ -69,16 +77,11 @@ export type GameSocketEvents = {
     onConnect: () => void;
     onDisconnect: () => void;
 
-    onPlayUnit: () => void;
-    onPlaySpell: () => void;
-    onBuyArtifact: () => void;
-    onEndTurn: () => void;
-
     onStartTurn: () => void;
-    onRefillShop: () => void;
+    onRefillShop: (newShop: ArtifactData[]) => void;
     onUpdateGamePhase: () => void;
-    onUpdateHand: () => void;
-    onUpdateBench: () => void;
-    onUpdateBoard: () => void;
-    onUpdatePlayerMoney: () => void;
+    onUpdateHand: (newHand: SpellData[]) => void;
+    onUpdateBench: (newBench: UnitData[]) => void;
+    onUpdateBoard: (newBoard: UnitData[]) => void;
+    onUpdateMoney: (newMoney: number) => void;
 };
