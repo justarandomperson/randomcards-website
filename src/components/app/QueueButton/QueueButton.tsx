@@ -1,15 +1,13 @@
+import { useGameContext } from "../../../contexts/GameContext/GameContext"
 import styles from "./QueueButton.module.css"
 
 
-type Props = {
-    queueUp: () => void;
-}
+const QueueButton: React.FC = () => {
+    const { queue } = useGameContext();
 
-
-const QueueButton: React.FC<Props> = ({ queueUp }) => {
     return (
         <div className={styles.QueueButtonContainer}>
-            <button onClick={queueUp}>Queue</button>
+            <button onClick={queue}>Queue</button>
         </div>
     )
 }

@@ -6,6 +6,7 @@ export enum CardType {
 
 export type UnitData = {
     instanceId: string,
+    id: string,
     name: string,
     type: CardType.UNIT
     effect: string,
@@ -16,6 +17,7 @@ export type UnitData = {
 
 export type SpellData = {
     instanceId: string,
+    id: string,
     name: string,
     type: CardType.SPELL,
     effect: string,

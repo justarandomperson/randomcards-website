@@ -1,7 +1,7 @@
 import { ReactNode, createContext, useContext, useState, useEffect, useRef, useCallback, useMemo } from "react"
 import { Socket } from 'socket.io-client'
 import { produce } from 'immer'
-import { BuyArtifactPayload, ClientGameState, GameSocketEvents, PlaySpellPayload, PlayUnitPayload, SOCKET_EVENT_NAMES } from './types'
+import { BuyArtifactPayload, ClientGameState, GameSocketEvents, PlaySpellPayload, PlayUnitPayload, QueuePayload, SOCKET_EVENT_NAMES } from './types'
 import { getPlaceholderGameState } from "../../shared/functions/game"
 import { createGameSocket } from "./socket"
 import { SpellData, UnitData } from "../../shared/types/card"
@@ -12,6 +12,7 @@ import { useAuth } from "../AuthContext/AuthContext"
 type GameContextType = {
     state: ClientGameState,
     isConnected: boolean,
+    queue: (payload: QueuePayload) => void,
     playUnit: (payload: PlayUnitPayload) => void,
     playSpell: (payload: PlaySpellPayload) => void,
     buyArtifact: (payload: BuyArtifactPayload) => void,
@@ -21,6 +22,7 @@ type GameContextType = {
 const GameContext = createContext<GameContextType>({
     state: getPlaceholderGameState(),
     isConnected: false,
+    queue: () => {},
     playUnit: () => {},
     playSpell: () => {},
     buyArtifact: () => {},
@@ -29,7 +31,6 @@ const GameContext = createContext<GameContextType>({
 
 
 type GameProviderProps = {
-    gameId: number,
     children: ReactNode
 }
 
@@ -46,9 +47,11 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
             onConnect: () => setIsConnected(true),
             onDisconnect: () => setIsConnected(false),
 
+            onMatchStart: () => {
+                // TODO: 1. update hand, 2. update bench, 3. get playable cards
+            },
             onStartTurn: () => {
                 setState(produce(draft => {
-                    // TODO: maybe change this to UpdateTurn and make it that it can change the opponent's turn too
                     draft.players.player.data.turn += 1;
                 }));
             },
@@ -78,10 +81,11 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                     draft.board.opponent = newBoard.slice(4, 8);
                 }));
             },
-            onUpdateMoney: (newMoney: number) => {
+            onUpdateMoney: (newMoney: number, playerId: string) => {
                 setState(produce(draft => {
                     // TODO: add it so that this event works for changing the opponent's money too
-                    draft.players.player.data.money = newMoney;
+                    socket.id === playerId ? 
+                        draft.players.player.data.money = newMoney : draft.players.opponent.data.money = newMoney;
                 }));
             }
         };
@@ -95,6 +99,11 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
         };
     }, []);
 
+
+    const queue = useCallback((payload: QueuePayload) => {
+        if (!socketRef.current) return;
+        socketRef.current.emit(SOCKET_EVENT_NAMES.QUEUE, payload);
+    }, []);
 
     const playUnit = useCallback((payload: PlayUnitPayload) => {
         if (!socketRef.current) return;
@@ -120,11 +129,13 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     const value = useMemo(() => ({
         state,
         isConnected,
+        queue,
         playUnit,
         playSpell,
         buyArtifact,
         endTurn
-    }), [state, isConnected, playUnit, playSpell, buyArtifact, endTurn]);
+    }), [state, isConnected, 
+        queue, playUnit, playSpell, buyArtifact, endTurn]);
 
     return (
         <GameContext.Provider value={value}>

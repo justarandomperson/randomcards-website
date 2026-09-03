@@ -15,6 +15,7 @@ import { DeckProvider } from './contexts/DeckContext/DeckContext';
 import ProtectedRoute from './components/app/ProtectedRoute/ProtectedRoute';
 import PublicRoute from './components/app/PublicRoute/PublicRoute';
 import LoginPage from './pages/LoginPage/LoginPage';
+import { GameProvider } from './contexts/GameContext/GameContext';
 
 
 const router = createBrowserRouter([{
@@ -51,7 +52,9 @@ root.render(
   <React.StrictMode>
     <AuthProvider>
     <DeckProvider>
+    <GameProvider>            
       <RouterProvider router={router}/>
+    </GameProvider>            
     </DeckProvider>
     </AuthProvider> 
   </React.StrictMode>

@@ -24,14 +24,17 @@ const PlayerBar: React.FC<Props> = ({ isOpponent }) => {
             </div>
 
             <div className={Styles.turn_container}>
-                <p>Turn {player.data.turn}</p>
 
                 {!isOpponent &&
-                    <div className={Styles.end_turn_btn_container}>
-                        <button onClick={endTurn}>
-                            End Turn
-                        </button>
-                    </div>    
+                    <>
+                        <p>Turn {player.data.turn}</p>
+
+                        <div className={Styles.end_turn_btn_container}>
+                            <button onClick={endTurn}>
+                                End Turn
+                            </button>
+                        </div>    
+                    </>
                 }
 
             </div>

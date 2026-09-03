@@ -13,6 +13,7 @@ export const createGameSocket = (events: GameSocketEvents, token: string): Socke
     socket.on(SOCKET_EVENT_NAMES.CONNECT,           events.onConnect);
     socket.on(SOCKET_EVENT_NAMES.DISCONNECT,        events.onDisconnect);
 
+    socket.on(SOCKET_EVENT_NAMES.MATCH_START,       events.onMatchStart)
     socket.on(SOCKET_EVENT_NAMES.START_TURN,        events.onStartTurn);
     socket.on(SOCKET_EVENT_NAMES.REFILL_SHOP,       events.onRefillShop);
     socket.on(SOCKET_EVENT_NAMES.UPDATE_GAME_PHASE, events.onUpdateGamePhase);

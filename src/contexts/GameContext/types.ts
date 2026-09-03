@@ -46,11 +46,13 @@ export const SOCKET_EVENT_NAMES = { // this is used both on 'emit' and on 'on'
     CONNECT: 'connect',
     DISCONNECT: 'disconnect',
 
+    QUEUE: 'queue',
     PLAY_UNIT: 'play_unit',
     PLAY_SPELL: 'play_spell',
     BUY_ARTIFACT: 'buy_artifact',
     END_TURN: 'end_turn',
 
+    MATCH_START: 'match_start',
     START_TURN: 'start_turn',
     REFILL_SHOP: 'refill_shop',
     UPDATE_GAME_PHASE: 'update_game_phase',
@@ -62,6 +64,9 @@ export const SOCKET_EVENT_NAMES = { // this is used both on 'emit' and on 'on'
 
 
 // from client to server
+export type QueuePayload = 
+    {  }
+
 export type PlayUnitPayload =
     { instanceId: string, boardIndex: number }    
 
@@ -77,11 +82,12 @@ export type GameSocketEvents = {
     onConnect: () => void;
     onDisconnect: () => void;
 
+    onMatchStart: () => void;
     onStartTurn: () => void;
     onRefillShop: (newShop: ArtifactData[]) => void;
     onUpdateGamePhase: () => void;
     onUpdateHand: (newHand: SpellData[]) => void;
     onUpdateBench: (newBench: UnitData[]) => void;
     onUpdateBoard: (newBoard: UnitData[]) => void;
-    onUpdateMoney: (newMoney: number) => void;
+    onUpdateMoney: (newMoney: number, playerId: string) => void;
 };

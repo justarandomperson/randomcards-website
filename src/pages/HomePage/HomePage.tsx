@@ -12,7 +12,7 @@ const HomePage: React.FC = ({ }) => {
 
     return (
         <div className={styles.HomePageContainer}>
-            <QueueButton queueUp={queueUp}/>
+            <QueueButton/>
         </div>
     )
 }
