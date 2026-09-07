@@ -7,6 +7,8 @@ import { createGameSocket } from "./socket"
 import { SpellData, UnitData } from "../../shared/types/card"
 import { ArtifactData, GamePhase } from "../../shared/types/game"
 import { useAuth } from "../AuthContext/AuthContext"
+import { SPELLS_IN_DECK, UNITS_IN_DECK } from "../../shared/constants/game"
+import { isDeckFull, isDeckTypeFull } from "../../shared/functions/decks"
 
 
 type GameContextType = {
@@ -48,7 +50,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
             onDisconnect: () => setIsConnected(false),
 
             onMatchStart: () => {
-                // TODO: 1. update hand, 2. update bench, 3. get playable cards
+                // TODO: this
             },
             onStartTurn: () => {
                 setState(produce(draft => {
@@ -83,7 +85,6 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
             },
             onUpdateMoney: (newMoney: number, playerId: string) => {
                 setState(produce(draft => {
-                    // TODO: add it so that this event works for changing the opponent's money too
                     socket.id === playerId ? 
                         draft.players.player.data.money = newMoney : draft.players.opponent.data.money = newMoney;
                 }));
@@ -102,6 +103,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
 
     const queue = useCallback((payload: QueuePayload) => {
         if (!socketRef.current) return;
+        if (isDeckFull(payload)) return;
         socketRef.current.emit(SOCKET_EVENT_NAMES.QUEUE, payload);
     }, []);
 

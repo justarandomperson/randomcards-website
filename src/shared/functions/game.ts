@@ -14,7 +14,7 @@ export const getPlaceholderGameState = (): ClientGameState => {
                     },
                     bench: [],
                     hand: [],
-                    drawPile: []
+                    drawPileCount: 0
                 },
                 data: {
                     name: "Player",

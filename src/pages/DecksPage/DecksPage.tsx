@@ -1,6 +1,7 @@
 import CardList from '../../components/decks/CardList/CardList'
 import { useDeckContext } from '../../contexts/DeckContext/DeckContext';
 import { UNITS_IN_DECK, SPELLS_IN_DECK } from '../../shared/constants/game';
+import { isDeckTypeFull } from '../../shared/functions/decks';
 import { CardType } from '../../shared/types/card';
 import Styles from './DecksPage.module.css'
 
@@ -17,7 +18,9 @@ const DecksPage: React.FC = ({ }) => {
                 <div>
                     <div className={Styles.deck_row_header}>
                         <h3>Units</h3>
-                        <p>{`${deck.units.length}/${UNITS_IN_DECK}`}</p>
+                        <p className={isDeckTypeFull(CardType.UNIT, deck) ? Styles.full : undefined}>
+                            {`${deck.units.length}/${UNITS_IN_DECK}`}
+                        </p>
                     </div>
                     <CardList location='deck' type={CardType.UNIT}/>
                 </div>
@@ -25,7 +28,9 @@ const DecksPage: React.FC = ({ }) => {
                 <div>
                     <div className={Styles.deck_row_header}>
                         <h3>Spells</h3>
-                        <p>{`${deck.spells.length}/${SPELLS_IN_DECK}`}</p>
+                        <p className={isDeckTypeFull(CardType.UNIT, deck) ? Styles.full : undefined}>
+                            {`${deck.spells.length}/${SPELLS_IN_DECK}`}
+                        </p>
                     </div>
                     <CardList location='deck' type={CardType.SPELL}/>
                 </div>
