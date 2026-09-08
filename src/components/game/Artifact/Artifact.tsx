@@ -1,6 +1,6 @@
 import { useGameContext } from '../../../contexts/GameContext/GameContext'
 import { NULL_ARTIFACT_ID } from '../../../shared/constants/game';
-import { ArtifactData } from "../../../shared/types/game";
+import { ArtifactData, GamePhase } from "../../../shared/types/game";
 import Styles from './Artifact.module.css'
 
 
@@ -10,8 +10,9 @@ type Props = {
 
 
 const Artifact: React.FC<Props> = ({ artifactData }) => {
-    const { state, buyArtifact } = useGameContext();
-    const isBought = artifactData.instanceId === NULL_ARTIFACT_ID;
+    const { buyArtifact, state } = useGameContext()
+    const isBought = artifactData.instanceId === NULL_ARTIFACT_ID
+    const isPlayPhase = (state.phase === GamePhase.PLAY)
  
     const handleBuyArtifact = () => {
         if (isBought) {
@@ -22,7 +23,13 @@ const Artifact: React.FC<Props> = ({ artifactData }) => {
     }
 
     return (
-        <button onClick={handleBuyArtifact} className={isBought ? Styles.artifact_bought : Styles.artifact}></button>
+        <span className={isPlayPhase ? undefined : Styles.artifact_container_open}>
+            <button 
+                disabled={isPlayPhase} 
+                onClick={handleBuyArtifact} 
+                className={isBought ? Styles.artifact_bought : Styles.artifact}>
+            </button>
+        </span>
     );
 }
 

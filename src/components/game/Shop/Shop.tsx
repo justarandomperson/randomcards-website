@@ -1,13 +1,15 @@
 import { useGameContext } from '../../../contexts/GameContext/GameContext'
+import { GamePhase } from '../../../shared/types/game';
 import Artifact from '../Artifact/Artifact.js'
 import Styles from './Shop.module.css'
 
 
 const Shop: React.FC = () => {
-    const shop = useGameContext().state.shop;
+    const { shop, phase } = useGameContext().state;
+    const isPlayPhase = (phase === GamePhase.PLAY)
 
     return (
-        <div className={Styles.shop}>
+        <div className={isPlayPhase ? Styles.shop_closed : Styles.shop_open}>
 
             {shop.artifacts.map((artifact, index) => (
 

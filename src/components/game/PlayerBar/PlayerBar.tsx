@@ -2,6 +2,7 @@ import { useGameContext } from '../../../contexts/GameContext/GameContext'
 import Health from '../Health/Health'
 import Styles from './PlayerBar.module.css'
 
+
 type Props = {
     isOpponent: boolean
 }
