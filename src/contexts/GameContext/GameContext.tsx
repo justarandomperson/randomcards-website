@@ -103,8 +103,9 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
 
     const queue = useCallback((payload: QueuePayload) => {
         if (!socketRef.current) return;
-        if (isDeckFull(payload)) return;
+        if (!isDeckFull(payload)) return;
         socketRef.current.emit(SOCKET_EVENT_NAMES.QUEUE, payload);
+        alert("meow");
     }, []);
 
     const playUnit = useCallback((payload: PlayUnitPayload) => {

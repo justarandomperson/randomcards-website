@@ -1,5 +1,6 @@
 import { Board, Shop, GamePhase, ArtifactData } from "../../shared/types/game";
 import { UnitData, SpellData } from "../../shared/types/card";
+import { Deck } from "../../shared/types/decks";
 
 
 // context and state 
@@ -64,8 +65,7 @@ export const SOCKET_EVENT_NAMES = { // this is used both on 'emit' and on 'on'
 
 
 // from client to server
-export type QueuePayload = 
-    { units: UnitData[], spells: SpellData[] }
+export type QueuePayload = Deck
 
 export type PlayUnitPayload =
     { instanceId: string, boardIndex: number }    

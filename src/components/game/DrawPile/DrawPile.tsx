@@ -7,7 +7,7 @@ const DrawPile: React.FC = () => {
 
     return (
         <div className={Styles.draw_pile}>
-            <p>{`${drawPileCount} Cards`}</p>
+            <p>{`${drawPileCount} Cards In Drawpile`}</p>
         </div>
     );
 }
