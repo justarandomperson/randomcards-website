@@ -98,7 +98,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
             socket.disconnect();
             socketRef.current = null;
         };
-    }, []);
+    }, [token]);
 
 
     const queue = useCallback((payload: QueuePayload) => {
