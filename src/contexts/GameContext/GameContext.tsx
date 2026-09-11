@@ -104,7 +104,12 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     const queue = useCallback((payload: QueuePayload) => {
         if (!socketRef.current) return;
         if (!isDeckFull(payload)) return;
-        socketRef.current.emit(SOCKET_EVENT_NAMES.QUEUE, payload);
+        
+        // TODO: server only receives units rn u will have to change it later
+        const unit_ids = payload.units.map((unit) => unit.id)
+
+        socketRef.current.emit(SOCKET_EVENT_NAMES.QUEUE, unit_ids);
+
         alert("meow");
     }, []);
 
