@@ -48,6 +48,7 @@ export const SOCKET_EVENT_NAMES = { // this is used both on 'emit' and on 'on'
     DISCONNECT: 'disconnect',
 
     QUEUE: 'queue',
+    DEQUEUE: 'dequeue',
     PLAY_UNIT: 'play_unit',
     PLAY_SPELL: 'play_spell',
     BUY_ARTIFACT: 'buy_artifact',

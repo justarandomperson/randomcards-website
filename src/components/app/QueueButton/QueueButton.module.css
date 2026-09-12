@@ -1,19 +1,17 @@
-.QueueButtonContainer
-{
+.queue {
     display: flex;
     justify-content: center;
     width: 20%;
     height: 50%;
     background-color: rgb(76, 75, 75);
-    opacity: .8;
+    opacity: 0.8;
 }
 
-.QueueButtonContainer:hover
-{
-    opacity: .7;
+.queue:hover {
+    opacity: 0.7;
 }
 
-.QueueButtonContainer button
+.queue button
 {
     height: 100%;
     width: 100%;
@@ -23,6 +21,6 @@
     font-size: 2rem;
 }
 
-.QueueButtonContainer button:hover{
+.queue button:hover{
     cursor: pointer;
 }

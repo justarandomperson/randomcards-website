@@ -14,7 +14,9 @@ import { useNavigate } from "react-router-dom"
 type GameContextType = {
     state: ClientGameState,
     isConnected: boolean,
+    isInQueue: boolean,
     queue: (payload: QueuePayload) => void,
+    dequeue: () => void,
     playUnit: (payload: PlayUnitPayload) => void,
     playSpell: (payload: PlaySpellPayload) => void,
     buyArtifact: (payload: BuyArtifactPayload) => void,
@@ -24,7 +26,9 @@ type GameContextType = {
 const GameContext = createContext<GameContextType>({
     state: getPlaceholderGameState(),
     isConnected: false,
+    isInQueue: false,
     queue: () => {},
+    dequeue: () => {},
     playUnit: () => {},
     playSpell: () => {},
     buyArtifact: () => {},
@@ -40,6 +44,8 @@ type GameProviderProps = {
 export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     const [state, setState] = useState<ClientGameState>(getPlaceholderGameState());
     const [isConnected, setIsConnected] = useState(false);
+    const [isInQueue, setIsInQueue] = useState(false);
+
     const socketRef = useRef<Socket | null>(null);
     const navigate = useNavigate();
     const token = useAuth().user?.token as string;
@@ -109,9 +115,16 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
         // TODO: server only receives units rn u will have to change it later
         const unit_ids = payload.units.map((unit) => unit.id)
 
+        setIsInQueue(true);
         socketRef.current.emit(SOCKET_EVENT_NAMES.QUEUE, unit_ids);
 
         alert("meow");
+    }, []);
+
+    const dequeue = useCallback(() => {
+        if (!socketRef.current) return;
+        setIsInQueue(false);
+        socketRef.current.emit(SOCKET_EVENT_NAMES.DEQUEUE);
     }, []);
 
     const playUnit = useCallback((payload: PlayUnitPayload) => {
@@ -138,7 +151,9 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     const value = useMemo(() => ({
         state,
         isConnected,
+        isInQueue,
         queue,
+        dequeue,
         playUnit,
         playSpell,
         buyArtifact,
