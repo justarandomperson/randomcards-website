@@ -7,8 +7,8 @@ import { createGameSocket } from "./socket"
 import { SpellData, UnitData } from "../../shared/types/card"
 import { ArtifactData, GamePhase } from "../../shared/types/game"
 import { useAuth } from "../AuthContext/AuthContext"
-import { SPELLS_IN_DECK, UNITS_IN_DECK } from "../../shared/constants/game"
-import { isDeckFull, isDeckTypeFull } from "../../shared/functions/decks"
+import { isDeckFull } from "../../shared/functions/decks"
+import { useNavigate } from "react-router-dom"
 
 
 type GameContextType = {
@@ -41,6 +41,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     const [state, setState] = useState<ClientGameState>(getPlaceholderGameState());
     const [isConnected, setIsConnected] = useState(false);
     const socketRef = useRef<Socket | null>(null);
+    const navigate = useNavigate();
     const token = useAuth().user?.token as string;
 
 
@@ -50,7 +51,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
             onDisconnect: () => setIsConnected(false),
 
             onMatchStart: () => {
-                // TODO: this
+                navigate('/game');
             },
             onStartTurn: () => {
                 setState(produce(draft => {

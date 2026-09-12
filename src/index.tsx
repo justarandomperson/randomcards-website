@@ -51,11 +51,7 @@ const root = ReactDOM.createRoot(document.getElementById('root')!);
 root.render(
   <React.StrictMode>
     <AuthProvider>
-    <DeckProvider>
-    <GameProvider>            
       <RouterProvider router={router}/>
-    </GameProvider>            
-    </DeckProvider>
     </AuthProvider> 
   </React.StrictMode>
 );
