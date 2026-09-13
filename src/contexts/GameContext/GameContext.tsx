@@ -3,8 +3,8 @@ import { Socket } from 'socket.io-client'
 import { produce } from 'immer'
 import { BuyArtifactPayload, ClientGameState, GameSocketEvents, PlaySpellPayload, PlayUnitPayload, QueuePayload, SOCKET_EVENT_NAMES } from './types'
 import { getPlaceholderGameState } from "../../shared/functions/game"
-import { createGameSocket } from "./socket"
-import { SpellData, UnitData } from "../../shared/types/card"
+import { createGameSocket, useGameSocketEmit } from "./socket"
+import { CardLocation, CardType, CardZone, SpellData, UnitData } from "../../shared/types/card"
 import { ArtifactData, GamePhase } from "../../shared/types/game"
 import { useAuth } from "../AuthContext/AuthContext"
 import { isDeckFull } from "../../shared/functions/decks"
@@ -15,24 +15,28 @@ type GameContextType = {
     state: ClientGameState,
     isConnected: boolean,
     isInQueue: boolean,
-    queue: (payload: QueuePayload) => void,
-    dequeue: () => void,
-    playUnit: (payload: PlayUnitPayload) => void,
-    playSpell: (payload: PlaySpellPayload) => void,
-    buyArtifact: (payload: BuyArtifactPayload) => void,
-    endTurn: () => void
+    emitters: {
+        queue: (payload: QueuePayload) => void,
+        dequeue: () => void,
+        playUnit: (payload: PlayUnitPayload) => void,
+        playSpell: (payload: PlaySpellPayload) => void,
+        buyArtifact: (payload: BuyArtifactPayload) => void,
+        endTurn: () => void
+    }
 }
 
 const GameContext = createContext<GameContextType>({
     state: getPlaceholderGameState(),
     isConnected: false,
     isInQueue: false,
-    queue: () => {},
-    dequeue: () => {},
-    playUnit: () => {},
-    playSpell: () => {},
-    buyArtifact: () => {},
-    endTurn: () => {}
+    emitters: {
+        queue: () => {},
+        dequeue: () => {},
+        playUnit: () => {},
+        playSpell: () => {},
+        buyArtifact: () => {},
+        endTurn: () => {}
+    }
 });
 
 
@@ -48,10 +52,13 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
 
     const socketRef = useRef<Socket | null>(null);
     const navigate = useNavigate();
-    const token = useAuth().user?.token as string;
+    const token = useAuth().user?.token;
+    const emit = useGameSocketEmit(socketRef);
 
 
     useEffect(() => {
+        if (!token) return;
+
         const gameEvents: GameSocketEvents = {
             onConnect: () => setIsConnected(true),
             onDisconnect: () => setIsConnected(false),
@@ -74,6 +81,26 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                     draft.phase = draft.phase === GamePhase.PLAY ? GamePhase.SHOP : GamePhase.PLAY;
                 }));
             },
+            onUpdateCard: (newCard: UnitData | SpellData, location: CardLocation) => {
+                setState(produce(draft => {
+                    switch(location.insideOf) {
+                        case CardZone.BENCH:
+                            if (newCard.type !== CardType.UNIT) return;
+                            draft.players.player.cards.bench[location.index] = newCard;
+                            break;
+                            
+                        case CardZone.BOARD:
+                            if (newCard.type !== CardType.UNIT) return;
+                            draft.board[location.index] = newCard;
+                            break;
+
+                        case CardZone.HAND:
+                            if (newCard.type !== CardType.SPELL) return;
+                            draft.players.player.cards.hand[location.index] = newCard;
+                            break;
+                    }
+                }));
+            },
             onUpdateHand: (newHand: SpellData[]) => {
                 setState(produce(draft => {
                     draft.players.player.cards.hand = newHand;
@@ -86,14 +113,16 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
             },
             onUpdateBoard: (newBoard: UnitData[]) => {
                 setState(produce(draft => {
-                    draft.board.player = newBoard.slice(0, 4);
-                    draft.board.opponent = newBoard.slice(4, 8);
+                    draft.board = newBoard;
                 }));
             },
             onUpdateMoney: (newMoney: number, playerId: string) => {
                 setState(produce(draft => {
-                    socket.id === playerId ? 
-                        draft.players.player.data.money = newMoney : draft.players.opponent.data.money = newMoney;
+                    if (socket.id === playerId) {
+                        draft.players.player.data.money = newMoney;
+                    } else {
+                        draft.players.opponent.data.money = newMoney;
+                    }
                 }));
             }
         };
@@ -109,57 +138,48 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
 
 
     const queue = useCallback((payload: QueuePayload) => {
-        if (!socketRef.current) return;
         if (!isDeckFull(payload)) return;
         
-        // TODO: server only receives units rn u will have to change it later
+        // TODO: server only receives units rn. u will have to change it later as server grows
         const unit_ids = payload.units.map((unit) => unit.id)
 
         setIsInQueue(true);
-        socketRef.current.emit(SOCKET_EVENT_NAMES.QUEUE, unit_ids);
-
-        alert("meow");
-    }, []);
+        emit(SOCKET_EVENT_NAMES.QUEUE, unit_ids);
+    }, [emit]);
 
     const dequeue = useCallback(() => {
-        if (!socketRef.current) return;
         setIsInQueue(false);
-        socketRef.current.emit(SOCKET_EVENT_NAMES.DEQUEUE);
-    }, []);
+        emit(SOCKET_EVENT_NAMES.DEQUEUE);
+    }, [emit]);
 
     const playUnit = useCallback((payload: PlayUnitPayload) => {
-        if (!socketRef.current) return;
-        socketRef.current.emit(SOCKET_EVENT_NAMES.PLAY_UNIT, payload);
-    }, []);
+        emit(SOCKET_EVENT_NAMES.PLAY_UNIT, payload);
+    }, [emit]);
 
     const playSpell = useCallback((payload: PlaySpellPayload) => {
-        if (!socketRef.current) return;
-        socketRef.current.emit(SOCKET_EVENT_NAMES.PLAY_SPELL, payload);
-    }, []);
+        emit(SOCKET_EVENT_NAMES.PLAY_SPELL, payload);
+    }, [emit]);
 
     const buyArtifact = useCallback((payload: BuyArtifactPayload) => {
-        if (!socketRef.current) return;
-        socketRef.current.emit(SOCKET_EVENT_NAMES.BUY_ARTIFACT, payload);
-    }, []);
+        emit(SOCKET_EVENT_NAMES.BUY_ARTIFACT, payload);
+    }, [emit]);
 
     const endTurn = useCallback(() => {
-        if (!socketRef.current) return;
-        socketRef.current.emit(SOCKET_EVENT_NAMES.END_TURN);
-    }, []);
+        emit(SOCKET_EVENT_NAMES.END_TURN);
+    }, [emit]);
+
+
+    const emitters = useMemo(() => ({
+        queue, dequeue, playUnit, playSpell, buyArtifact, endTurn
+    }), [queue, dequeue, playUnit, playSpell, buyArtifact, endTurn]);
 
 
     const value = useMemo(() => ({
         state,
         isConnected,
         isInQueue,
-        queue,
-        dequeue,
-        playUnit,
-        playSpell,
-        buyArtifact,
-        endTurn
-    }), [state, isConnected, 
-        queue, playUnit, playSpell, buyArtifact, endTurn]);
+        emitters
+    }), [state, isConnected, emitters]);
 
     return (
         <GameContext.Provider value={value}>

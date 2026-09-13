@@ -5,22 +5,22 @@ export enum CardType {
 }
 
 export type UnitData = {
-    instanceId: string,
-    id: string,
-    name: string,
+    instanceId: string
+    id: string
+    name: string
     type: CardType.UNIT
-    effect: string,
-    cost: number,
-    hp: number,
+    effect: string
+    cost: number
+    hp: number
     atk: number
 }
 
 export type SpellData = {
-    instanceId: string,
-    id: string,
-    name: string,
-    type: CardType.SPELL,
-    effect: string,
+    instanceId: string
+    id: string
+    name: string
+    type: CardType.SPELL
+    effect: string
     cost: number
 }
 
@@ -33,11 +33,11 @@ export enum CardZone {
 }
 
 export type CardLocation = {
-    insideOf: CardZone;
-    index: number;
+    insideOf: CardZone
+    index: number
 };
 
 export type DraggedCard = {
-    cardData: UnitData | SpellData;
-    location: CardLocation;
+    cardData: UnitData | SpellData
+    location: CardLocation
 };

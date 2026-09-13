@@ -1,5 +1,6 @@
 import io, { Socket } from 'socket.io-client';
 import { GameSocketEvents, SOCKET_EVENT_NAMES } from './types';
+import { RefObject, useCallback } from 'react';
 
 
 export const createGameSocket = (events: GameSocketEvents, token: string): Socket => {
@@ -17,10 +18,19 @@ export const createGameSocket = (events: GameSocketEvents, token: string): Socke
     socket.on(SOCKET_EVENT_NAMES.START_TURN,        events.onStartTurn);
     socket.on(SOCKET_EVENT_NAMES.REFILL_SHOP,       events.onRefillShop);
     socket.on(SOCKET_EVENT_NAMES.UPDATE_GAME_PHASE, events.onUpdateGamePhase);
+    socket.on(SOCKET_EVENT_NAMES.UPDATE_CARD,       events.onUpdateCard);
     socket.on(SOCKET_EVENT_NAMES.UPDATE_HAND,       events.onUpdateHand);    
     socket.on(SOCKET_EVENT_NAMES.UPDATE_BENCH,      events.onUpdateBench);
     socket.on(SOCKET_EVENT_NAMES.UPDATE_BOARD,      events.onUpdateBoard);
     socket.on(SOCKET_EVENT_NAMES.UPDATE_MONEY,      events.onUpdateMoney);
 
     return socket;
+}
+
+
+export const useGameSocketEmit = (socketRef: RefObject<Socket | null>) => {
+    return useCallback(<T,>(event: string, payload?: T) => {
+        if (!socketRef.current) return;
+        socketRef.current.emit(event, payload);
+    }, [socketRef]);
 }

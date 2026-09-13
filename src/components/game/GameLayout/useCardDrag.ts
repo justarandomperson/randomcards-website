@@ -15,8 +15,9 @@ const isCardLocation = (data: unknown): data is CardLocation => {
 
 
 export function useCardDrag() {
-    const [activeCardDrag, setActiveCardDrag] = useState<DraggedCard | null>(null);
-    const { playUnit, playSpell } = useGameContext();
+    const [activeCardDrag, setActiveCardDrag] = useState<DraggedCard | null>(null)
+    const { emitters } = useGameContext()
+    const { playUnit, playSpell } = emitters
 
     const handleCardDragStart = (event: DragStartEvent) => {
         const data = event.active.data.current;

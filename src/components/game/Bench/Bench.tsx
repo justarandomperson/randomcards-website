@@ -6,7 +6,7 @@ import Styles from './Bench.module.css'
 
 
 const Bench: React.FC = ({ }) => {
-    const bench = useGameContext().state.players.player.cards.bench;
+    const bench = useGameContext().state.players.player.cards.bench
 
     return (        
         <div className={Styles.bench}>

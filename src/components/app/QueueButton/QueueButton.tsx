@@ -1,15 +1,16 @@
-import { useDeckContext } from "../../../contexts/DeckContext/DeckContext";
+import { useDeckContext } from "../../../contexts/DeckContext/DeckContext"
 import { useGameContext } from "../../../contexts/GameContext/GameContext"
 import styles from "./QueueButton.module.css"
 
 
 const QueueButton: React.FC = () => {
-    const { queue, dequeue, isInQueue } = useGameContext();
+    const { emitters, isInQueue } = useGameContext()
+    const { queue, dequeue } = emitters
     const { deck } = useDeckContext().state
 
     return (
         <div className={styles.queue}>
-            <button onClick={!isInQueue ? () => queue(deck) : dequeue}>
+            <button onClick={() => (!isInQueue ? queue(deck) : dequeue())}>
                 {!isInQueue ? "Queue" : "Dequeue"}
             </button>
         </div>

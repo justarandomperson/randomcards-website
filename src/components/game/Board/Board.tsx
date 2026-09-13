@@ -12,22 +12,25 @@ type Props = {
 
 
 const Board: React.FC<Props> = ({ activeCardDrag }) => {
-    const { board, phase } = useGameContext().state;
+    const { board, phase } = useGameContext().state
     const isPlayPhase = (phase === GamePhase.PLAY)
+
+    const playerBoardRow = board.slice(0, 4)
+    const opponentBoardRow = board.slice(4, 8)
 
     return (
         <div className={activeCardDrag || !isPlayPhase ? Styles.board_opacitated : Styles.board}>
 
             <div className={Styles.opponent_row}>
                 {Array.from({ length: MAX_CARDS_PER_BOARD_ROW }).map((_, i) => (
-                    <CardSlot cardData={board.opponent[i]} location={{ insideOf: CardZone.BOARD, index: i }}
+                    <CardSlot cardData={opponentBoardRow[i]} location={{ insideOf: CardZone.BOARD, index: i }}
                     activeCardDrag={null} key={i}/>
                 ))}
             </div>
 
             <div className={Styles.user_row}>
                 {Array.from({ length: MAX_CARDS_PER_BOARD_ROW }).map((_, i) => (
-                    <CardSlot cardData={board.player[i]} location={{ insideOf: CardZone.BOARD, index: i }}
+                    <CardSlot cardData={playerBoardRow[i]} location={{ insideOf: CardZone.BOARD, index: i }}
                     activeCardDrag={activeCardDrag} key={i}/>
                 ))}
             </div>

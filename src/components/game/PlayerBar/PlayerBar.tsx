@@ -9,8 +9,9 @@ type Props = {
 
 
 const PlayerBar: React.FC<Props> = ({ isOpponent }) => {
-    const { state, endTurn } = useGameContext();
-    const player = isOpponent ? state.players.opponent : state.players.player;
+    const { state, emitters } = useGameContext()
+    const { endTurn } = emitters
+    const player = isOpponent ? state.players.opponent : state.players.player
 
     return (
         <div className={Styles.player_bar}>

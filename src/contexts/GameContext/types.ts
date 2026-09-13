@@ -1,42 +1,42 @@
-import { Board, Shop, GamePhase, ArtifactData } from "../../shared/types/game";
-import { UnitData, SpellData } from "../../shared/types/card";
+import { Shop, GamePhase, ArtifactData } from "../../shared/types/game";
+import { UnitData, SpellData, CardLocation } from "../../shared/types/card";
 import { Deck } from "../../shared/types/decks";
 
 
 // context and state 
 export type ClientGameState = {
-    players: {player: PlayerState, opponent: OpponentState},
-    board: Board,
-    shop: Shop,
-    phase: GamePhase,
+    players: {player: PlayerState, opponent: OpponentState}
+    board: (UnitData | null)[]
+    shop: Shop
+    phase: GamePhase
     isPlayerTurn: boolean
 };
 
 export type PlayerState = {
     cards: {
         deck: {
-            units: UnitData[],
+            units: UnitData[]
             spells: SpellData[]
         },
-        bench: (UnitData | null)[],
-        hand: SpellData[],
+        bench: (UnitData | null)[]
+        hand: SpellData[]
         drawPileCount: number
     },
     data: {
-        name: string,
-        health: number,
-        money: number,
-        turn: number,
+        name: string
+        health: number
+        money: number
+        turn: number
         artifacts: ArtifactData[]
     }
 }
 
 export type OpponentState = {
       data: {
-        name: string,
-        health: number,
-        money: number,
-        turn: number,
+        name: string
+        health: number
+        money: number
+        turn: number
         artifacts: ArtifactData[]
     }  
 }
@@ -58,11 +58,12 @@ export const SOCKET_EVENT_NAMES = { // this is used both on 'emit' and on 'on'
     START_TURN: 'start_turn',
     REFILL_SHOP: 'refill_shop',
     UPDATE_GAME_PHASE: 'update_game_phase',
+    UPDATE_CARD: 'update_card',
     UPDATE_HAND: 'update_hand',
     UPDATE_BENCH: 'update_bench',
     UPDATE_BOARD: 'update_board',
     UPDATE_MONEY: 'update_money'
-};
+} as const;
 
 
 // from client to server
@@ -87,6 +88,7 @@ export type GameSocketEvents = {
     onStartTurn: () => void;
     onRefillShop: (newShop: ArtifactData[]) => void;
     onUpdateGamePhase: () => void;
+    onUpdateCard: (newCard: UnitData | SpellData, location: CardLocation) => void;
     onUpdateHand: (newHand: SpellData[]) => void;
     onUpdateBench: (newBench: UnitData[]) => void;
     onUpdateBoard: (newBoard: UnitData[]) => void;

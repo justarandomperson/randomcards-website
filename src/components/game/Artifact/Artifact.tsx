@@ -10,7 +10,8 @@ type Props = {
 
 
 const Artifact: React.FC<Props> = ({ artifactData }) => {
-    const { buyArtifact, state } = useGameContext()
+    const { emitters, state } = useGameContext()
+    const { buyArtifact } = emitters
     const isBought = artifactData.instanceId === NULL_ARTIFACT_ID
     const isPlayPhase = (state.phase === GamePhase.PLAY)
  

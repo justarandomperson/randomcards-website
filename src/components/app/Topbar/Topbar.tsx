@@ -1,10 +1,10 @@
-import { NavLink } from "react-router-dom";
-import { useAuth } from "../../../contexts/AuthContext/AuthContext";
-import styles from "./Topbar.module.css";
+import { NavLink } from "react-router-dom"
+import { useAuth } from "../../../contexts/AuthContext/AuthContext"
+import styles from "./Topbar.module.css"
 
 
 const Topbar: React.FC = () => {
-    const { isLoggedIn, logout } = useAuth();
+    const { isLoggedIn, logout } = useAuth()
 
     return (
         <div className={styles.Topbar}>

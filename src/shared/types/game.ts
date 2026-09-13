@@ -1,7 +1,7 @@
 import { UnitData } from './card'
 
 
-export type Board = {
+type Board = {
     player: (UnitData | null)[],
     opponent: (UnitData | null)[]
 }
