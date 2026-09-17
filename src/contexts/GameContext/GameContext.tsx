@@ -5,7 +5,7 @@ import { BuyArtifactPayload, ClientGameState, GameSocketEvents, PlaySpellPayload
 import { getPlaceholderGameState } from "../../shared/functions/game"
 import { createGameSocket, useGameSocketEmit } from "./socket"
 import { CardLocation, CardType, CardZone, SpellData, UnitData } from "../../shared/types/card"
-import { ArtifactData, GamePhase } from "../../shared/types/game"
+import { ArtifactData, ArtifactLocation, ArtifactZone, GamePhase } from "../../shared/types/game"
 import { useAuth } from "../AuthContext/AuthContext"
 import { isDeckFull } from "../../shared/functions/decks"
 import { useNavigate } from "react-router-dom"
@@ -71,18 +71,27 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                     draft.players.player.data.turn += 1;
                 }));
             },
-            onRefillShop: (newShop: ArtifactData[]) => {
-                setState(produce(draft => {
-                    draft.shop.artifacts = newShop;
-                }));
-            },
             onUpdateGamePhase: () => {
                 setState(produce(draft => {
                     draft.phase = draft.phase === GamePhase.PLAY ? GamePhase.SHOP : GamePhase.PLAY;
                 }));
             },
-            onUpdateCard: (newCard: UnitData | SpellData, location: CardLocation) => {
+
+            onUpdateMoney: (newMoney: number, playerId: string) => {
                 setState(produce(draft => {
+                    //? can i shortcut this to a helper function?
+                    if (socket.id === playerId) {
+                        draft.players.player.data.money = newMoney;
+                    } else {
+                        draft.players.opponent.data.money = newMoney;
+                    }
+                }));
+            },
+            onUpdateCard: (newCard: UnitData | SpellData, location: CardLocation) => {
+                // TODO: should remove existing instanceId before.
+                //? it possibly overwrites an existing card?
+                setState(produce(draft => {
+                    //? can i shortcut this to a helper function?
                     switch(location.insideOf) {
                         case CardZone.BENCH:
                             if (newCard.type !== CardType.UNIT) return;
@@ -116,15 +125,32 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                     draft.board = newBoard;
                 }));
             },
-            onUpdateMoney: (newMoney: number, playerId: string) => {
+            onUpdateArtifact: (newArtifact: ArtifactData, location: ArtifactLocation, playerId?: string) => {
+                // TODO: should remove existing instanceId before.
+                //? it possibly overwrites an existing artifact?
                 setState(produce(draft => {
-                    if (socket.id === playerId) {
-                        draft.players.player.data.money = newMoney;
-                    } else {
-                        draft.players.opponent.data.money = newMoney;
+                    switch(location.insideOf) {
+                        case ArtifactZone.SHOP:
+                            draft.shop.artifacts[location.index] = newArtifact;
+                            break;
+                            
+                        case ArtifactZone.PLAYER:
+                            //? can i shortcut this to a helper function?
+                            if (socket.id === playerId) {
+                                draft.players.player.data.artifacts[location.index] = newArtifact;
+                            } else if (socket.id !== undefined) {
+                                draft.players.opponent.data.artifacts[location.index] = newArtifact;
+                            }
+
+                            break;
                     }
+                }))
+            },
+            onUpdateShop: (newShop: ArtifactData[]) => {
+                setState(produce(draft => {
+                    draft.shop.artifacts = newShop;
                 }));
-            }
+            },
         };
 
         const socket = createGameSocket(gameEvents, token);

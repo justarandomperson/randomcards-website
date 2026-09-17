@@ -11,13 +11,23 @@ export type Shop = {
 }
 
 export enum GamePhase {
-    PLAY = 'PLAY',
-    SHOP = 'SHOP'    
+    PLAY = 'play',
+    SHOP = 'shop'    
 }
 
 export type ArtifactData = {
-    instanceId: string,
-    name: string,
-    effect: string,
+    instanceId: string
+    name: string
+    effect: string
     cost: number
+};
+
+export enum ArtifactZone {
+    SHOP = 'shop',
+    PLAYER = 'player'
+}
+
+export type ArtifactLocation = {
+    insideOf: ArtifactZone
+    index: number
 };

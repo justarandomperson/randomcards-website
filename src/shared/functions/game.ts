@@ -14,13 +14,13 @@ export const getPlaceholderGameState = (): ClientGameState => {
                     },
                     bench: [],
                     hand: [],
-                    drawPileCount: 0
                 },
                 data: {
                     name: "Player",
                     health: STARTING_HEALTH,
                     money: STARTING_MONEY,
                     turn: STARTING_TURN,
+                    drawPileCount: 0,
                     artifacts: []
                 }
             },
@@ -31,6 +31,7 @@ export const getPlaceholderGameState = (): ClientGameState => {
                     health: STARTING_HEALTH,
                     money: STARTING_MONEY,
                     turn: STARTING_TURN,
+                    drawPileCount: 0,
                     artifacts: []
                 }
             }

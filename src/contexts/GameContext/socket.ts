@@ -16,13 +16,14 @@ export const createGameSocket = (events: GameSocketEvents, token: string): Socke
 
     socket.on(SOCKET_EVENT_NAMES.MATCH_START,       events.onMatchStart)
     socket.on(SOCKET_EVENT_NAMES.START_TURN,        events.onStartTurn);
-    socket.on(SOCKET_EVENT_NAMES.REFILL_SHOP,       events.onRefillShop);
     socket.on(SOCKET_EVENT_NAMES.UPDATE_GAME_PHASE, events.onUpdateGamePhase);
+    socket.on(SOCKET_EVENT_NAMES.UPDATE_MONEY,      events.onUpdateMoney);
     socket.on(SOCKET_EVENT_NAMES.UPDATE_CARD,       events.onUpdateCard);
     socket.on(SOCKET_EVENT_NAMES.UPDATE_HAND,       events.onUpdateHand);    
     socket.on(SOCKET_EVENT_NAMES.UPDATE_BENCH,      events.onUpdateBench);
     socket.on(SOCKET_EVENT_NAMES.UPDATE_BOARD,      events.onUpdateBoard);
-    socket.on(SOCKET_EVENT_NAMES.UPDATE_MONEY,      events.onUpdateMoney);
+    socket.on(SOCKET_EVENT_NAMES.UPDATE_ARTIFACT,   events.onUpdateArtifact);
+    socket.on(SOCKET_EVENT_NAMES.UPDATE_SHOP,       events.onUpdateShop);
 
     return socket;
 }

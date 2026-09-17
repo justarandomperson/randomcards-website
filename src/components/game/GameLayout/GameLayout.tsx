@@ -5,7 +5,6 @@ import Board from '../Board/Board'
 import PlayerBar from '../PlayerBar/PlayerBar'
 import Shop from '../Shop/Shop'
 import Hand from '../Hand/Hand'
-import DrawPile from '../DrawPile/DrawPile'
 import GameCard from '../GameCard/GameCard'
 import Styles from './GameLayout.module.css'
 
@@ -33,7 +32,6 @@ const GameLayout: React.FC = () => {
 
             <div className={Styles.hand_container}>
                 <Hand/>
-                <DrawPile/>
             </div>
 
             <DragOverlay>

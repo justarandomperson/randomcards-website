@@ -1,4 +1,4 @@
-import { Shop, GamePhase, ArtifactData } from "../../shared/types/game";
+import { Shop, GamePhase, ArtifactData, ArtifactLocation } from "../../shared/types/game";
 import { UnitData, SpellData, CardLocation } from "../../shared/types/card";
 import { Deck } from "../../shared/types/decks";
 
@@ -20,13 +20,13 @@ export type PlayerState = {
         },
         bench: (UnitData | null)[]
         hand: SpellData[]
-        drawPileCount: number
     },
     data: {
         name: string
         health: number
         money: number
         turn: number
+        drawPileCount: number
         artifacts: ArtifactData[]
     }
 }
@@ -37,6 +37,7 @@ export type OpponentState = {
         health: number
         money: number
         turn: number
+        drawPileCount: number
         artifacts: ArtifactData[]
     }  
 }
@@ -56,13 +57,14 @@ export const SOCKET_EVENT_NAMES = { // this is used both on 'emit' and on 'on'
 
     MATCH_START: 'match_start',
     START_TURN: 'start_turn',
-    REFILL_SHOP: 'refill_shop',
     UPDATE_GAME_PHASE: 'update_game_phase',
+    UPDATE_MONEY: 'update_money',
     UPDATE_CARD: 'update_card',
     UPDATE_HAND: 'update_hand',
     UPDATE_BENCH: 'update_bench',
     UPDATE_BOARD: 'update_board',
-    UPDATE_MONEY: 'update_money'
+    UPDATE_ARTIFACT: 'update_artifact',
+    UPDATE_SHOP: 'update_shop'
 } as const;
 
 
@@ -86,11 +88,13 @@ export type GameSocketEvents = {
 
     onMatchStart: () => void;
     onStartTurn: () => void;
-    onRefillShop: (newShop: ArtifactData[]) => void;
     onUpdateGamePhase: () => void;
+    onUpdateMoney: (newMoney: number, playerId: string) => void;
     onUpdateCard: (newCard: UnitData | SpellData, location: CardLocation) => void;
     onUpdateHand: (newHand: SpellData[]) => void;
     onUpdateBench: (newBench: UnitData[]) => void;
     onUpdateBoard: (newBoard: UnitData[]) => void;
-    onUpdateMoney: (newMoney: number, playerId: string) => void;
+    onUpdateArtifact: (newArtifact: ArtifactData, location: ArtifactLocation, playerId?: string) => void;
+    onUpdateShop: (newShop: ArtifactData[]) => void;
+
 };
