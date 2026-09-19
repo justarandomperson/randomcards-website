@@ -1,13 +1,12 @@
-import { Shop, GamePhase, ArtifactData, ArtifactLocation } from "../../shared/types/game";
-import { UnitData, SpellData, CardLocation } from "../../shared/types/card";
-import { Deck } from "../../shared/types/decks";
+import { GamePhase, ArtifactData, ArtifactLocation, ArtifactZone } from "../../shared/types/game";
+import { UnitData, SpellData, CardLocation, CardZone } from "../../shared/types/card";
 
 
 // context and state 
 export type ClientGameState = {
     players: {player: PlayerState, opponent: OpponentState}
     board: (UnitData | null)[]
-    shop: Shop
+    shop: (ArtifactData | null)[]
     phase: GamePhase
     isPlayerTurn: boolean
 };
@@ -21,27 +20,21 @@ export type PlayerState = {
         bench: (UnitData | null)[]
         hand: SpellData[]
     },
-    data: {
-        name: string
-        health: number
-        money: number
-        turn: number
-        drawPileCount: number
-        artifacts: ArtifactData[]
-    }
+    data: PlayerData
 }
 
 export type OpponentState = {
-      data: {
-        name: string
-        health: number
-        money: number
-        turn: number
-        drawPileCount: number
-        artifacts: ArtifactData[]
-    }  
+    data: PlayerData
 }
 
+export type PlayerData = {
+    name: string
+    health: number
+    money: number
+    turn: number
+    drawpileCount: number
+    artifacts: ArtifactData[]
+}
 
 // actions and events
 export const SOCKET_EVENT_NAMES = { // this is used both on 'emit' and on 'on'
@@ -59,26 +52,26 @@ export const SOCKET_EVENT_NAMES = { // this is used both on 'emit' and on 'on'
     START_TURN: 'start_turn',
     UPDATE_GAME_PHASE: 'update_game_phase',
     UPDATE_MONEY: 'update_money',
+    UPDATE_HEALTH: 'update_health',
+    UPDATE_DRAWPILE_COUNT: 'update_drawpile_count',
+    UPDATE_ARTIFACT: 'update_artifact',
     UPDATE_CARD: 'update_card',
     UPDATE_HAND: 'update_hand',
     UPDATE_BENCH: 'update_bench',
     UPDATE_BOARD: 'update_board',
-    UPDATE_ARTIFACT: 'update_artifact',
-    UPDATE_SHOP: 'update_shop'
+    UPDATE_SHOP: 'update_shop',
+    UPDATE_PLAYER_DATA: 'update_player_data'
 } as const;
 
 
 // from client to server
-export type QueuePayload = Deck
+export type QueuePayload = DeckIds
 
-export type PlayUnitPayload =
-    { instanceId: string, boardIndex: number }    
+export type PlayUnitPayload = { instanceId: string, boardIndex: number }    
 
-export type PlaySpellPayload =
-    { instanceId: string }
+export type PlaySpellPayload = { instanceId: string }
 
-export type BuyArtifactPayload = 
-    { instanceId: string }
+export type BuyArtifactPayload = { instanceId: string }
 
 
 // from server to client
@@ -86,15 +79,33 @@ export type GameSocketEvents = {
     onConnect: () => void;
     onDisconnect: () => void;
 
-    onMatchStart: () => void;
+    onMatchStart: (playerData: PlayerData, opponentData: PlayerData) => void;
     onStartTurn: () => void;
     onUpdateGamePhase: () => void;
     onUpdateMoney: (newMoney: number, playerId: string) => void;
-    onUpdateCard: (newCard: UnitData | SpellData, location: CardLocation) => void;
+    onUpdateHealth: (newHealth: number, playerId: string) => void;
+    onUpdateDrawpileCount: (newDrawpileCount: number, playerId: string) => void;
+    onUpdateCard: (data: UpdateCardData) => void;
+    onUpdateArtifact: (data: UpdateArtifactData) => void;
     onUpdateHand: (newHand: SpellData[]) => void;
     onUpdateBench: (newBench: UnitData[]) => void;
     onUpdateBoard: (newBoard: UnitData[]) => void;
-    onUpdateArtifact: (newArtifact: ArtifactData, location: ArtifactLocation, playerId?: string) => void;
     onUpdateShop: (newShop: ArtifactData[]) => void;
-
+    onUpdatePlayerData: (newPlayerData: PlayerData, playerId: string) => void;
 };
+
+
+export type UpdateCardData =
+    | { card: UnitData;  insideOf: CardZone.BENCH | CardZone.BOARD; index: number }
+    | { card: SpellData; insideOf: CardZone.HAND;                   index: number };
+
+
+export type UpdateArtifactData = 
+    | { artifact: ArtifactData; insideOf: ArtifactZone.SHOP; index: number }
+    | { artifact: ArtifactData; insideOf: ArtifactZone.PLAYER; index: number, playerId: string }
+
+// other
+export type DeckIds = {
+    unitIds: string[],
+    spellIds: string[]
+}

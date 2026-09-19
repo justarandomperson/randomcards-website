@@ -11,11 +11,15 @@ const Shop: React.FC = () => {
     return (
         <div className={isPlayPhase ? Styles.shop_closed : Styles.shop_open}>
 
-            {shop.artifacts.map((artifact, index) => (
+            {shop.map((artifact, index) => (
 
                 <div className={Styles.shop_item} key={index}>
                     <Artifact artifactData={artifact}/>
-                    <p className={Styles.artifact_cost}>{`${artifact.cost}$`}</p>
+
+                    {artifact && 
+                        <p className={Styles.artifact_cost}>{`${artifact.cost}$`}</p>
+                    }
+
                 </div>
                 
             ))}

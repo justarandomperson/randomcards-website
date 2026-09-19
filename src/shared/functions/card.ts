@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { CardType, UnitData, SpellData } from '../types/card'
+import { CardType, UnitData, SpellData, CardLocation, CardZone } from '../types/card'
 
 
 export const getPlaceholderUnit = (): UnitData => {
@@ -26,3 +26,14 @@ export const getPlaceholderSpell = (): SpellData => {
         cost: 3,
     }
 }
+
+export const isCardLocationCorrect = (cardType: CardType, location: CardLocation): boolean => {
+    if (cardType === CardType.UNIT && location.insideOf === CardZone.HAND) {
+        return false;
+    }
+    if (cardType === CardType.SPELL && location.insideOf !== CardZone.HAND) {
+        return false;
+    }
+
+    return true;
+} 

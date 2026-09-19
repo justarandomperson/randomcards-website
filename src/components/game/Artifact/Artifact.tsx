@@ -5,18 +5,17 @@ import Styles from './Artifact.module.css'
 
 
 type Props = {
-    artifactData: ArtifactData
+    artifactData: ArtifactData | null
 }
 
 
 const Artifact: React.FC<Props> = ({ artifactData }) => {
-    const { emitters, state } = useGameContext()
-    const { buyArtifact } = emitters
-    const isBought = artifactData.instanceId === NULL_ARTIFACT_ID
-    const isPlayPhase = (state.phase === GamePhase.PLAY)
+    const { emitters, state } = useGameContext();
+    const { buyArtifact } = emitters;
+    const isPlayPhase = (state.phase === GamePhase.PLAY);
  
     const handleBuyArtifact = () => {
-        if (isBought) {
+        if (!artifactData) {
             return; 
         }
 
@@ -28,7 +27,7 @@ const Artifact: React.FC<Props> = ({ artifactData }) => {
             <button 
                 disabled={isPlayPhase} 
                 onClick={handleBuyArtifact} 
-                className={isBought ? Styles.artifact_bought : Styles.artifact}>
+                className={!artifactData ? Styles.artifact_bought : Styles.artifact}>
             </button>
         </span>
     );

@@ -27,7 +27,7 @@ const PlayerBar: React.FC<Props> = ({ isOpponent }) => {
 
             <div className={Styles.turn_container}>
 
-                <p>{player.data.drawPileCount} cards in drawpile</p>
+                <p>{player.data.drawpileCount} cards in drawpile</p>
 
                 {!isOpponent &&
                     <>

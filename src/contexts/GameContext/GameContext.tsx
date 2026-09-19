@@ -1,14 +1,16 @@
 import { ReactNode, createContext, useContext, useState, useEffect, useRef, useCallback, useMemo } from "react"
 import { Socket } from 'socket.io-client'
 import { produce } from 'immer'
-import { BuyArtifactPayload, ClientGameState, GameSocketEvents, PlaySpellPayload, PlayUnitPayload, QueuePayload, SOCKET_EVENT_NAMES } from './types'
+import { BuyArtifactPayload, ClientGameState, GameSocketEvents, PlayerData, PlaySpellPayload, PlayUnitPayload, SOCKET_EVENT_NAMES, UpdateArtifactData, UpdateCardData } from './types'
 import { getPlaceholderGameState } from "../../shared/functions/game"
 import { createGameSocket, useGameSocketEmit } from "./socket"
-import { CardLocation, CardType, CardZone, SpellData, UnitData } from "../../shared/types/card"
-import { ArtifactData, ArtifactLocation, ArtifactZone, GamePhase } from "../../shared/types/game"
+import { CardZone, SpellData, UnitData } from "../../shared/types/card"
+import { ArtifactData, ArtifactZone, GamePhase } from "../../shared/types/game"
 import { useAuth } from "../AuthContext/AuthContext"
 import { isDeckFull } from "../../shared/functions/decks"
 import { useNavigate } from "react-router-dom"
+import { Deck } from "../../shared/types/decks"
+import { getDeckIds, matchPlayerIds, removeArtifactInstance, removeCardInstance } from "./helpers"
 
 
 type GameContextType = {
@@ -16,7 +18,7 @@ type GameContextType = {
     isConnected: boolean,
     isInQueue: boolean,
     emitters: {
-        queue: (payload: QueuePayload) => void,
+        queue: (deck: Deck) => void,
         dequeue: () => void,
         playUnit: (payload: PlayUnitPayload) => void,
         playSpell: (payload: PlaySpellPayload) => void,
@@ -60,10 +62,22 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
         if (!token) return;
 
         const gameEvents: GameSocketEvents = {
-            onConnect: () => setIsConnected(true),
-            onDisconnect: () => setIsConnected(false),
+            onConnect: () => { 
+                setIsConnected(true);
+            },
+            onDisconnect: () => {
+                setIsConnected(false); 
+                setIsInQueue(false);
+            },
 
-            onMatchStart: () => {
+            onMatchStart: (playerData: PlayerData, opponentData: PlayerData) => {
+                setIsInQueue(false);
+
+                setState(produce(draft => {
+                    draft.players.player.data = playerData;
+                    draft.players.opponent.data = opponentData;
+                }));
+
                 navigate('/game');
             },
             onStartTurn: () => {
@@ -73,40 +87,59 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
             },
             onUpdateGamePhase: () => {
                 setState(produce(draft => {
-                    draft.phase = draft.phase === GamePhase.PLAY ? GamePhase.SHOP : GamePhase.PLAY;
+                    draft.phase = (draft.phase === GamePhase.PLAY) ? GamePhase.SHOP : GamePhase.PLAY;
                 }));
             },
-
             onUpdateMoney: (newMoney: number, playerId: string) => {
                 setState(produce(draft => {
-                    //? can i shortcut this to a helper function?
-                    if (socket.id === playerId) {
-                        draft.players.player.data.money = newMoney;
-                    } else {
-                        draft.players.opponent.data.money = newMoney;
+                    const player = matchPlayerIds(draft, playerId, socket.id);
+                    player.data.money = newMoney;
+                }));
+            },
+            onUpdateHealth: (newHealth: number, playerId: string) => {
+                setState(produce(draft => {
+                    const player = matchPlayerIds(draft, playerId, socket.id);
+                    player.data.health = newHealth;
+                }));
+            },
+            onUpdateDrawpileCount: (newDrawpileCount, playerId) => {
+                setState(produce(draft => {
+                    const player = matchPlayerIds(draft, playerId, socket.id);
+                    player.data.drawpileCount = newDrawpileCount;
+                }));
+            },
+            onUpdateCard: (data: UpdateCardData) => {
+                setState(produce(draft => {
+                    removeCardInstance(draft, data.card.instanceId);
+
+                    switch (data.insideOf) {
+                        case CardZone.BENCH:
+                            draft.players.player.cards.bench[data.index] = data.card;
+                            break;
+                        case CardZone.BOARD:
+                            draft.board[data.index] = data.card;
+                            break;
+                        case CardZone.HAND: {
+                            const hand = draft.players.player.cards.hand;
+                            hand.splice(data.index, 0, data.card);
+                            break;
+                        }
                     }
                 }));
             },
-            onUpdateCard: (newCard: UnitData | SpellData, location: CardLocation) => {
-                // TODO: should remove existing instanceId before.
-                //? it possibly overwrites an existing card?
+            onUpdateArtifact: (data: UpdateArtifactData) => {
                 setState(produce(draft => {
-                    //? can i shortcut this to a helper function?
-                    switch(location.insideOf) {
-                        case CardZone.BENCH:
-                            if (newCard.type !== CardType.UNIT) return;
-                            draft.players.player.cards.bench[location.index] = newCard;
-                            break;
-                            
-                        case CardZone.BOARD:
-                            if (newCard.type !== CardType.UNIT) return;
-                            draft.board[location.index] = newCard;
-                            break;
+                    removeArtifactInstance(draft, data.artifact.instanceId);
 
-                        case CardZone.HAND:
-                            if (newCard.type !== CardType.SPELL) return;
-                            draft.players.player.cards.hand[location.index] = newCard;
+                    switch (data.insideOf) {
+                        case ArtifactZone.SHOP:
+                            draft.shop[data.index] = data.artifact;
                             break;
+                        case ArtifactZone.PLAYER: {
+                            const player = matchPlayerIds(draft, data.playerId, socket.id)
+                            player.data.artifacts.splice(data.index, 0, data.artifact);
+                            break;
+                        }
                     }
                 }));
             },
@@ -125,32 +158,17 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                     draft.board = newBoard;
                 }));
             },
-            onUpdateArtifact: (newArtifact: ArtifactData, location: ArtifactLocation, playerId?: string) => {
-                // TODO: should remove existing instanceId before.
-                //? it possibly overwrites an existing artifact?
-                setState(produce(draft => {
-                    switch(location.insideOf) {
-                        case ArtifactZone.SHOP:
-                            draft.shop.artifacts[location.index] = newArtifact;
-                            break;
-                            
-                        case ArtifactZone.PLAYER:
-                            //? can i shortcut this to a helper function?
-                            if (socket.id === playerId) {
-                                draft.players.player.data.artifacts[location.index] = newArtifact;
-                            } else if (socket.id !== undefined) {
-                                draft.players.opponent.data.artifacts[location.index] = newArtifact;
-                            }
-
-                            break;
-                    }
-                }))
-            },
             onUpdateShop: (newShop: ArtifactData[]) => {
                 setState(produce(draft => {
-                    draft.shop.artifacts = newShop;
+                    draft.shop = newShop;
                 }));
             },
+            onUpdatePlayerData: (newPlayerData: PlayerData, playerId: string) => {
+                setState(produce(draft => {
+                    const player = matchPlayerIds(draft, playerId, socket.id);
+                    player.data = newPlayerData;
+                }));
+            }
         };
 
         const socket = createGameSocket(gameEvents, token);
@@ -163,20 +181,22 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     }, [token]);
 
 
-    const queue = useCallback((payload: QueuePayload) => {
-        if (!isDeckFull(payload)) return;
-        
-        // TODO: server only receives units rn. u will have to change it later as server grows
-        const unit_ids = payload.units.map((unit) => unit.id)
+    const queue = useCallback((deck: Deck) => {
+        if (!isDeckFull(deck)) {
+            return;
+        }
+
+        const payload = getDeckIds(deck);
 
         setIsInQueue(true);
-        emit(SOCKET_EVENT_NAMES.QUEUE, unit_ids);
+        emit(SOCKET_EVENT_NAMES.QUEUE, payload);
     }, [emit]);
 
     const dequeue = useCallback(() => {
         setIsInQueue(false);
         emit(SOCKET_EVENT_NAMES.DEQUEUE);
     }, [emit]);
+
 
     const playUnit = useCallback((payload: PlayUnitPayload) => {
         emit(SOCKET_EVENT_NAMES.PLAY_UNIT, payload);
@@ -201,11 +221,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
 
 
     const value = useMemo(() => ({
-        state,
-        isConnected,
-        isInQueue,
-        emitters
-    }), [state, isConnected, emitters]);
+        state, isConnected, isInQueue, emitters
+    }), [state, isConnected, isInQueue, emitters]);
 
     return (
         <GameContext.Provider value={value}>
@@ -217,5 +234,5 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
 
 
 export const useGameContext = () => {
-   return useContext(GameContext);
+return useContext(GameContext);
 }

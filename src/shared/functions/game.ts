@@ -20,7 +20,7 @@ export const getPlaceholderGameState = (): ClientGameState => {
                     health: STARTING_HEALTH,
                     money: STARTING_MONEY,
                     turn: STARTING_TURN,
-                    drawPileCount: 0,
+                    drawpileCount: 0,
                     artifacts: []
                 }
             },
@@ -31,20 +31,15 @@ export const getPlaceholderGameState = (): ClientGameState => {
                     health: STARTING_HEALTH,
                     money: STARTING_MONEY,
                     turn: STARTING_TURN,
-                    drawPileCount: 0,
+                    drawpileCount: 0,
                     artifacts: []
                 }
             }
         },
 
         board: [null, null, null, null, null, null, null, null],
-
-        shop: {
-            artifacts: [NULL_ARTIFACT, NULL_ARTIFACT, NULL_ARTIFACT, NULL_ARTIFACT, NULL_ARTIFACT]
-        },
-
+        shop: [NULL_ARTIFACT, NULL_ARTIFACT, NULL_ARTIFACT, NULL_ARTIFACT, NULL_ARTIFACT],
         phase: GamePhase.PLAY,
-
         isPlayerTurn: true
     };
 };
