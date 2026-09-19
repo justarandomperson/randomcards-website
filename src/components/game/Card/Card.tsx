@@ -23,7 +23,7 @@ const Card: React.FC<Props> = ({ cardData }) => {
             </div>
 
             <div>
-                <p className={Styles.effect}>{cardData.effect}</p>
+                <p className={Styles.effect}>{cardData.effectDesc}</p>
             </div>
 
             <div className={Styles.footer}>

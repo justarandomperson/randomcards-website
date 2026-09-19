@@ -34,8 +34,14 @@ export function useCardDrag() {
 
         const card = active.data.current;
         const to = over.data.current;
-        if (!isDraggedCard(card) || !isCardLocation(to)) return;
+        if (!isDraggedCard(card) || !isCardLocation(to)) { 
+            return;
+        }
 
+        if (!card.cardData.instanceId) {
+            throw new Error (`card ${card.cardData.name} has to have an instanceId`);
+        }
+        
         switch (card.cardData.type) {
             case CardType.UNIT:
                 playUnit({ instanceId: card.cardData.instanceId, boardIndex: to.index });

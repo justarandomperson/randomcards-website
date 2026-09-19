@@ -71,6 +71,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
             },
 
             onMatchStart: (data: MatchStartData) => {
+                // TODO: implement firstTurnId doing stuff
                 setIsInQueue(false);
 
                 setState(produce(draft => {
@@ -109,8 +110,13 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                 }));
             },
             onUpdateCard: (data: UpdateCardData) => {
+                const { instanceId } = data.card;
+                if (!instanceId) {
+                    throw new Error(`card ${data.card.name} in ${data.insideOf} has no instanceId`);
+                }
+
                 setState(produce(draft => {
-                    removeCardInstance(draft, data.card.instanceId);
+                    removeCardInstance(draft, instanceId);
 
                     switch (data.insideOf) {
                         case CardZone.BENCH:

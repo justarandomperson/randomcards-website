@@ -54,19 +54,16 @@ export const SOCKET_EVENT_NAMES = { // this is used both on 'emit' and on 'on'
     UPDATE_MONEY: 'update_money',
     UPDATE_HEALTH: 'update_health',
     UPDATE_DRAWPILE_COUNT: 'update_drawpile_count',
-    UPDATE_ARTIFACT: 'update_artifact',
     UPDATE_CARD: 'update_card',
+    UPDATE_ARTIFACT: 'update_artifact',
     UPDATE_HAND: 'update_hand',
     UPDATE_BENCH: 'update_bench',
     UPDATE_BOARD: 'update_board',
     UPDATE_SHOP: 'update_shop',
-    UPDATE_PLAYER_DATA: 'update_player_data'
 } as const;
 
 
 // from client to server
-export type QueuePayload = DeckIds
-
 export type PlayUnitPayload = { instanceId: string, boardIndex: number }    
 
 export type PlaySpellPayload = { instanceId: string }
@@ -95,7 +92,7 @@ export type GameSocketEvents = {
 
 
 export type MatchStartData = 
-    | { playerData: PlayerData, opponentData: PlayerData }
+    | { playerData: PlayerData, opponentData: PlayerData, firstTurnId: string }
 
 export type UpdateMoneyData = 
     | { newMoney: number, playerId: string }

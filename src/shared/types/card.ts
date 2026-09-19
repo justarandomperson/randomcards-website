@@ -1,26 +1,26 @@
 // card data
 export enum CardType {
-    UNIT = 'UNIT',
-    SPELL = 'SPELL'
+    UNIT = 'unit',
+    SPELL = 'spell'
 }
 
 export type UnitData = {
-    instanceId: string
+    instanceId?: string
     id: string
     name: string
     type: CardType.UNIT
-    effect: string
+    effectDesc: string
     cost: number
     hp: number
     atk: number
 }
 
 export type SpellData = {
-    instanceId: string
+    instanceId?: string
     id: string
     name: string
     type: CardType.SPELL
-    effect: string
+    effectDesc: string
     cost: number
 }
 

@@ -4,11 +4,10 @@ import { CardType, UnitData, SpellData, CardLocation, CardZone } from '../types/
 
 export const getPlaceholderUnit = (): UnitData => {
     return {
-        instanceId: uuidv4(),
         id: "1",
         name: "dog",
         type: CardType.UNIT,
-        effect: "im dog",
+        effectDesc: "im dog",
         cost: 3,
         hp: 1,
         atk: 2,
@@ -18,11 +17,10 @@ export const getPlaceholderUnit = (): UnitData => {
 
 export const getPlaceholderSpell = (): SpellData => {
     return {
-        instanceId: uuidv4(),
         id: "2",
         name: "cat",
         type: CardType.SPELL,
-        effect: "although i may look like it, im not dog. have a wonderful rest of your day!",
+        effectDesc: "although i may look like it, im not dog. have a wonderful rest of your day!",
         cost: 3,
     }
 }
