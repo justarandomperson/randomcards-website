@@ -1,7 +1,7 @@
 import { ReactNode, createContext, useContext, useState, useEffect, useRef, useCallback, useMemo } from "react"
 import { Socket } from 'socket.io-client'
 import { produce } from 'immer'
-import { BuyArtifactPayload, ClientGameState, GameSocketEvents, PlayerData, PlaySpellPayload, PlayUnitPayload, SOCKET_EVENT_NAMES, UpdateArtifactData, UpdateCardData } from './types'
+import { BuyArtifactPayload, ClientGameState, GameSocketEvents, MatchStartData, PlayerData, PlaySpellPayload, PlayUnitPayload, SOCKET_EVENT_NAMES, UpdateArtifactData, UpdateCardData, UpdateDrawpileCount, UpdateHealthData, UpdateMoneyData } from './types'
 import { getPlaceholderGameState } from "../../shared/functions/game"
 import { createGameSocket, useGameSocketEmit } from "./socket"
 import { CardZone, SpellData, UnitData } from "../../shared/types/card"
@@ -70,12 +70,12 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                 setIsInQueue(false);
             },
 
-            onMatchStart: (playerData: PlayerData, opponentData: PlayerData) => {
+            onMatchStart: (data: MatchStartData) => {
                 setIsInQueue(false);
 
                 setState(produce(draft => {
-                    draft.players.player.data = playerData;
-                    draft.players.opponent.data = opponentData;
+                    draft.players.player.data = data.playerData;
+                    draft.players.opponent.data = data.opponentData;
                 }));
 
                 navigate('/game');
@@ -90,22 +90,22 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                     draft.phase = (draft.phase === GamePhase.PLAY) ? GamePhase.SHOP : GamePhase.PLAY;
                 }));
             },
-            onUpdateMoney: (newMoney: number, playerId: string) => {
+            onUpdateMoney: (data: UpdateMoneyData) => {
                 setState(produce(draft => {
-                    const player = matchPlayerIds(draft, playerId, socket.id);
-                    player.data.money = newMoney;
+                    const player = matchPlayerIds(draft, data.playerId, socket.id);
+                    player.data.money = data.newMoney;
                 }));
             },
-            onUpdateHealth: (newHealth: number, playerId: string) => {
+            onUpdateHealth: (data: UpdateHealthData) => {
                 setState(produce(draft => {
-                    const player = matchPlayerIds(draft, playerId, socket.id);
-                    player.data.health = newHealth;
+                    const player = matchPlayerIds(draft, data.playerId, socket.id);
+                    player.data.health = data.newHealth;
                 }));
             },
-            onUpdateDrawpileCount: (newDrawpileCount, playerId) => {
+            onUpdateDrawpileCount: (data: UpdateDrawpileCount) => {
                 setState(produce(draft => {
-                    const player = matchPlayerIds(draft, playerId, socket.id);
-                    player.data.drawpileCount = newDrawpileCount;
+                    const player = matchPlayerIds(draft, data.playerId, socket.id);
+                    player.data.drawpileCount = data.newDrawpileCount;
                 }));
             },
             onUpdateCard: (data: UpdateCardData) => {
@@ -163,12 +163,6 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                     draft.shop = newShop;
                 }));
             },
-            onUpdatePlayerData: (newPlayerData: PlayerData, playerId: string) => {
-                setState(produce(draft => {
-                    const player = matchPlayerIds(draft, playerId, socket.id);
-                    player.data = newPlayerData;
-                }));
-            }
         };
 
         const socket = createGameSocket(gameEvents, token);

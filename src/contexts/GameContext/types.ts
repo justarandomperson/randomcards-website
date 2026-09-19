@@ -79,21 +79,32 @@ export type GameSocketEvents = {
     onConnect: () => void;
     onDisconnect: () => void;
 
-    onMatchStart: (playerData: PlayerData, opponentData: PlayerData) => void;
+    onMatchStart: (data: MatchStartData) => void;
     onStartTurn: () => void;
     onUpdateGamePhase: () => void;
-    onUpdateMoney: (newMoney: number, playerId: string) => void;
-    onUpdateHealth: (newHealth: number, playerId: string) => void;
-    onUpdateDrawpileCount: (newDrawpileCount: number, playerId: string) => void;
+    onUpdateMoney: (data: UpdateMoneyData) => void;
+    onUpdateHealth: (data: UpdateHealthData) => void;
+    onUpdateDrawpileCount: (data: UpdateDrawpileCount) => void;
     onUpdateCard: (data: UpdateCardData) => void;
     onUpdateArtifact: (data: UpdateArtifactData) => void;
     onUpdateHand: (newHand: SpellData[]) => void;
     onUpdateBench: (newBench: UnitData[]) => void;
     onUpdateBoard: (newBoard: UnitData[]) => void;
     onUpdateShop: (newShop: ArtifactData[]) => void;
-    onUpdatePlayerData: (newPlayerData: PlayerData, playerId: string) => void;
 };
 
+
+export type MatchStartData = 
+    | { playerData: PlayerData, opponentData: PlayerData }
+
+export type UpdateMoneyData = 
+    | { newMoney: number, playerId: string }
+
+export type UpdateHealthData =
+    | { newHealth: number, playerId: string }
+
+export type UpdateDrawpileCount = 
+    | { newDrawpileCount: number, playerId: string }
 
 export type UpdateCardData =
     | { card: UnitData;  insideOf: CardZone.BENCH | CardZone.BOARD; index: number }
@@ -103,6 +114,7 @@ export type UpdateCardData =
 export type UpdateArtifactData = 
     | { artifact: ArtifactData; insideOf: ArtifactZone.SHOP; index: number }
     | { artifact: ArtifactData; insideOf: ArtifactZone.PLAYER; index: number, playerId: string }
+
 
 // other
 export type DeckIds = {

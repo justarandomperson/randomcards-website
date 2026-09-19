@@ -29,7 +29,7 @@ export const getDeckIds = (deck: Deck): DeckIds => {
 export const removeCardInstance = (draft: Draft<ClientGameState>, instanceId: string): boolean => {
     const bench = draft.players.player.cards.bench;
     for (let i = 0; i < bench.length; i++) {
-        if (bench[i]?.instanceId == instanceId) {
+        if (bench[i]?.instanceId === instanceId) {
             bench[i] = null;
             return true;
         }
@@ -37,7 +37,7 @@ export const removeCardInstance = (draft: Draft<ClientGameState>, instanceId: st
 
     const hand = draft.players.player.cards.hand;
     for (let i = 0; i < hand.length; i++) {
-        if (hand[i].instanceId == instanceId) {
+        if (hand[i].instanceId === instanceId) {
             hand.splice(i, 1);
             return true;
         }
@@ -45,7 +45,7 @@ export const removeCardInstance = (draft: Draft<ClientGameState>, instanceId: st
 
     const board = draft.board;
     for (let i = 0; i < board.length; i++) {
-        if (board[i]?.instanceId == instanceId) {
+        if (board[i]?.instanceId === instanceId) {
             board[i] = null;
             return true;
         }
@@ -58,7 +58,7 @@ export const removeCardInstance = (draft: Draft<ClientGameState>, instanceId: st
 export const removeArtifactInstance = (draft: Draft<ClientGameState>, instanceId: string): boolean => {
     const playerArtifacts = draft.players.player.data.artifacts;
     for (let i = 0; i < playerArtifacts.length; i++) {
-        if (playerArtifacts[i].instanceId == instanceId) {
+        if (playerArtifacts[i].instanceId === instanceId) {
             playerArtifacts.splice(i, 1);
             return true;
         }
@@ -66,7 +66,7 @@ export const removeArtifactInstance = (draft: Draft<ClientGameState>, instanceId
 
     const opponentArtifacts = draft.players.opponent.data.artifacts;
     for (let i = 0; i < opponentArtifacts.length; i++) {
-        if (opponentArtifacts[i].instanceId == instanceId) {
+        if (opponentArtifacts[i].instanceId === instanceId) {
             opponentArtifacts.splice(i, 1);
             return true;
         }
@@ -74,8 +74,8 @@ export const removeArtifactInstance = (draft: Draft<ClientGameState>, instanceId
 
     const shop = draft.shop;
     for (let i = 0; i < shop.length; i++) {
-        if (shop[i]?.instanceId == instanceId) {
-            shop[i] == null;
+        if (shop[i]?.instanceId === instanceId) {
+            shop[i] = null;
             return true;
         }
     }
