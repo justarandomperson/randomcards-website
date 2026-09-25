@@ -1,5 +1,5 @@
-import { GamePhase, ArtifactData, ArtifactLocation, ArtifactZone } from "../../shared/types/game";
-import { UnitData, SpellData, CardLocation, CardZone } from "../../shared/types/card";
+import { GamePhase, ArtifactData, ArtifactZone } from "../../shared/types/game";
+import { UnitData, SpellData, CardZone } from "../../shared/types/card";
 
 
 // context and state 
@@ -81,7 +81,7 @@ export type GameSocketEvents = {
     onUpdateGamePhase: () => void;
     onUpdateMoney: (data: UpdateMoneyData) => void;
     onUpdateHealth: (data: UpdateHealthData) => void;
-    onUpdateDrawpileCount: (data: UpdateDrawpileCount) => void;
+    onUpdateDrawpileCount: (data: UpdateDrawpileCountData) => void;
     onUpdateCard: (data: UpdateCardData) => void;
     onUpdateArtifact: (data: UpdateArtifactData) => void;
     onUpdateHand: (newHand: SpellData[]) => void;

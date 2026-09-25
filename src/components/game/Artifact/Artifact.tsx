@@ -25,7 +25,7 @@ const Artifact: React.FC<Props> = ({ artifactData }) => {
     return (
         <span className={isPlayPhase ? undefined : Styles.artifact_container_open}>
             <button 
-                disabled={isPlayPhase} 
+                disabled={isPlayPhase || !state.isPlayerTurn} 
                 onClick={handleBuyArtifact} 
                 className={!artifactData ? Styles.artifact_bought : Styles.artifact}>
             </button>

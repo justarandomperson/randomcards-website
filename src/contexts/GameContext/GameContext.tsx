@@ -71,12 +71,12 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
             },
 
             onMatchStart: (data: MatchStartData) => {
-                // TODO: implement isFirstTurn doing stuff
                 setIsInQueue(false);
 
                 setState(produce(draft => {
                     draft.players.player.data = data.playerData;
                     draft.players.opponent.data = data.opponentData;
+                    draft.isPlayerTurn = data.isFirstTurn;
                 }));
 
                 navigate('/game');
@@ -84,6 +84,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
             onStartTurn: () => {
                 setState(produce(draft => {
                     draft.players.player.data.turn += 1;
+                    draft.isPlayerTurn = true;
                 }));
             },
             onUpdateGamePhase: () => {
@@ -211,6 +212,9 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     }, [emit]);
 
     const endTurn = useCallback(() => {
+        setState(produce(draft => {
+            draft.isPlayerTurn = false;
+        }));
         emit(SOCKET_EVENT_NAMES.END_TURN);
     }, [emit]);
 
