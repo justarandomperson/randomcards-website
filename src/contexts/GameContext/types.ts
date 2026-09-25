@@ -91,17 +91,26 @@ export type GameSocketEvents = {
 };
 
 
-export type MatchStartData = 
-    | { playerData: PlayerData, opponentData: PlayerData, firstTurnId: string }
+export type MatchStartData = {
+    playerData: PlayerData, 
+    opponentData: PlayerData, 
+    isFirstTurn: boolean 
+}
 
-export type UpdateMoneyData = 
-    | { newMoney: number, playerId: string }
+export type UpdateMoneyData = {
+    playerId: string,
+    newMoney: number
+}
 
-export type UpdateHealthData =
-    | { newHealth: number, playerId: string }
+export type UpdateHealthData = {
+    playerId: string,
+    newHealth: number
+}
 
-export type UpdateDrawpileCount = 
-    | { newDrawpileCount: number, playerId: string }
+export type UpdateDrawpileCountData = {
+    playerId: string,
+    newDrawpileCount: number
+}
 
 export type UpdateCardData =
     | { card: UnitData;  insideOf: CardZone.BENCH | CardZone.BOARD; index: number }

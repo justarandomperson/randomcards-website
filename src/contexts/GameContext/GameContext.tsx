@@ -1,7 +1,7 @@
 import { ReactNode, createContext, useContext, useState, useEffect, useRef, useCallback, useMemo } from "react"
 import { Socket } from 'socket.io-client'
 import { produce } from 'immer'
-import { BuyArtifactPayload, ClientGameState, GameSocketEvents, MatchStartData, PlayerData, PlaySpellPayload, PlayUnitPayload, SOCKET_EVENT_NAMES, UpdateArtifactData, UpdateCardData, UpdateDrawpileCount, UpdateHealthData, UpdateMoneyData } from './types'
+import { BuyArtifactPayload, ClientGameState, GameSocketEvents, MatchStartData, PlayerData, PlaySpellPayload, PlayUnitPayload, SOCKET_EVENT_NAMES, UpdateArtifactData, UpdateCardData, UpdateDrawpileCountData, UpdateHealthData, UpdateMoneyData } from './types'
 import { getPlaceholderGameState } from "../../shared/functions/game"
 import { createGameSocket, useGameSocketEmit } from "./socket"
 import { CardZone, SpellData, UnitData } from "../../shared/types/card"
@@ -71,7 +71,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
             },
 
             onMatchStart: (data: MatchStartData) => {
-                // TODO: implement firstTurnId doing stuff
+                // TODO: implement isFirstTurn doing stuff
                 setIsInQueue(false);
 
                 setState(produce(draft => {
@@ -103,7 +103,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                     player.data.health = data.newHealth;
                 }));
             },
-            onUpdateDrawpileCount: (data: UpdateDrawpileCount) => {
+            onUpdateDrawpileCount: (data: UpdateDrawpileCountData) => {
                 setState(produce(draft => {
                     const player = matchPlayerIds(draft, data.playerId, socket.id);
                     player.data.drawpileCount = data.newDrawpileCount;

@@ -5,8 +5,9 @@ export enum GamePhase {
 
 export type ArtifactData = {
     instanceId: string
+    id: string
     name: string
-    effect: string
+    effectDesc: string
     cost: number
 };
 

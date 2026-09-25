@@ -26,7 +26,6 @@ export const createGameSocket = (events: GameSocketEvents, token: string): Socke
     socket.on(SOCKET_EVENT_NAMES.UPDATE_BENCH,          events.onUpdateBench);
     socket.on(SOCKET_EVENT_NAMES.UPDATE_BOARD,          events.onUpdateBoard);
     socket.on(SOCKET_EVENT_NAMES.UPDATE_SHOP,           events.onUpdateShop);
-
     return socket;
 }
 
