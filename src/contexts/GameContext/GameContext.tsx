@@ -4,13 +4,14 @@ import { produce } from 'immer'
 import { BuyArtifactPayload, ClientGameState, GameSocketEvents, MatchStartData, PlayerData, PlaySpellPayload, PlayUnitPayload, SOCKET_EVENT_NAMES, UpdateArtifactData, UpdateCardData, UpdateDrawpileCountData, UpdateHealthData, UpdateMoneyData } from './types'
 import { getPlaceholderGameState } from "../../shared/functions/game"
 import { createGameSocket, useGameSocketEmit } from "./socket"
-import { CardZone, SpellData, UnitData } from "../../shared/types/card"
+import { CardType, CardZone, SpellData, UnitData } from "../../shared/types/card"
 import { ArtifactData, ArtifactZone, GamePhase } from "../../shared/types/game"
 import { useAuth } from "../AuthContext/AuthContext"
 import { isDeckFull } from "../../shared/functions/decks"
 import { useNavigate } from "react-router-dom"
 import { Deck } from "../../shared/types/decks"
 import { getDeckIds, matchPlayerIds, removeArtifactInstance, removeCardInstance } from "./helpers"
+import Card from "../../components/game/Card/Card"
 
 
 type GameContextType = {
@@ -113,20 +114,31 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
             onUpdateCard: (data: UpdateCardData) => {
                 const { instanceId } = data.card;
                 if (!instanceId) {
-                    throw new Error(`card ${data.card.name} in ${data.insideOf} has no instanceId`);
+                    throw new Error(`card ${data.card.name} in ${data.location.insideOf} has no instanceId`);
                 }
 
                 setState(produce(draft => {
                     removeCardInstance(draft, instanceId);
 
-                    switch (data.insideOf) {
+                    switch (data.location.insideOf) {
                         case CardZone.BENCH:
-                            draft.players.player.cards.bench[data.index] = data.card;
+                            if (data.card.type === CardType.SPELL) {
+                                throw new Error(`card ${data.card.name} cannot exist in ${data.location.insideOf}`);
+                            }
+                            draft.players.player.cards.bench[data.location.index] = data.card;
                             break;
+
                         case CardZone.BOARD:
+                            if (data.card.type === CardType.SPELL) {
+                                throw new Error(`card ${data.card.name} cannot exist in ${data.location.insideOf}`);
+                            }
                             draft.board[data.index] = data.card;
                             break;
+
                         case CardZone.HAND: {
+                            if (data.card.type === CardType.UNIT) {
+                                throw new Error(`card ${data.card.name} cannot exist in ${data.location.insideOf}`);
+                            }
                             const hand = draft.players.player.cards.hand;
                             hand.splice(data.index, 0, data.card);
                             break;
@@ -136,15 +148,18 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
             },
             onUpdateArtifact: (data: UpdateArtifactData) => {
                 setState(produce(draft => {
-                    removeArtifactInstance(draft, data.artifact.instanceId);
+                    removeArtifactInstance(draft, data.artifact.instanceId!);
 
-                    switch (data.insideOf) {
+                    switch (data.location.insideOf) {
                         case ArtifactZone.SHOP:
-                            draft.shop[data.index] = data.artifact;
+                            draft.shop[data.location.index] = data.artifact;
                             break;
                         case ArtifactZone.PLAYER: {
+                            if (!data.playerId) {
+                                throw new Error('no playerId provided.');
+                            }
                             const player = matchPlayerIds(draft, data.playerId, socket.id)
-                            player.data.artifacts.splice(data.index, 0, data.artifact);
+                            player.data.artifacts.splice(data.location.index, 0, data.artifact);
                             break;
                         }
                     }

@@ -1,5 +1,5 @@
-import { GamePhase, ArtifactData, ArtifactZone } from "../../shared/types/game";
-import { UnitData, SpellData, CardZone } from "../../shared/types/card";
+import { GamePhase, ArtifactData, ArtifactZone, ArtifactLocation } from "../../shared/types/game";
+import { UnitData, SpellData, CardZone, CardLocation } from "../../shared/types/card";
 
 
 // context and state 
@@ -112,15 +112,17 @@ export type UpdateDrawpileCountData = {
     newDrawpileCount: number
 }
 
-export type UpdateCardData =
-    | { card: UnitData;  insideOf: CardZone.BENCH | CardZone.BOARD; index: number }
-    | { card: SpellData; insideOf: CardZone.HAND;                   index: number };
+export type UpdateCardData = {
+  card: UnitData | SpellData,
+  location: CardLocation,
+  index: number
+}
 
-
-export type UpdateArtifactData = 
-    | { artifact: ArtifactData; insideOf: ArtifactZone.SHOP; index: number }
-    | { artifact: ArtifactData; insideOf: ArtifactZone.PLAYER; index: number, playerId: string }
-
+export type UpdateArtifactData = { 
+  artifact: ArtifactData,
+  location: ArtifactLocation,
+  playerId?: string 
+}
 
 // other
 export type DeckIds = {
