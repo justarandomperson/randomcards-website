@@ -32,9 +32,7 @@ export const createGameSocket = (events: GameSocketEvents, token: string): Socke
 
 export const useGameSocketEmit = (socketRef: RefObject<Socket | null>) => {
     return useCallback(<T,>(event: string, payload?: T) => {
-        console.log("trying to emit", socketRef)
         if (!socketRef.current) return;
-        console.log("emitting event:", event)
         socketRef.current.emit(event, payload);
     }, [socketRef]);
 }

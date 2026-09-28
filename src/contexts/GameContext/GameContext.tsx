@@ -125,6 +125,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                             if (data.card.type === CardType.SPELL) {
                                 throw new Error(`card ${data.card.name} cannot exist in ${data.location.insideOf}`);
                             }
+
                             draft.players.player.cards.bench[data.location.index] = data.card;
                             break;
 
@@ -132,7 +133,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                             if (data.card.type === CardType.SPELL) {
                                 throw new Error(`card ${data.card.name} cannot exist in ${data.location.insideOf}`);
                             }
-                            draft.board[data.index] = data.card;
+
+                            draft.board[data.location.index] = data.card;
                             break;
 
                         case CardZone.HAND: {
@@ -189,7 +191,6 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
 
         const socket = createGameSocket(gameEvents, token);
         socketRef.current = socket;
-        console.log("set current to", socket.id)
 
         return () => {
             socket.disconnect();
