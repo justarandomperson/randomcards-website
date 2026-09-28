@@ -4,7 +4,7 @@ import { CardType, UnitData, SpellData, CardLocation, CardZone } from '../types/
 
 export const getPlaceholderUnit = (): UnitData => {
     return {
-        id: "1",
+        id: "U_1",
         name: "dog",
         type: CardType.UNIT,
         effectDesc: "im dog",
@@ -17,13 +17,14 @@ export const getPlaceholderUnit = (): UnitData => {
 
 export const getPlaceholderSpell = (): SpellData => {
     return {
-        id: "2",
+        id: "S_1",
         name: "cat",
         type: CardType.SPELL,
         effectDesc: "although i may look like it, im not dog. have a wonderful rest of your day!",
         cost: 3,
     }
 }
+
 
 export const isCardLocationCorrect = (cardType: CardType, location: CardLocation): boolean => {
     if (cardType === CardType.UNIT && location.insideOf === CardZone.HAND) {
