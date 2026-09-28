@@ -189,6 +189,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
 
         const socket = createGameSocket(gameEvents, token);
         socketRef.current = socket;
+        console.log("set current to", socket.id)
 
         return () => {
             socket.disconnect();
@@ -203,7 +204,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
         }
 
         const payload = getDeckIds(deck);
-
+        
         setIsInQueue(true);
         emit(SOCKET_EVENT_NAMES.QUEUE, payload);
     }, [emit]);
