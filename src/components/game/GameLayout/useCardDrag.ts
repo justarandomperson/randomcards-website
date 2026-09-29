@@ -41,7 +41,7 @@ export function useCardDrag() {
         if (!card.cardData.instanceId) {
             throw new Error (`card ${card.cardData.name} has to have an instanceId`);
         }
-        
+
         switch (card.cardData.type) {
             case CardType.UNIT: {
                 const payload = { instanceId: card.cardData.instanceId, boardIndex: to.index };
