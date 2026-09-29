@@ -43,12 +43,17 @@ export function useCardDrag() {
         }
         
         switch (card.cardData.type) {
-            case CardType.UNIT:
-                playUnit({ instanceId: card.cardData.instanceId, boardIndex: to.index });
+            case CardType.UNIT: {
+                const payload = { instanceId: card.cardData.instanceId, boardIndex: to.index };
+                playUnit(payload, card.cardData, card.location.index);
                 break;
-            case CardType.SPELL:
-                playSpell({ instanceId: card.cardData.instanceId });
+            }
+
+            case CardType.SPELL: {
+                const payload = { instanceId: card.cardData.instanceId };
+                playSpell(payload, card.cardData, card.location.index);
                 break;
+            }
         }
     }
 

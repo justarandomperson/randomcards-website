@@ -6,10 +6,11 @@ import Styles from './Artifact.module.css'
 
 type Props = {
     artifactData: ArtifactData | null
+    shopIndex: number
 }
 
 
-const Artifact: React.FC<Props> = ({ artifactData }) => {
+const Artifact: React.FC<Props> = ({ artifactData, shopIndex }) => {
     const { emitters, state } = useGameContext();
     const { buyArtifact } = emitters;
     const isPlayPhase = (state.phase === GamePhase.PLAY);
@@ -19,7 +20,8 @@ const Artifact: React.FC<Props> = ({ artifactData }) => {
             return; 
         }
 
-        buyArtifact({instanceId: artifactData.instanceId});
+        const payload = { instanceId: artifactData.instanceId };
+        buyArtifact(payload, artifactData, shopIndex);
     }
 
     return (

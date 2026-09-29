@@ -11,7 +11,6 @@ import { isDeckFull } from "../../shared/functions/decks"
 import { useNavigate } from "react-router-dom"
 import { Deck } from "../../shared/types/decks"
 import { getDeckIds, matchPlayerIds, removeArtifactInstance, removeCardInstance } from "./helpers"
-import Card from "../../components/game/Card/Card"
 
 
 type GameContextType = {
@@ -21,9 +20,9 @@ type GameContextType = {
     emitters: {
         queue: (deck: Deck) => void,
         dequeue: () => void,
-        playUnit: (payload: PlayUnitPayload) => void,
-        playSpell: (payload: PlaySpellPayload) => void,
-        buyArtifact: (payload: BuyArtifactPayload) => void,
+        playUnit: (payload: PlayUnitPayload, card: UnitData, benchIndex: number) => void,
+        playSpell: (payload: PlaySpellPayload, card: SpellData, handIndex: number) => void,
+        buyArtifact: (payload: BuyArtifactPayload, artifact: ArtifactData, shopIndex: number) => void,
         endTurn: () => void
     }
 }
@@ -132,10 +131,11 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                             if (data.card.type === CardType.SPELL) {
                                 throw new Error(`card ${data.card.name} cannot exist in ${data.location.insideOf}`);
                             }
-                            draft.board[data.index] = data.card;
+                            draft.board[data.location.index] = data.card;
                             break;
 
                         case CardZone.HAND: {
+                            //! wait does it always remove stuuff no it shouldnt be like that
                             if (data.card.type === CardType.UNIT) {
                                 throw new Error(`card ${data.card.name} cannot exist in ${data.location.insideOf}`);
                             }
@@ -215,15 +215,30 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     }, [emit]);
 
 
-    const playUnit = useCallback((payload: PlayUnitPayload) => {
+    const playUnit = useCallback((payload: PlayUnitPayload, card: UnitData, benchIndex: number) => {
+        setState(produce(draft => {
+            draft.players.player.cards.bench[benchIndex] = null;
+            draft.board[payload.boardIndex] = card;
+        }));
+
         emit(SOCKET_EVENT_NAMES.PLAY_UNIT, payload);
     }, [emit]);
 
-    const playSpell = useCallback((payload: PlaySpellPayload) => {
+    const playSpell = useCallback((payload: PlaySpellPayload, card: SpellData, handIndex: number) => {
+        setState(produce(draft => {
+            draft.players.player.cards.hand.splice(handIndex, 0, card);
+            draft.players.player.data.drawpileCount += 1;
+        }));
+
         emit(SOCKET_EVENT_NAMES.PLAY_SPELL, payload);
     }, [emit]);
 
-    const buyArtifact = useCallback((payload: BuyArtifactPayload) => {
+    const buyArtifact = useCallback((payload: BuyArtifactPayload, artifact: ArtifactData, shopIndex: number) => {
+        setState(produce(draft => {
+            draft.shop[shopIndex] = null;
+            draft.players.player.data.artifacts.push(artifact);
+        }));
+
         emit(SOCKET_EVENT_NAMES.BUY_ARTIFACT, payload);
     }, [emit]);
 

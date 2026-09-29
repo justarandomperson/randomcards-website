@@ -14,7 +14,7 @@ const Shop: React.FC = () => {
             {shop.map((artifact, index) => (
 
                 <div className={Styles.shop_item} key={index}>
-                    <Artifact artifactData={artifact}/>
+                    <Artifact artifactData={artifact} shopIndex={index}/>
 
                     {artifact && 
                         <p className={Styles.artifact_cost}>{`${artifact.cost}$`}</p>

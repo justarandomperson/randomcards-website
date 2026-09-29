@@ -34,9 +34,11 @@ const PlayerBar: React.FC<Props> = ({ isOpponent }) => {
                         <p>Turn {player.data.turn}</p>
 
                         <div className={Styles.end_turn_btn_container}>
-                            <button onClick={endTurn}>
-                                End Turn
-                            </button>
+                            {state.isPlayerTurn &&
+                                <button onClick={endTurn}>
+                                    End Turn
+                                </button>
+                            }
                         </div>    
                     </>
                 }

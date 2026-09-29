@@ -12,7 +12,7 @@ type Props = {
 
 
 const Board: React.FC<Props> = ({ activeCardDrag }) => {
-    const { board, phase, isPlayerTurn } = useGameContext().state
+    const { board, phase } = useGameContext().state
     const isPlayPhase = (phase === GamePhase.PLAY)
 
     const playerBoardRow = board.slice(0, 4)
