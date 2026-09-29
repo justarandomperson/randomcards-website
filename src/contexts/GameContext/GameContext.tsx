@@ -120,6 +120,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                     removeCardInstance(draft, instanceId);
 
                     switch (data.location.insideOf) {
+                        // TODO: add a case for none, that means the card is just deleted from screen
                         case CardZone.BENCH:
                             if (data.card.type === CardType.SPELL) {
                                 throw new Error(`card ${data.card.name} cannot exist in ${data.location.insideOf}`);
