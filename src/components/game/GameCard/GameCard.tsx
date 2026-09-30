@@ -1,8 +1,10 @@
 import { useDraggable } from '@dnd-kit/core'
-import { UnitData, SpellData } from '../../../shared/types/card'
+import { UnitData, SpellData, CardType } from '../../../shared/types/card'
 import { CardLocation } from '../../../shared/types/card'
 import Card from '../Card/Card'
 import { useGameContext } from '../../../contexts/GameContext/GameContext'
+import styles from "./GameCard.module.css"
+import classNames from "classnames"
 
 
 type Props = {
@@ -12,7 +14,10 @@ type Props = {
 
 
 const GameCard: React.FC<Props> = ({ cardData, location }) => {
-    const { isPlayerTurn } = useGameContext().state;
+    const { state, selectedCard, setSelectedCard, emitters } = useGameContext()
+    const { isPlayerTurn } = state
+
+
     const isDraggable = location.insideOf !== 'board'; // board cards arent draggable
 
     const { attributes, listeners, setNodeRef, isDragging } = useDraggable({ 
@@ -22,12 +27,30 @@ const GameCard: React.FC<Props> = ({ cardData, location }) => {
         }
     );
 
-    const style = {
-        opacity: isDragging ? 0.4 : 1,
-    };
+    const allyUnit = (cardData.type == CardType.UNIT && location.index < 4) || location.insideOf == "bench"
+    const hasCardSelected = selectedCard != undefined
 
+    if (location.insideOf == "board") console.log(hasCardSelected, allyUnit, location.index, state.board)
+
+    const cardClass = classNames({
+        [styles.draggedCard]: isDragging,
+        [styles.cardPlayerTurn]: isPlayerTurn && (hasCardSelected !== allyUnit),
+        [styles.selectedCard]: selectedCard == cardData.instanceId
+    })
+
+    const onSelectedHandler = () => {
+        if (allyUnit && selectedCard) return
+        if (allyUnit)
+        {
+            setSelectedCard(cardData.instanceId)
+            return
+        }
+        if (!selectedCard || !cardData.instanceId) return
+        emitters.attackUnit({instanceId: selectedCard, targetId: cardData.instanceId})
+    }
+    
     return (
-        <div ref={setNodeRef} style={style} {...(isDraggable ? attributes : {})} {...(isDraggable ? listeners : {})}>
+        <div ref={setNodeRef} className={cardClass} {...(isDraggable ? attributes : {})} {...(isDraggable ? listeners : {})} onClick={onSelectedHandler}>
             <Card cardData={cardData}/>
         </div>
     );

@@ -1,10 +1,10 @@
 import { ReactNode, createContext, useContext, useState, useEffect, useRef, useCallback, useMemo } from "react"
 import { Socket } from 'socket.io-client'
 import { produce } from 'immer'
-import { BuyArtifactPayload, ClientGameState, GameSocketEvents, MatchStartData, PlayerData, PlaySpellPayload, PlayUnitPayload, SOCKET_EVENT_NAMES, UpdateArtifactData, UpdateCardData, UpdateDrawpileCountData, UpdateHealthData, UpdateMoneyData } from './types'
+import { AttackPlayerPayload, AttackUnitPayload, BuyArtifactPayload, ClientGameState, GameSocketEvents, MatchStartData, PlayerData, PlaySpellPayload, PlayUnitPayload, SOCKET_EVENTS, UpdateArtifactData, UpdateCardData, UpdateDrawpileCountData, UpdateHealthData, UpdateMoneyData } from './types'
 import { getPlaceholderGameState } from "../../shared/functions/game"
 import { createGameSocket, useGameSocketEmit } from "./socket"
-import { CardType, CardZone, SpellData, UnitData } from "../../shared/types/card"
+import { CardLocation, CardType, CardZone, SpellData, UnitData } from "../../shared/types/card"
 import { ArtifactData, ArtifactZone, GamePhase } from "../../shared/types/game"
 import { useAuth } from "../AuthContext/AuthContext"
 import { isDeckFull } from "../../shared/functions/decks"
@@ -17,13 +17,18 @@ type GameContextType = {
     state: ClientGameState,
     isConnected: boolean,
     isInQueue: boolean,
+    selectedCard: string | undefined,
+    setSelectedCard: (
+        instanceId: string | undefined
+    ) => void,
     emitters: {
         queue: (deck: Deck) => void,
         dequeue: () => void,
         playUnit: (payload: PlayUnitPayload, card: UnitData, benchIndex: number) => void,
         playSpell: (payload: PlaySpellPayload, card: SpellData, handIndex: number) => void,
         buyArtifact: (payload: BuyArtifactPayload, artifact: ArtifactData, shopIndex: number) => void,
-        endTurn: () => void
+        endTurn: () => void,
+        attackUnit: (payload: AttackUnitPayload) => void
     }
 }
 
@@ -31,13 +36,16 @@ const GameContext = createContext<GameContextType>({
     state: getPlaceholderGameState(),
     isConnected: false,
     isInQueue: false,
+    selectedCard: undefined,
+    setSelectedCard: () => {},
     emitters: {
         queue: () => {},
         dequeue: () => {},
         playUnit: () => {},
         playSpell: () => {},
         buyArtifact: () => {},
-        endTurn: () => {}
+        endTurn: () => {},
+        attackUnit: () => {}
     }
 });
 
@@ -51,6 +59,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     const [state, setState] = useState<ClientGameState>(getPlaceholderGameState());
     const [isConnected, setIsConnected] = useState(false);
     const [isInQueue, setIsInQueue] = useState(false);
+    const [selectedCard, setSelectedCard] = useState<string | undefined>(undefined)
 
     const socketRef = useRef<Socket | null>(null);
     const navigate = useNavigate();
@@ -133,7 +142,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                             if (data.card.type === CardType.SPELL) {
                                 throw new Error(`card ${data.card.name} cannot exist in ${data.location.insideOf}`);
                             }
-                            draft.board[data.index] = data.card;
+                            draft.board[data.location.index] = data.card;
                             break;
 
                         case CardZone.HAND: {
@@ -142,7 +151,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                                 throw new Error(`card ${data.card.name} cannot exist in ${data.location.insideOf}`);
                             }
                             const hand = draft.players.player.cards.hand;
-                            hand.splice(data.index, 0, data.card);
+                            hand.splice(data.location.index, 0, data.card);
                             break;
                         }
                     }
@@ -207,12 +216,12 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
         const payload = getDeckIds(deck);
         
         setIsInQueue(true);
-        emit(SOCKET_EVENT_NAMES.QUEUE, payload);
+        emit(SOCKET_EVENTS.QUEUE, payload);
     }, [emit]);
 
     const dequeue = useCallback(() => {
         setIsInQueue(false);
-        emit(SOCKET_EVENT_NAMES.DEQUEUE);
+        emit(SOCKET_EVENTS.DEQUEUE);
     }, [emit]);
 
 
@@ -222,17 +231,21 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
             draft.board[payload.boardIndex] = card;
         }));
 
-        emit(SOCKET_EVENT_NAMES.PLAY_UNIT, payload);
+        emit(SOCKET_EVENTS.PLAY_UNIT, payload);
     }, [emit]);
 
     const playSpell = useCallback((payload: PlaySpellPayload, card: SpellData, handIndex: number) => {
         setState(produce(draft => {
-            draft.players.player.cards.hand.splice(handIndex, 0, card);
+            draft.players.player.cards.hand.splice(handIndex, 1);
             draft.players.player.data.drawpileCount += 1;
         }));
 
-        emit(SOCKET_EVENT_NAMES.PLAY_SPELL, payload);
+        emit(SOCKET_EVENTS.PLAY_SPELL, payload);
     }, [emit]);
+
+    const attackUnit = useCallback((payload: AttackUnitPayload) => {
+        emit(SOCKET_EVENTS.ATTACK_UNIT, payload)
+    }, [emit])
 
     const buyArtifact = useCallback((payload: BuyArtifactPayload, artifact: ArtifactData, shopIndex: number) => {
         setState(produce(draft => {
@@ -240,25 +253,25 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
             draft.players.player.data.artifacts.push(artifact);
         }));
 
-        emit(SOCKET_EVENT_NAMES.BUY_ARTIFACT, payload);
+        emit(SOCKET_EVENTS.BUY_ARTIFACT, payload);
     }, [emit]);
 
     const endTurn = useCallback(() => {
         setState(produce(draft => {
             draft.isPlayerTurn = false;
         }));
-        emit(SOCKET_EVENT_NAMES.END_TURN);
+        emit(SOCKET_EVENTS.END_TURN);
     }, [emit]);
 
 
     const emitters = useMemo(() => ({
-        queue, dequeue, playUnit, playSpell, buyArtifact, endTurn
-    }), [queue, dequeue, playUnit, playSpell, buyArtifact, endTurn]);
+        queue, dequeue, playUnit, playSpell, buyArtifact, endTurn, attackUnit
+    }), [queue, dequeue, playUnit, playSpell, buyArtifact, endTurn, attackUnit]);
 
 
     const value = useMemo(() => ({
-        state, isConnected, isInQueue, emitters
-    }), [state, isConnected, isInQueue, emitters]);
+        state, isConnected, selectedCard, setSelectedCard, isInQueue, emitters
+    }), [state, isConnected, isInQueue, selectedCard, setSelectedCard, emitters]);
 
     return (
         <GameContext.Provider value={value}>

@@ -37,7 +37,7 @@ export type PlayerData = {
 }
 
 // actions and events
-export const SOCKET_EVENT_NAMES = { // this is used both on 'emit' and on 'on'
+export const SOCKET_EVENTS = { // this is used for both emitted events and listened events
     CONNECT: 'connect',
     DISCONNECT: 'disconnect',
 
@@ -60,6 +60,9 @@ export const SOCKET_EVENT_NAMES = { // this is used both on 'emit' and on 'on'
     UPDATE_BENCH: 'update_bench',
     UPDATE_BOARD: 'update_board',
     UPDATE_SHOP: 'update_shop',
+
+    ATTACK_UNIT: "attack_unit",
+    ATTACK_PLAYER: "attack_player"
 } as const;
 
 
@@ -69,6 +72,10 @@ export type PlayUnitPayload = { instanceId: string, boardIndex: number }
 export type PlaySpellPayload = { instanceId: string }
 
 export type BuyArtifactPayload = { instanceId: string }
+
+export type AttackUnitPayload = { instanceId: string, targetId: string }
+
+export type AttackPlayerPayload = { instanceId: string, isOpponent: boolean }
 
 
 // from server to client

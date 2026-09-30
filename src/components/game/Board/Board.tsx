@@ -23,7 +23,7 @@ const Board: React.FC<Props> = ({ activeCardDrag }) => {
 
             <div className={Styles.opponent_row}>
                 {Array.from({ length: MAX_CARDS_PER_BOARD_ROW }).map((_, i) => (
-                    <CardSlot cardData={opponentBoardRow[i]} location={{ insideOf: CardZone.BOARD, index: i }}
+                    <CardSlot cardData={opponentBoardRow[i]} location={{ insideOf: CardZone.BOARD, index: i + MAX_CARDS_PER_BOARD_ROW }}
                     activeCardDrag={null} key={i}/>
                 ))}
             </div>
