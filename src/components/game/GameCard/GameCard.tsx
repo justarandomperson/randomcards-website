@@ -1,5 +1,5 @@
 import { useDraggable } from '@dnd-kit/core'
-import { UnitData, SpellData, CardType } from '../../../shared/types/card'
+import { UnitData, SpellData, CardType, CardZone } from '../../../shared/types/card'
 import { CardLocation } from '../../../shared/types/card'
 import Card from '../Card/Card'
 import { useGameContext } from '../../../contexts/GameContext/GameContext'
@@ -14,11 +14,14 @@ type Props = {
 
 
 const GameCard: React.FC<Props> = ({ cardData, location }) => {
+    if (location.insideOf === CardZone.NONE) {
+        throw new Error('card doesnt exist');
+    }
+
     const { state, selectedCard, setSelectedCard, emitters } = useGameContext()
     const { isPlayerTurn } = state
 
-
-    const isDraggable = location.insideOf !== 'board'; // board cards arent draggable
+    const isDraggable = location.insideOf !== CardZone.BOARD; // board cards arent draggable
 
     const { attributes, listeners, setNodeRef, isDragging } = useDraggable({ 
             id: `${location.insideOf}-${location.index}`, 

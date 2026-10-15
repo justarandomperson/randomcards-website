@@ -1,8 +1,8 @@
-import { useReducer, createContext, type PropsWithChildren, useContext } from 'react'
-import { UNITS_IN_DECK, SPELLS_IN_DECK } from '../../shared/constants/game'
-import { getPlaceholderUnit, getPlaceholderSpell } from '../../shared/functions/card'
+import { useReducer, createContext, type PropsWithChildren, useContext, useEffect, useState } from 'react'
 import { DeckAction, DeckReducer } from './reducer'
 import { DeckState } from './types'
+import axios from 'axios'
+import { Storage } from '../../shared/types/decks'
 
 
 type DeckContextType = {
@@ -15,17 +15,34 @@ const DeckContext = createContext<DeckContextType | null>(null);
 
 
 export const DeckProvider: React.FC<PropsWithChildren> = ({ children }) => {
+    const axiosApi = axios.create({ /* put url here */ });
+    const [storage, setStorage ] = useState<Storage>({ units: [], spells: [] })
+
+    useEffect(() => {
+        const fetchStorage = async () => {
+            try {
+                const { data } = await axiosApi.get(/* put url here */ 'placeholder');
+                setStorage(data);
+
+            } catch (error) {
+                console.error('Could not load users');
+            }
+        }
+
+        fetchStorage();
+    });
+
+
     const [deckContext, dispatch] = useReducer(DeckReducer, 
         {
-            // TODO: obviously we dont generate the players storage or deck like that. its temporary
             deck: {
-                units: Array.from({ length: UNITS_IN_DECK }, getPlaceholderUnit),            
-                spells: Array.from({ length: SPELLS_IN_DECK }, getPlaceholderSpell)
+                units: [],           
+                spells: []
             },
 
             storage: {
-                units: Array.from({ length: UNITS_IN_DECK }, getPlaceholderUnit),            
-                spells: Array.from({ length: SPELLS_IN_DECK }, getPlaceholderSpell)
+                units: storage.units,          
+                spells: storage.spells
             }
         }
     );
