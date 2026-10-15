@@ -28,7 +28,8 @@ type GameContextType = {
         playSpell: (payload: PlaySpellPayload, card: SpellData, handIndex: number) => void,
         buyArtifact: (payload: BuyArtifactPayload, artifact: ArtifactData, shopIndex: number) => void,
         endTurn: () => void,
-        attackUnit: (payload: AttackUnitPayload) => void
+        attackUnit: (payload: AttackUnitPayload) => void,
+        selectTarget: (targetId: string) => void
     }
 }
 
@@ -45,7 +46,8 @@ const GameContext = createContext<GameContextType>({
         playSpell: () => {},
         buyArtifact: () => {},
         endTurn: () => {},
-        attackUnit: () => {}
+        attackUnit: () => {},
+        selectTarget: () => {}
     }
 });
 
@@ -94,6 +96,11 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                 setState(produce(draft => {
                     draft.players.player.data.turn += 1;
                     draft.isPlayerTurn = true;
+                }));
+            },
+            onSelectTarget: () => {
+                setState(produce(draft => {
+                    draft.selectingTarget = true;
                 }));
             },
             onUpdateGamePhase: () => {
@@ -263,10 +270,20 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
         emit(SOCKET_EVENTS.END_TURN);
     }, [emit]);
 
+    const selectTarget = useCallback((targetId: string) => {
+        setState(produce(draft => {
+            draft.selectingTarget = false;
+        }));
+
+        emit(SOCKET_EVENTS.SELECTED_TARGET, targetId)
+    }, [emit])
+
 
     const emitters = useMemo(() => ({
-        queue, dequeue, playUnit, playSpell, buyArtifact, endTurn, attackUnit
-    }), [queue, dequeue, playUnit, playSpell, buyArtifact, endTurn, attackUnit]);
+        queue, dequeue, playUnit, playSpell, buyArtifact, endTurn, attackUnit, selectTarget
+    }), [queue, dequeue, playUnit, playSpell, buyArtifact, endTurn, attackUnit, selectTarget
+
+    ]);
 
 
     const value = useMemo(() => ({

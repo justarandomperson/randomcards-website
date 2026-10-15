@@ -35,10 +35,15 @@ const GameCard: React.FC<Props> = ({ cardData, location }) => {
     const cardClass = classNames({
         [styles.draggedCard]: isDragging,
         [styles.cardPlayerTurn]: isPlayerTurn && (hasCardSelected !== allyUnit),
-        [styles.selectedCard]: selectedCard == cardData.instanceId
+        [styles.selectedCard]: selectedCard == cardData.instanceId,
+        [styles.selectableCard]: state.selectingTarget
     })
 
     const onSelectedHandler = () => {
+        if (state.selectingTarget)
+        {
+            emitters.selectTarget(cardData.id)
+        }
         if (allyUnit && selectedCard) return
         if (allyUnit)
         {

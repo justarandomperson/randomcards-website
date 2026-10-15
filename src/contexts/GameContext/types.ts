@@ -8,7 +8,8 @@ export type ClientGameState = {
     board: (UnitData | null)[]
     shop: (ArtifactData | null)[]
     phase: GamePhase
-    isPlayerTurn: boolean
+    isPlayerTurn: boolean,
+    selectingTarget: boolean
 };
 
 export type PlayerState = {
@@ -47,6 +48,8 @@ export const SOCKET_EVENTS = { // this is used for both emitted events and liste
     PLAY_SPELL: 'play_spell',
     BUY_ARTIFACT: 'buy_artifact',
     END_TURN: 'end_turn',
+    SELECT_TARGET: 'select_target',
+    SELECTED_TARGET: 'selected_target',
 
     MATCH_START: 'match_start',
     START_TURN: 'start_turn',
@@ -85,6 +88,7 @@ export type GameSocketEvents = {
 
     onMatchStart: (data: MatchStartData) => void;
     onStartTurn: () => void;
+    onSelectTarget: () => void;
     onUpdateGamePhase: () => void;
     onUpdateMoney: (data: UpdateMoneyData) => void;
     onUpdateHealth: (data: UpdateHealthData) => void;

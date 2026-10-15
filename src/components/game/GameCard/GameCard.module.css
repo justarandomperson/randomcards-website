@@ -1,4 +1,4 @@
-.draggedCard, .cardPlayerTurn:hover, .selectedCard
+.draggedCard, .cardPlayerTurn:hover, .selectedCard, .selectableCard
 {
     opacity: .4;
 }
