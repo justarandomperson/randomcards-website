@@ -1,10 +1,10 @@
 import { ReactNode, createContext, useContext, useState, useEffect, useRef, useCallback, useMemo } from "react"
 import { Socket } from 'socket.io-client'
 import { produce } from 'immer'
-import { AttackPlayerPayload, AttackUnitPayload, BuyArtifactPayload, ClientGameState, GameSocketEvents, MatchStartData, PlayerData, PlaySpellPayload, PlayUnitPayload, SOCKET_EVENTS, UpdateArtifactData, UpdateCardData, UpdateDrawpileCountData, UpdateHealthData, UpdateMoneyData } from './types'
+import { AttackUnitPayload, BuyArtifactPayload, ClientGameState, GameSocketEvents, MatchStartData, PlaySpellPayload, PlayUnitPayload, SOCKET_EVENTS, UpdateArtifactData, UpdateCardData, UpdateDrawpileCountData, UpdateHealthData, UpdateMoneyData } from './types'
 import { getPlaceholderGameState } from "../../shared/functions/game"
 import { createGameSocket, useGameSocketEmit } from "./socket"
-import { CardLocation, CardType, CardZone, SpellData, UnitData } from "../../shared/types/card"
+import { CardType, CardZone, SpellData, UnitData } from "../../shared/types/card"
 import { ArtifactData, ArtifactZone, GamePhase } from "../../shared/types/game"
 import { useAuth } from "../AuthContext/AuthContext"
 import { isDeckFull } from "../../shared/functions/decks"
@@ -136,7 +136,6 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                     removeCardInstance(draft, instanceId);
 
                     switch (data.location.insideOf) {
-                        // TODO: add a case for none, that means the card is just deleted from screen
                         case CardZone.BENCH:
                             if (data.card.type === CardType.SPELL) {
                                 throw new Error(`card ${data.card.name} cannot exist in ${data.location.insideOf}`);
@@ -160,7 +159,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                             const hand = draft.players.player.cards.hand;
                             hand.splice(data.location.index, 0, data.card);
                             break;
-                        }
+                        }                            
                     }
                 }));
             },

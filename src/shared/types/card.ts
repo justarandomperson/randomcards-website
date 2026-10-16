@@ -29,13 +29,13 @@ export type SpellData = {
 export enum CardZone {
     HAND = 'hand',
     BENCH = 'bench',
-    BOARD = 'board'
+    BOARD = 'board',
+    NONE = 'none'
 }
 
-export type CardLocation = {
-    insideOf: CardZone
-    index: number
-};
+export type CardLocation = 
+    | { insideOf: CardZone.BENCH | CardZone.BOARD | CardZone.HAND, index: number }
+    | { insideOf: CardZone.NONE }
 
 export type DraggedCard = {
     cardData: UnitData | SpellData
