@@ -1,8 +1,8 @@
 import { useReducer, createContext, type PropsWithChildren, useContext, useEffect, useState } from 'react'
 import { DeckAction, DeckReducer } from './reducer'
 import { DeckState } from './types'
-import axios from 'axios'
 import { Storage } from '../../shared/types/decks'
+import { axiosInstance, fetchStorage } from '../../api/axiosInstance'
 
 
 type DeckContextType = {
@@ -15,23 +15,16 @@ const DeckContext = createContext<DeckContextType | null>(null);
 
 
 export const DeckProvider: React.FC<PropsWithChildren> = ({ children }) => {
-    const axiosApi = axios.create({ /* put url here */ });
     const [storage, setStorage ] = useState<Storage>({ units: [], spells: [] })
 
     useEffect(() => {
-        const fetchStorage = async () => {
-            try {
-                const { data } = await axiosApi.get(/* put url here */ 'placeholder');
-                setStorage(data);
-
-            } catch (error) {
-                console.error('Could not load users');
-            }
+        const getStorage = async () => {
+            const storage = await fetchStorage()
+            setStorage(storage);
         }
 
-        fetchStorage();
+        getStorage();
     });
-
 
     const [deckContext, dispatch] = useReducer(DeckReducer, 
         {

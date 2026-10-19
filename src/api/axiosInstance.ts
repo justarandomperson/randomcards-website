@@ -26,3 +26,15 @@ export const login = async (username: string, password: string) => {
 export const validate = async (token: string) => {
     return (await axiosInstance.post("/auth/validate", {token: token}))
 }
+
+export const fetchStorage = async () => {
+    try {
+        const { data } = await axiosInstance.get("/decks");
+        return data;
+    } 
+    catch (error) {
+        console.error('Could not load users');
+    }
+
+}
+
