@@ -18,7 +18,7 @@ const DeckContext = createContext<DeckContextType | null>(null);
 export const DeckProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const [storage, setStorage ] = useState<Storage>(
         { 
-            units: new Map<string, { data: UnitData, amount: number }>,
+            units: [],
             spells: new Map<string, { data: SpellData, amount: number }> 
         }
     )
@@ -33,7 +33,7 @@ export const DeckProvider: React.FC<PropsWithChildren> = ({ children }) => {
                     {
                         deck: {
                             units: [],           
-                            spells: []
+                            spells: new Map<string, { data: SpellData, amount: number }> 
                         },
                         storage: storage
                     }
@@ -47,7 +47,7 @@ export const DeckProvider: React.FC<PropsWithChildren> = ({ children }) => {
         {
             deck: {
                 units: [],           
-                spells: []
+                spells: new Map<string, { data: SpellData, amount: number }> 
             },
 
             storage: {
