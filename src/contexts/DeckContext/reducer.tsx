@@ -2,16 +2,17 @@ import { DeckState } from './types'
 import { CardType, UnitData, SpellData } from '../../shared/types/card'
 import { isUnitsDeckFull, isSpellsDeckFull } from '../../shared/functions/decks';
 
-
 export enum DeckActionType {
     ADD_CARD = 'ADD_CARD',
-    REMOVE_CARD = 'REMOVE_CARD'
+    REMOVE_CARD = 'REMOVE_CARD',
+    SET_DECK_STATE = 'SET_DECK_STATE'
 }
 
 
 export type DeckAction = 
     | { type: DeckActionType.ADD_CARD; card: UnitData | SpellData }
     | { type: DeckActionType.REMOVE_CARD; card: UnitData | SpellData }
+    | { type: DeckActionType.SET_DECK_STATE; deckState: DeckState }
 
 
 const addCard = (state: DeckState, card: UnitData | SpellData): DeckState => {
@@ -75,6 +76,11 @@ const removeCard = (state: DeckState, card: UnitData | SpellData): DeckState => 
     }
 }
 
+const setDeckState = (state: DeckState, deckState: DeckState) =>
+{
+    return deckState
+}
+
 
 export const DeckReducer = (state: DeckState, action: DeckAction): DeckState => {
     switch (action.type) {
@@ -83,6 +89,8 @@ export const DeckReducer = (state: DeckState, action: DeckAction): DeckState => 
 
         case DeckActionType.REMOVE_CARD:
             return removeCard(state, action.card);
+        case DeckActionType.SET_DECK_STATE:
+            return setDeckState(state, action.deckState)
 
         default:
             throw new Error('DeckReducer does not have this type. ');

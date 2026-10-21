@@ -12,9 +12,9 @@ type Props = {
 
 
 const CardList: React.FC<Props> = ({ location, type }) => {
-    const deckStateLocation = useDeckContext().state[location];
+    const { state } = useDeckContext();
+    const deckStateLocation = state[location]
     const items = type === CardType.UNIT ? deckStateLocation.units : deckStateLocation.spells;
-
     return (
         <ul className={Styles.card_list}>
             {items.map((item) => {

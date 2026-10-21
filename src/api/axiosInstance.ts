@@ -33,7 +33,7 @@ export const fetchStorage = async () => {
         return data;
     } 
     catch (error) {
-        console.error('Could not load users');
+        console.error('Could not load users: ' + error);
     }
 
 }
