@@ -2,8 +2,7 @@ import { useReducer, createContext, type PropsWithChildren, useContext, useEffec
 import { DeckAction, DeckActionType, DeckReducer } from './reducer'
 import { DeckState } from './types'
 import { Storage } from '../../shared/types/decks'
-import { axiosInstance, fetchStorage } from '../../api/axiosInstance'
-import { getPlaceholderSpell, getPlaceholderUnit } from '../../shared/functions/card'
+import { fetchStorage } from '../../api/axiosInstance'
 import { SpellData, UnitData } from '../../shared/types/card'
 
 
@@ -17,9 +16,12 @@ const DeckContext = createContext<DeckContextType | null>(null);
 
 
 export const DeckProvider: React.FC<PropsWithChildren> = ({ children }) => {
-    const [storage, setStorage ] = useState<Storage>({ units: [], spells: [] })
-
-    
+    const [storage, setStorage ] = useState<Storage>(
+        { 
+            units: new Map<string, { data: UnitData, amount: number }>,
+            spells: new Map<string, { data: SpellData, amount: number }> 
+        }
+    )
     
     useEffect(() => {
         const getStorage = async () => {
