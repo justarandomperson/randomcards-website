@@ -1,110 +1,93 @@
 import { DeckState } from './types'
 import { CardType, UnitData, SpellData } from '../../shared/types/card'
 import { isUnitsDeckFull, isSpellsDeckFull } from '../../shared/functions/decks';
+import { produce } from 'immer';
 
 export enum DeckActionType {
     ADD_CARD = 'ADD_CARD',
     REMOVE_CARD = 'REMOVE_CARD',
-    SET_DECK_STATE = 'SET_DECK_STATE'
+    SET_FULL_STATE = 'SET_FULL_STATE'
 }
 
 
 export type DeckAction = 
     | { type: DeckActionType.ADD_CARD; card: UnitData | SpellData }
     | { type: DeckActionType.REMOVE_CARD; card: UnitData | SpellData }
-    | { type: DeckActionType.SET_DECK_STATE; deckState: DeckState }
+    | { type: DeckActionType.SET_FULL_STATE; newState: DeckState }
 
 
-const addCardToDeck = (state: DeckState, cardData: UnitData | SpellData): DeckState => {
-    if (cardData.type === CardType.UNIT) {
-        if (isUnitsDeckFull(state.deck)) return state;
+const addCardToDeck = (state: DeckState, card: UnitData | SpellData): DeckState => {
+    return produce(state, draft => {
+        switch(card.type) {
+            case CardType.UNIT:
+                if (isUnitsDeckFull(draft.deck)) {
+                    return draft;
+                }
 
-        return {
-            ...state,
-            storage: {
-                ...state.storage,
-                units: state.storage.units.filter(u => u.instanceId !== cardData.instanceId)
-            },
-            deck: {
-                ...state.deck,
-                units: [...state.deck.units, cardData]
+                draft.storage.units.splice(draft.storage.units.indexOf(card), 1);
+                draft.deck.units.push(card);
+
+                break;
+
+            case CardType.SPELL: {
+                const cardInStorage = draft.storage.spells.get(card.id);
+                if (isSpellsDeckFull(draft.deck) || !cardInStorage) {
+                    return draft;
+                }
+
+                cardInStorage.amount -= 1;
+                if (cardInStorage.amount == 0) {
+                    draft.storage.spells.delete(cardInStorage.data.id);
+                }
+
+                const cardInDeck = draft.deck.spells.get(card.id) ;
+                if (cardInDeck) {
+                    cardInDeck.amount += 1;
+                }
+                else {
+                    draft.deck.spells.set(card.id, { data: card, amount: 1 });
+                }
+                
+                break;
             }
-        };
-    } else {
-        if (isSpellsDeckFull(state.deck)) return state;
-
-        const cardStorage =  state.storage.spells.get(cardData.id)
-        const cardDeck = state.deck.spells.get(cardData.id) 
-
-        if (!cardStorage) return state
-        
-        cardStorage.amount -= 1
-        if (cardDeck) cardDeck.amount += 1
-        else state.deck.spells.set(cardData.id, { data: cardData, amount: 1 })
-
-        if (cardStorage.amount > 0) state.storage.spells.set(cardStorage.data.id, cardStorage)
-        else state.storage.spells.delete(cardStorage.data.id)
-
-        return {
-            ...state,
-            storage: {
-                ...state.storage,
-                spells: state.storage.spells
-            },
-            deck: {
-                ...state.deck,
-                spells: state.deck.spells
-            }
-        };
-    }
+        }
+    });
 }
 
 
-const removeCardFromDeck = (state: DeckState, cardData: UnitData | SpellData): DeckState => {
-    if (cardData.type === CardType.UNIT) {
-        return {
-            ...state,
-            deck: {
-                ...state.deck,
-                units: state.deck.units.filter(u => u.instanceId !== cardData.instanceId)
-            },
-            storage: {
-                ...state.storage,
-                units: [...state.storage.units, cardData]
+const removeCardFromDeck = (state: DeckState, card: UnitData | SpellData): DeckState => {
+    return produce(state, draft => {
+        switch (card.type) {
+            case CardType.UNIT:
+                draft.deck.units.splice(draft.storage.units.indexOf(card), 1);
+                draft.storage.units.push(card);
+
+                break;
+
+            case CardType.SPELL: {
+                const cardInDeck = draft.storage.spells.get(card.id);
+                if (!cardInDeck) {
+                    return draft;
+                }
+
+                cardInDeck.amount -= 1;
+                if (cardInDeck.amount == 0) {
+                    draft.deck.spells.delete(cardInDeck.data.id);;
+                }
+
+                const cardInStorage = draft.deck.spells.get(card.id) ;
+                if (cardInStorage) {
+                    cardInStorage.amount += 1;
+                }
+                else {
+                    draft.storage.spells.set(card.id, { data: card, amount: 1 });
+                }
+                
+                break;
             }
-        };
-    } else {
-        const cardStorage =  state.storage.spells.get(cardData.id)
-        const cardDeck = state.deck.spells.get(cardData.id) 
-
-        if (!cardDeck) return state
-        
-        cardDeck.amount -= 1
-        if (cardStorage) cardStorage.amount += 1
-        else state.storage.spells.set(cardData.id, { data: cardData, amount: 1 })
-
-        if (cardDeck.amount > 0) state.storage.spells.set(cardDeck.data.id, cardDeck)
-        else state.storage.spells.delete(cardDeck.data.id)
-    
-        return {
-            ...state,
-            deck: {
-                ...state.deck,
-                spells: state.deck.spells
-            },
-            storage: {
-                ...state.storage,
-                spells: state.storage.spells
-            }
-        };
-    }
+        }
+    });
 }
-
-const setDeckState = (state: DeckState, deckState: DeckState) =>
-{
-    return deckState
-}
-
 
 export const DeckReducer = (state: DeckState, action: DeckAction): DeckState => {
     switch (action.type) {
@@ -113,8 +96,9 @@ export const DeckReducer = (state: DeckState, action: DeckAction): DeckState => 
 
         case DeckActionType.REMOVE_CARD:
             return removeCardFromDeck(state, action.card);
-        case DeckActionType.SET_DECK_STATE:
-            return setDeckState(state, action.deckState)
+
+        case DeckActionType.SET_FULL_STATE:
+            return action.newState;
 
         default:
             throw new Error('DeckReducer does not have this type. ');

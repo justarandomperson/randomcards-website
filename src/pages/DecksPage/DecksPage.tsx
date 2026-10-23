@@ -7,7 +7,7 @@ import Styles from './DecksPage.module.css'
 
 
 const DecksPage: React.FC = ({ }) => {
-    const deck = useDeckContext().state.deck
+    const { state, getSpellDeckLength } = useDeckContext();
 
     return (
         <div>
@@ -18,8 +18,8 @@ const DecksPage: React.FC = ({ }) => {
                 <div>
                     <div className={Styles.deck_row_header}>
                         <h3>Units</h3>
-                        <p className={isDeckTypeFull(CardType.UNIT, deck) ? Styles.full : undefined}>
-                            {`${deck.units.length}/${UNITS_IN_DECK}`}
+                        <p className={isDeckTypeFull(CardType.UNIT, state.deck) ? Styles.full : undefined}>
+                            {`${state.deck.units.length}/${UNITS_IN_DECK}`}
                         </p>
                     </div>
                     <CardList location='deck' type={CardType.UNIT}/>
@@ -28,8 +28,8 @@ const DecksPage: React.FC = ({ }) => {
                 <div>
                     <div className={Styles.deck_row_header}>
                         <h3>Spells</h3>
-                        <p className={isDeckTypeFull(CardType.UNIT, deck) ? Styles.full : undefined}>
-                            {`${deck.spells.length}/${SPELLS_IN_DECK}`}
+                        <p className={isDeckTypeFull(CardType.UNIT, state.deck) ? Styles.full : undefined}>
+                            {`${getSpellDeckLength()}/${SPELLS_IN_DECK}`}
                         </p>
                     </div>
                     <CardList location='deck' type={CardType.SPELL}/>

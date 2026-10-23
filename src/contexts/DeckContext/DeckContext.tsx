@@ -3,12 +3,12 @@ import { DeckAction, DeckActionType, DeckReducer } from './reducer'
 import { DeckState } from './types'
 import { Storage } from '../../shared/types/decks'
 import { fetchStorage } from '../../api/axiosInstance'
-import { SpellData, UnitData } from '../../shared/types/card'
 
 
 type DeckContextType = {
     state: DeckState,
-    dispatch: React.Dispatch<DeckAction>
+    dispatch: React.Dispatch<DeckAction>,
+    getSpellDeckLength: () => {},
 }
 
 
@@ -16,28 +16,27 @@ const DeckContext = createContext<DeckContextType | null>(null);
 
 
 export const DeckProvider: React.FC<PropsWithChildren> = ({ children }) => {
-    const [storage, setStorage ] = useState<Storage>(
-        { 
-            units: [],
-            spells: new Map<string, { data: SpellData, amount: number }> 
-        }
-    )
-    
+    const [storage, setStorage ] = useState<Storage>({ units: [], spells: new Map });
+
     useEffect(() => {
         const getStorage = async () => {
-            const storage = await fetchStorage()
+            const storage = await fetchStorage();
             setStorage(storage);
-               dispatch({ 
-                    type: DeckActionType.SET_DECK_STATE,
-                    deckState: 
-                    {
-                        deck: {
-                            units: [],           
-                            spells: new Map<string, { data: SpellData, amount: number }> 
-                        },
-                        storage: storage
-                    }
-            })
+
+            console.log("this is stora")
+            console.log(storage);
+
+            dispatch({ 
+                type: DeckActionType.SET_FULL_STATE,
+                newState: 
+                {
+                    deck: {
+                        units: [],           
+                        spells: new Map
+                    },
+                    storage: storage
+                }
+            });
         }
 
         getStorage();
@@ -47,7 +46,7 @@ export const DeckProvider: React.FC<PropsWithChildren> = ({ children }) => {
         {
             deck: {
                 units: [],           
-                spells: new Map<string, { data: SpellData, amount: number }> 
+                spells: new Map
             },
 
             storage: {
@@ -57,9 +56,19 @@ export const DeckProvider: React.FC<PropsWithChildren> = ({ children }) => {
         }
     );
 
+    const getSpellDeckLength = () => {
+        let length = 0;
+        deckContext.deck.spells.forEach((spell) => {
+            length += spell.amount;
+        });
+
+        return length;
+    }
+
     const value = {
         state: deckContext,
-        dispatch: dispatch
+        dispatch: dispatch,
+        getSpellDeckLength,
     }
 
     return <DeckContext.Provider value={value}> {children} </DeckContext.Provider>

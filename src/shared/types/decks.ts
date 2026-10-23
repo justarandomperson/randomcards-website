@@ -2,12 +2,12 @@ import { UnitData, SpellData } from './card'
 
 
 export type Storage = {
-    units: Map<string, { data: UnitData, amount: number }>,
+    units: UnitData[],
     spells: Map<string, { data: SpellData, amount: number }>
 };
 
 export type Deck = {
-    units: Map<string, { data: UnitData, amount: number }>,
+    units: UnitData[],
     spells: Map<string, { data: SpellData, amount: number }>
 };
 
