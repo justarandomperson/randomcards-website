@@ -11,15 +11,7 @@ type Props = {
 }
 
 const compileSpellsMap = (spellsMap: Map<string, { data: SpellData, amount: number }>): SpellData[] => {
-    let spells: SpellData[] = [];
-
-    Array.prototype.forEach.call(spellsMap, spell => {
-        for (let i = 0; i < spell.amount; i++) {
-            spells.push(spell.data);
-        }
-    });
-
-    return spells;
+    return [...spellsMap.values()].map((spell) => spell.data );
 }
 
 

@@ -216,6 +216,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
 
     const queue = useCallback((deck: Deck) => {
         if (!isDeckFull(deck)) {
+            console.log('get a full deck nub')
             return;
         }
 

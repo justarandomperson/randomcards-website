@@ -20,11 +20,13 @@ export const DeckProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
     useEffect(() => {
         const getStorage = async () => {
-            const storage = await fetchStorage();
-            setStorage(storage);
+            const storageObject = await fetchStorage();
+            const storage: Storage = {
+                units: storageObject.units,
+                spells: new Map(storageObject.spells)
+            }
 
-            console.log("this is stora")
-            console.log(storage);
+            setStorage(storage);
 
             dispatch({ 
                 type: DeckActionType.SET_FULL_STATE,

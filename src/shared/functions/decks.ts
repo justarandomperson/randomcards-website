@@ -8,7 +8,13 @@ export const isUnitsDeckFull = (deck: Deck): boolean => {
 }
 
 export const isSpellsDeckFull = (deck: Deck): boolean => {
-    return deck.spells.length >= SPELLS_IN_DECK;
+    const spells = []
+    Array.prototype.forEach.call(deck.spells, spell => {
+        for (let i = 0; i < spell.amount; i++) {
+            spells.push(spell.data);
+        }
+    });
+    return spells.length >= SPELLS_IN_DECK;
 }
 
 export const isDeckTypeFull = (cardType: CardType, deck: Deck): boolean => {

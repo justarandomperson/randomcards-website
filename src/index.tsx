@@ -17,6 +17,10 @@ import PublicRoute from './components/app/PublicRoute/PublicRoute';
 import LoginPage from './pages/LoginPage/LoginPage';
 import { GameProvider } from './contexts/GameContext/GameContext';
 
+import {enableMapSet} from "immer"
+
+enableMapSet()
+
 
 const router = createBrowserRouter([{
   path: "/",
