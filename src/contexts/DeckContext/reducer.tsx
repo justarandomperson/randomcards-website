@@ -65,7 +65,7 @@ const removeCardFromDeck = (state: DeckState, card: UnitData | SpellData): DeckS
                 break;
 
             case CardType.SPELL: {
-                const cardInDeck = draft.storage.spells.get(card.id);
+                const cardInDeck = draft.deck.spells.get(card.id);
                 if (!cardInDeck) {
                    break;
                 }
@@ -75,7 +75,7 @@ const removeCardFromDeck = (state: DeckState, card: UnitData | SpellData): DeckS
                     draft.deck.spells.delete(cardInDeck.data.id);;
                 }
 
-                const cardInStorage = draft.deck.spells.get(card.id) ;
+                const cardInStorage = draft.storage.spells.get(card.id);
                 if (cardInStorage) {
                     cardInStorage.amount += 1;
                 }

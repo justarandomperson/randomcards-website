@@ -28,7 +28,7 @@ const DecksPage: React.FC = ({ }) => {
                 <div>
                     <div className={Styles.deck_row_header}>
                         <h3>Spells</h3>
-                        <p className={isDeckTypeFull(CardType.UNIT, state.deck) ? Styles.full : undefined}>
+                        <p className={isDeckTypeFull(CardType.SPELL, state.deck) ? Styles.full : undefined}>
                             {`${getSpellDeckLength()}/${SPELLS_IN_DECK}`}
                         </p>
                     </div>
