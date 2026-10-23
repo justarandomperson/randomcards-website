@@ -18,7 +18,9 @@ import LoginPage from './pages/LoginPage/LoginPage';
 import { GameProvider } from './contexts/GameContext/GameContext';
 
 import {enableMapSet} from "immer"
+import {enableArrayMethods} from "immer"
 
+enableArrayMethods()
 enableMapSet()
 
 

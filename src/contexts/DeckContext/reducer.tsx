@@ -21,9 +21,9 @@ const addCardToDeck = (state: DeckState, card: UnitData | SpellData): DeckState 
         switch(card.type) {
             case CardType.UNIT:
                 if (isUnitsDeckFull(draft.deck)) {
-                    break;
+                    return draft;
                 }
-
+                
                 draft.storage.units.splice(draft.storage.units.indexOf(card), 1);
                 draft.deck.units.push(card);
 
@@ -32,7 +32,7 @@ const addCardToDeck = (state: DeckState, card: UnitData | SpellData): DeckState 
             case CardType.SPELL: {
                 const cardInStorage = draft.storage.spells.get(card.id);
                 if (isSpellsDeckFull(draft.deck) || !cardInStorage) {
-                    break;
+                    return draft;
                 }
 
                 cardInStorage.amount -= 1;
@@ -59,15 +59,15 @@ const removeCardFromDeck = (state: DeckState, card: UnitData | SpellData): DeckS
     return produce(state, draft => {
         switch (card.type) {
             case CardType.UNIT:
-                draft.deck.units.splice(draft.storage.units.indexOf(card), 1);
+                draft.deck.units.splice(draft.deck.units.indexOf(card), 1);
                 draft.storage.units.push(card);
 
                 break;
 
             case CardType.SPELL: {
-                const cardInDeck = draft.deck.spells.get(card.id);
+                const cardInDeck = draft.storage.spells.get(card.id);
                 if (!cardInDeck) {
-                   break;
+                    return draft;
                 }
 
                 cardInDeck.amount -= 1;
@@ -75,7 +75,7 @@ const removeCardFromDeck = (state: DeckState, card: UnitData | SpellData): DeckS
                     draft.deck.spells.delete(cardInDeck.data.id);;
                 }
 
-                const cardInStorage = draft.storage.spells.get(card.id);
+                const cardInStorage = draft.deck.spells.get(card.id) ;
                 if (cardInStorage) {
                     cardInStorage.amount += 1;
                 }

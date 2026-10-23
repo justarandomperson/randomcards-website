@@ -13,12 +13,11 @@ type Props = {
 
 const CardList: React.FC<Props> = ({ location, type }) => {
     const { state } = useDeckContext();
+
     const list = (location === 'deck') ? state.deck : state.storage;
-    
     const items = (type === CardType.UNIT) ? 
         list.units : [...list.spells.values()].map((spell) => spell.data );
     
-
     return (
         <ul className={Styles.card_list}>
             {items.map((item, i) => {
