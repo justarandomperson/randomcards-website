@@ -10,17 +10,13 @@ type Props = {
     type: CardType
 }
 
-const compileSpellsMap = (spellsMap: Map<string, { data: SpellData, amount: number }>): SpellData[] => {
-    return [...spellsMap.values()].map((spell) => spell.data );
-}
-
 
 const CardList: React.FC<Props> = ({ location, type }) => {
     const { state } = useDeckContext();
     const list = (location === 'deck') ? state.deck : state.storage;
     
     const items = (type === CardType.UNIT) ? 
-        list.units : compileSpellsMap(list.spells);
+        list.units : [...list.spells.values()].map((spell) => spell.data );
     
 
     return (

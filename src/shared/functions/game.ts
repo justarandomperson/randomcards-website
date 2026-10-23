@@ -40,6 +40,7 @@ export const getPlaceholderGameState = (): ClientGameState => {
         board: [null, null, null, null, null, null, null, null],
         shop: [NULL_ARTIFACT, NULL_ARTIFACT, NULL_ARTIFACT, NULL_ARTIFACT, NULL_ARTIFACT],
         phase: GamePhase.PLAY,
-        isPlayerTurn: true
+        isPlayerTurn: true,
+        selectingTarget: false
     };
 };

@@ -21,7 +21,7 @@ const addCardToDeck = (state: DeckState, card: UnitData | SpellData): DeckState 
         switch(card.type) {
             case CardType.UNIT:
                 if (isUnitsDeckFull(draft.deck)) {
-                    return draft;
+                    break;
                 }
 
                 draft.storage.units.splice(draft.storage.units.indexOf(card), 1);
@@ -32,7 +32,7 @@ const addCardToDeck = (state: DeckState, card: UnitData | SpellData): DeckState 
             case CardType.SPELL: {
                 const cardInStorage = draft.storage.spells.get(card.id);
                 if (isSpellsDeckFull(draft.deck) || !cardInStorage) {
-                    return draft;
+                    break;
                 }
 
                 cardInStorage.amount -= 1;
@@ -67,7 +67,7 @@ const removeCardFromDeck = (state: DeckState, card: UnitData | SpellData): DeckS
             case CardType.SPELL: {
                 const cardInDeck = draft.storage.spells.get(card.id);
                 if (!cardInDeck) {
-                    return draft;
+                   break;
                 }
 
                 cardInDeck.amount -= 1;

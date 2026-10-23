@@ -1,4 +1,4 @@
-import { CardType } from "../types/card";
+import { CardType, SpellData } from "../types/card";
 import { Deck } from "../types/decks";
 import { UNITS_IN_DECK, SPELLS_IN_DECK } from '../constants/game';
 
@@ -8,13 +8,20 @@ export const isUnitsDeckFull = (deck: Deck): boolean => {
 }
 
 export const isSpellsDeckFull = (deck: Deck): boolean => {
-    const spells = []
-    Array.prototype.forEach.call(deck.spells, spell => {
+    console.log("deck.spells map")
+    console.log(deck.spells);
+
+    let length = 0;
+
+    for (const spell of deck.spells.values()) {
         for (let i = 0; i < spell.amount; i++) {
-            spells.push(spell.data);
+            console.log(`amount ${spell.amount}`);
+            length += 1;
         }
-    });
-    return spells.length >= SPELLS_IN_DECK;
+    };
+
+    console.log(length);
+    return length >= SPELLS_IN_DECK;
 }
 
 export const isDeckTypeFull = (cardType: CardType, deck: Deck): boolean => {
