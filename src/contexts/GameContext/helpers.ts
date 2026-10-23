@@ -20,7 +20,13 @@ export const matchPlayerIds = (
 
 export const getDeckIds = (deck: Deck): DeckIds => {
     const unitIds = deck.units.map((unit) => unit.id);
-    const spellIds = [...deck.spells.values()].map((spell) => spell.data.id);
+    const spellIds = [];
+
+    for (const spell of deck.spells.values()) {
+        for (let i = 0; i < spell.amount; i++) {
+            spellIds.push(spell.data.id);
+        }
+    };
 
     return { unitIds, spellIds };
 }
