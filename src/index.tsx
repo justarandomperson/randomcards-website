@@ -34,7 +34,7 @@ const router = createBrowserRouter([{
             { index: true, Component: Homepage },
             { path: "decks", Component: DecksPage },
             { path: "gacha", Component: GachaPage },
-            { path: "game", Component: GamePage },
+            { path: "/game", Component: GamePage },
         ],
     },
     {

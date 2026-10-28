@@ -17,6 +17,7 @@ export const createGameSocket = (events: GameSocketEvents, token: string): Socke
     socket.on(SOCKET_EVENTS.MATCH_START,           events.onMatchStart)
     socket.on(SOCKET_EVENTS.START_TURN,            events.onStartTurn);
     socket.on(SOCKET_EVENTS.UPDATE_GAME_PHASE,     events.onUpdateGamePhase);
+    socket.on(SOCKET_EVENTS.SELECT_TARGET,         events.onSelectTarget)
     socket.on(SOCKET_EVENTS.UPDATE_MONEY,          events.onUpdateMoney);
     socket.on(SOCKET_EVENTS.UPDATE_HEALTH,         events.onUpdateHealth);
     socket.on(SOCKET_EVENTS.UPDATE_DRAWPILE_COUNT, events.onUpdateDrawpileCount);

@@ -275,7 +275,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
             draft.selectingTarget = false;
         }));
 
-        emit(SOCKET_EVENTS.SELECTED_TARGET, targetId)
+        emit(SOCKET_EVENTS.SELECTED_TARGET, {instanceId: targetId})
     }, [emit])
 
 
