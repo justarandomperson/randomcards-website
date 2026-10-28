@@ -2,6 +2,7 @@ import { DeckState } from './types'
 import { CardType, UnitData, SpellData } from '../../shared/types/card'
 import { isUnitsDeckFull, isSpellsDeckFull } from '../../shared/functions/decks';
 import { produce } from 'immer';
+import { Deck } from '../../shared/types/decks';
 
 export enum DeckActionType {
     ADD_CARD = 'ADD_CARD',
@@ -15,9 +16,23 @@ export type DeckAction =
     | { type: DeckActionType.REMOVE_CARD; card: UnitData | SpellData }
     | { type: DeckActionType.SET_FULL_STATE; newState: DeckState }
 
+    
+const saveDeckToLocalStorage = (deck: Deck) => {
+    localStorage.setItem(
+        "deck",
+        JSON.stringify({
+            units: deck.units.map(unit => unit.id),
+            spells: Array.from(
+                deck.spells,
+                ([spellId, spell]) => [spellId, spell.amount]
+            )
+        })
+    );
+};
+
 
 const addCardToDeck = (state: DeckState, card: UnitData | SpellData): DeckState => {
-    return produce(state, draft => {
+    const nextState = produce(state, draft => {
         switch(card.type) {
             case CardType.UNIT:
                 if (isUnitsDeckFull(draft.deck)) {
@@ -52,11 +67,14 @@ const addCardToDeck = (state: DeckState, card: UnitData | SpellData): DeckState 
             }
         }
     });
+
+    saveDeckToLocalStorage(nextState.deck)
+    return nextState
 }
 
 
 const removeCardFromDeck = (state: DeckState, card: UnitData | SpellData): DeckState => {
-    return produce(state, draft => {
+    const nextState = produce(state, draft => {
         switch (card.type) {
             case CardType.UNIT:
                 draft.deck.units.splice(draft.deck.units.indexOf(card), 1);
@@ -87,6 +105,9 @@ const removeCardFromDeck = (state: DeckState, card: UnitData | SpellData): DeckS
             }
         }
     });
+
+    saveDeckToLocalStorage(nextState.deck)
+    return nextState
 }
 
 export const DeckReducer = (state: DeckState, action: DeckAction): DeckState => {

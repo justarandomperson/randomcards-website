@@ -8,19 +8,15 @@ export const isUnitsDeckFull = (deck: Deck): boolean => {
 }
 
 export const isSpellsDeckFull = (deck: Deck): boolean => {
-    console.log("deck.spells map")
-    console.log(deck.spells);
 
     let length = 0;
 
     for (const spell of deck.spells.values()) {
         for (let i = 0; i < spell.amount; i++) {
-            console.log(`amount ${spell.amount}`);
             length += 1;
         }
     };
 
-    console.log(length);
     return length >= SPELLS_IN_DECK;
 }
 

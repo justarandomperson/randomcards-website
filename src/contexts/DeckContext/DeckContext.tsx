@@ -1,8 +1,9 @@
 import { useReducer, createContext, type PropsWithChildren, useContext, useEffect, useState } from 'react'
 import { DeckAction, DeckActionType, DeckReducer } from './reducer'
-import { DeckState } from './types'
-import { Storage } from '../../shared/types/decks'
+import { DeckState, localDeck } from './types'
+import { Deck, Storage } from '../../shared/types/decks'
 import { fetchStorage } from '../../api/axiosInstance'
+import { SpellData, UnitData } from '../../shared/types/card'
 
 
 type DeckContextType = {
@@ -28,15 +29,56 @@ export const DeckProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
             setStorage(storage);
 
+            const localDeck = localStorage.getItem("deck") || ""
+            let parsedLocalDeck: localDeck = {
+                units: [],
+                spells: []
+            }
+            if (localDeck)
+            {  
+                parsedLocalDeck = JSON.parse(localDeck)
+            }
+
+            const populatedDeck = {
+                units: parsedLocalDeck.units.map((unitId: string) =>  storage.units.find((unit) => unit.id == unitId)).filter((unit): unit is UnitData => unit !== undefined),
+               spells: new Map<string, { data: SpellData; amount: number }>(
+                parsedLocalDeck.spells.map(([spellId, amount] : [spellId: string, amount: number]) => [
+                    spellId,
+                    {
+                        data: storage.spells.get(spellId)!.data,
+                        amount
+                    }
+                ])
+                )
+            }
+
+           const updatedStorage = {
+                units: storage.units.filter(
+                    unit => !populatedDeck.units.some(deckUnit => deckUnit.id === unit.id)
+                ),
+
+                spells: new Map(
+                    Array.from(storage.spells)
+                        .map(([spellId, spell]) => {
+                            const deckSpell = populatedDeck.spells.get(spellId);
+                            const amountInDeck = deckSpell?.amount ?? 0;
+                            const remainingAmount = 2 - amountInDeck;
+
+                            return [
+                                spellId,
+                                { ...spell, amount: remainingAmount }
+                            ] as const;
+                        })
+                        .filter(([, spell]) => spell.amount > 0)
+                )
+            };
+
             dispatch({ 
                 type: DeckActionType.SET_FULL_STATE,
                 newState: 
                 {
-                    deck: {
-                        units: [],           
-                        spells: new Map
-                    },
-                    storage: storage
+                    deck: populatedDeck,
+                    storage: updatedStorage
                 }
             });
         }
