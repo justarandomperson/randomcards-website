@@ -1,13 +1,22 @@
 import { ArtifactData } from "../../../shared/types/game"
+import Styles from './ArtifactList.module.css'
 
 
 type Props = {
     artifacts: ArtifactData[]
 }
 
-// TODO: this, and make it so u can see what artifacts u have & what they do in game
-const ArtifactList: React.FC<Props> = ({ artifacts }) => {
 
+const ArtifactList: React.FC<Props> = ({ artifacts }) => {
+    return (
+        <div className={Styles.artifact_list_container}>
+            {
+                artifacts.map((artifact, i) => (
+                    <div className={Styles.artifact} key={i}>{`${artifact.name}: ${artifact.effectDesc}`}</div>
+                ))
+            }
+        </div>
+    )
 }
 
 

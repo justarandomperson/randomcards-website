@@ -38,3 +38,12 @@ export const fetchStorage = async () => {
 
 }
 
+export const fetchImages = async () => {
+    try {
+        const { data } = await axiosInstance.get("/instances/images")
+        return data;
+    } 
+    catch (error) {
+        console.error('Could not load users: ' + error);
+    }
+}

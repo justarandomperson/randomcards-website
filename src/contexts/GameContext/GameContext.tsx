@@ -76,9 +76,10 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
             onConnect: () => { 
                 setIsConnected(true);
             },
-            onDisconnect: () => {
+            onDisconnect: (reason: any) => {
                 setIsConnected(false); 
                 setIsInQueue(false);
+                console.log('disconnected: ', reason);
             },
 
             onMatchStart: (data: MatchStartData) => {

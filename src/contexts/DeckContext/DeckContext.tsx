@@ -29,26 +29,25 @@ export const DeckProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
             setStorage(storage);
 
-            const localDeck = localStorage.getItem("deck") || ""
+            const localDeck = localStorage.getItem("deck") || "";
             let parsedLocalDeck: localDeck = {
                 units: [],
                 spells: []
             }
-            if (localDeck)
-            {  
+
+            if (localDeck) {  
                 parsedLocalDeck = JSON.parse(localDeck)
             }
 
             const populatedDeck = {
-                units: parsedLocalDeck.units.map((unitId: string) =>  storage.units.find((unit) => unit.id == unitId)).filter((unit): unit is UnitData => unit !== undefined),
-               spells: new Map<string, { data: SpellData; amount: number }>(
-                parsedLocalDeck.spells.map(([spellId, amount] : [spellId: string, amount: number]) => [
-                    spellId,
-                    {
-                        data: storage.spells.get(spellId)!.data,
-                        amount
-                    }
-                ])
+                units: parsedLocalDeck.units.map((unitId: string) =>
+                    storage.units.find((unit) => unit.id == unitId)
+                ).filter((unit): unit is UnitData => unit !== undefined),
+                spells: new Map<string, { data: SpellData; amount: number }>(
+                    parsedLocalDeck.spells.flatMap(([spellId, amount]: [string, number]) => {
+                        const spell = storage.spells.get(spellId);
+                        return spell ? [[spellId, { data: spell.data, amount }] as const] : [];
+                    })
                 )
             }
 
@@ -58,18 +57,16 @@ export const DeckProvider: React.FC<PropsWithChildren> = ({ children }) => {
                 ),
 
                 spells: new Map(
-                    Array.from(storage.spells)
-                        .map(([spellId, spell]) => {
-                            const deckSpell = populatedDeck.spells.get(spellId);
-                            const amountInDeck = deckSpell?.amount ?? 0;
-                            const remainingAmount = 2 - amountInDeck;
+                    Array.from(storage.spells).map(([spellId, spell]) => {
+                        const deckSpell = populatedDeck.spells.get(spellId);
+                        const amountInDeck = deckSpell?.amount ?? 0;
+                        const remainingAmount = 2 - amountInDeck;
 
-                            return [
-                                spellId,
-                                { ...spell, amount: remainingAmount }
-                            ] as const;
-                        })
-                        .filter(([, spell]) => spell.amount > 0)
+                        return [
+                            spellId,
+                            { ...spell, amount: remainingAmount }
+                        ] as const;
+                    }).filter(([, spell]) => spell.amount > 0)
                 )
             };
 

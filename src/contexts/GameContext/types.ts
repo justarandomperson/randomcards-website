@@ -84,7 +84,7 @@ export type AttackPlayerPayload = { instanceId: string, isOpponent: boolean }
 // from server to client
 export type GameSocketEvents = {
     onConnect: () => void;
-    onDisconnect: () => void;
+    onDisconnect: (reason: any) => void;
 
     onMatchStart: (data: MatchStartData) => void;
     onStartTurn: () => void;

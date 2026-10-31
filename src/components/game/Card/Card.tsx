@@ -1,6 +1,7 @@
 import { UnitData, SpellData, CardType } from '../../../shared/types/card'
 import cardImg from './Card.png';
 import Styles from './Card.module.css'
+import { useImagesContext } from '../../../contexts/ImagesContext/ImagesContext';
 
 
 type Props = {
@@ -9,6 +10,7 @@ type Props = {
 
 
 const Card: React.FC<Props> = ({ cardData }) => {
+    const { state: imagesState } = useImagesContext();
 
     return (
         <div className={Styles.card}>
@@ -22,7 +24,7 @@ const Card: React.FC<Props> = ({ cardData }) => {
             </div>
 
             <div>
-                <img src={cardImg} alt="dog"/> {/* this is a placeholder pic for all cards */}
+                <img src={`data:image/png;base64,${imagesState.get(cardData.id)}`} alt="dog"/>
             </div>
 
             <div>

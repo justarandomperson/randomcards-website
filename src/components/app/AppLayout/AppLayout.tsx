@@ -4,12 +4,14 @@ import Topbar from "../Topbar/Topbar"
 import styles from "./AppLayout.module.css"
 import { DeckProvider } from "../../../contexts/DeckContext/DeckContext"
 import { GameProvider } from "../../../contexts/GameContext/GameContext"
+import { ImagesProvider } from "../../../contexts/ImagesContext/ImagesContext"
 
 
 const AppLayout: React.FC = ({ }) => {
     const currentPage = useLocation()
 
     return (
+        <ImagesProvider>
         <DeckProvider>
         <GameProvider>
 
@@ -20,6 +22,7 @@ const AppLayout: React.FC = ({ }) => {
 
         </GameProvider>
         </DeckProvider>
+        </ImagesProvider>
     )
 }
 

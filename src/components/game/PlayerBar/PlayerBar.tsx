@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react'
 import { useGameContext } from '../../../contexts/GameContext/GameContext'
 import Health from '../Health/Health'
 import Styles from './PlayerBar.module.css'
+import ArtifactList from '../ArtifactList/ArtifactList'
 
 
 type Props = {
@@ -13,11 +15,22 @@ const PlayerBar: React.FC<Props> = ({ isOpponent }) => {
     const { endTurn } = emitters
     const player = isOpponent ? state.players.opponent : state.players.player
 
+
+    const [ artifactListShown, setArtifactListShown ] = useState<boolean>(false);
+
+    const handleClickArtifacts = () => {
+        artifactListShown ? setArtifactListShown(false) : setArtifactListShown(true);
+    }
+
+
     return (
         <div className={Styles.player_bar}>
             <div>
                 <span className={Styles.player_name}>{player.data.name}</span>
-                <span>{`Artifacts: ${player.data.artifacts.length}`}</span>
+                <span onClick={handleClickArtifacts}>{`Artifacts: ${player.data.artifacts.length}`}</span>
+                { artifactListShown &&
+                    <ArtifactList artifacts={player.data.artifacts}/>
+                }
             </div>
 
             <div className={Styles.player_data_container}>

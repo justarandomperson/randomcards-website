@@ -1,4 +1,5 @@
 import { useGameContext } from '../../../contexts/GameContext/GameContext'
+import { useImagesContext } from '../../../contexts/ImagesContext/ImagesContext';
 import { NULL_ARTIFACT_ID } from '../../../shared/constants/game';
 import { ArtifactData, GamePhase } from "../../../shared/types/game";
 import Styles from './Artifact.module.css'
@@ -13,6 +14,7 @@ type Props = {
 const Artifact: React.FC<Props> = ({ artifactData, shopIndex }) => {
     const { emitters, state } = useGameContext();
     const { buyArtifact } = emitters;
+    const { state: imagesState } = useImagesContext();
     const isPlayPhase = (state.phase === GamePhase.PLAY);
  
     const handleBuyArtifact = () => {
@@ -30,6 +32,9 @@ const Artifact: React.FC<Props> = ({ artifactData, shopIndex }) => {
                 disabled={isPlayPhase || !state.isPlayerTurn} 
                 onClick={handleBuyArtifact} 
                 className={!artifactData ? Styles.artifact_bought : Styles.artifact}>
+                    { artifactData &&
+                        <img src={imagesState.get(artifactData.id)}/>
+                    }
             </button>
         </span>
     );

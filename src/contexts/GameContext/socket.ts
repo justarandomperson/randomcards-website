@@ -12,7 +12,7 @@ export const createGameSocket = (events: GameSocketEvents, token: string): Socke
 
     // attach all listeners (from server to client)
     socket.on(SOCKET_EVENTS.CONNECT,               events.onConnect);
-    socket.on(SOCKET_EVENTS.DISCONNECT,            events.onDisconnect);
+    socket.on(SOCKET_EVENTS.DISCONNECT,            (reason: any) => events.onDisconnect(reason));
 
     socket.on(SOCKET_EVENTS.MATCH_START,           events.onMatchStart)
     socket.on(SOCKET_EVENTS.START_TURN,            events.onStartTurn);

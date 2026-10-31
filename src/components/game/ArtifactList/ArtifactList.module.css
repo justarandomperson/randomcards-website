@@ -1,0 +1,9 @@
+.artifact_list_container {
+    background-color: rgb(35, 35, 35);
+    opacity: 60%;
+    padding: 5px;
+}
+
+.artifact {
+    background-color:  rgb(35, 35, 35);
+}
