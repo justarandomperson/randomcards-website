@@ -118,7 +118,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
             onUpdateHealth: (data: UpdateHealthData) => {
                 setState(produce(draft => {
                     const player = matchPlayerIds(draft, data.playerId, socket.id);
-                    player.data.health = data.newHealth;
+                    player.data.hp = data.newHealth;
                 }));
             },
             onUpdateDrawpileCount: (data: UpdateDrawpileCountData) => {
@@ -234,20 +234,10 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
 
 
     const playUnit = useCallback((payload: PlayUnitPayload, card: UnitData, benchIndex: number) => {
-        setState(produce(draft => {
-            draft.players.player.cards.bench[benchIndex] = null;
-            draft.board[payload.boardIndex] = card;
-        }));
-
         emit(SOCKET_EVENTS.PLAY_UNIT, payload);
     }, [emit]);
 
     const playSpell = useCallback((payload: PlaySpellPayload, card: SpellData, handIndex: number) => {
-        setState(produce(draft => {
-            draft.players.player.cards.hand.splice(handIndex, 1);
-            draft.players.player.data.drawpileCount += 1;
-        }));
-
         emit(SOCKET_EVENTS.PLAY_SPELL, payload);
     }, [emit]);
 
@@ -256,11 +246,6 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     }, [emit])
 
     const buyArtifact = useCallback((payload: BuyArtifactPayload, artifact: ArtifactData, shopIndex: number) => {
-        setState(produce(draft => {
-            draft.shop[shopIndex] = null;
-            draft.players.player.data.artifacts.push(artifact);
-        }));
-
         emit(SOCKET_EVENTS.BUY_ARTIFACT, payload);
     }, [emit]);
 

@@ -30,7 +30,7 @@ export type OpponentState = {
 
 export type PlayerData = {
     name: string
-    health: number
+    hp: number
     money: number
     turn: number
     drawpileCount: number

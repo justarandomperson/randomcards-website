@@ -34,7 +34,7 @@ const PlayerBar: React.FC<Props> = ({ isOpponent }) => {
             </div>
 
             <div className={Styles.player_data_container}>
-                <Health health={player.data.health}/>
+                <Health health={player.data.hp}/>
                 <p className={Styles.money}>{`${player.data.money}$`}</p>
             </div>
 
