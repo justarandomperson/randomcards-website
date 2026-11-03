@@ -10,6 +10,8 @@ export type ClientGameState = {
     phase: GamePhase
     isPlayerTurn: boolean,
     selectingTarget: boolean
+    spellShowing: SpellData | null
+
 };
 
 export type PlayerState = {
@@ -38,34 +40,35 @@ export type PlayerData = {
 }
 
 // actions and events
-export const SOCKET_EVENTS = { // this is used for both emitted events and listened events
-    CONNECT: 'connect',
-    DISCONNECT: 'disconnect',
+export const SOCKET_EVENTS = { // this is used both on 'emit' and on 'on'
+  CONNECT: 'connect',
+  DISCONNECT: 'disconnect',
 
-    QUEUE: 'queue',
-    DEQUEUE: 'dequeue',
-    PLAY_UNIT: 'play_unit',
-    PLAY_SPELL: 'play_spell',
-    BUY_ARTIFACT: 'buy_artifact',
-    END_TURN: 'end_turn',
-    SELECT_TARGET: 'select_target',
-    SELECTED_TARGET: 'selected_target',
+  QUEUE: 'queue',
+  DEQUEUE: 'dequeue',
+  PLAY_UNIT: 'play_unit',
+  PLAY_SPELL: 'play_spell',
+  BUY_ARTIFACT: 'buy_artifact',
+  END_TURN: 'end_turn',
+  ATTACK_UNIT: 'attack_unit',
+  ATTACK_PLAYER: 'attack_player',
+  SELECTED_TARGET: 'selected_target',
 
-    MATCH_START: 'match_start',
-    START_TURN: 'start_turn',
-    UPDATE_GAME_PHASE: 'update_game_phase',
-    UPDATE_MONEY: 'update_money',
-    UPDATE_HEALTH: 'update_health',
-    UPDATE_DRAWPILE_COUNT: 'update_drawpile_count',
-    UPDATE_CARD: 'update_card',
-    UPDATE_ARTIFACT: 'update_artifact',
-    UPDATE_HAND: 'update_hand',
-    UPDATE_BENCH: 'update_bench',
-    UPDATE_BOARD: 'update_board',
-    UPDATE_SHOP: 'update_shop',
-
-    ATTACK_UNIT: "attack_unit",
-    ATTACK_PLAYER: "attack_player"
+  MATCH_START: 'match_start',
+  START_TURN: 'start_turn',
+  SELECT_TARGET: 'select_target',
+  UPDATE_GAME_PHASE: 'update_game_phase',
+  UPDATE_MONEY: 'update_money',
+  UPDATE_HEALTH: 'update_health',
+  UPDATE_DRAWPILE_COUNT: 'update_drawpile_count',
+  UPDATE_CARD: 'update_card',
+  UPDATE_ARTIFACT: 'update_artifact',
+  UPDATE_HAND: 'update_hand',
+  UPDATE_BENCH: 'update_bench',
+  UPDATE_BOARD: 'update_board',
+  UPDATE_SHOP: 'update_shop',
+  OPPONENT_PLAYED_SPELL: 'opponent_played_spell',
+  GAME_END: 'game_end'
 } as const;
 
 
@@ -99,6 +102,8 @@ export type GameSocketEvents = {
     onUpdateBench: (newBench: UnitData[]) => void;
     onUpdateBoard: (newBoard: UnitData[]) => void;
     onUpdateShop: (newShop: ArtifactData[]) => void;
+    onOpponentPlayedSpell: (spell: SpellData) => void;
+    onGameEnd: ( winnerId: string ) => void;
 };
 
 

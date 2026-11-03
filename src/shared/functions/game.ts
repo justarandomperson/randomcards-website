@@ -17,7 +17,7 @@ export const getPlaceholderGameState = (): ClientGameState => {
                 },
                 data: {
                     name: "Player",
-                    health: STARTING_HEALTH,
+                    hp: STARTING_HEALTH,
                     money: STARTING_MONEY,
                     turn: STARTING_TURN,
                     drawpileCount: 0,
@@ -28,7 +28,7 @@ export const getPlaceholderGameState = (): ClientGameState => {
             opponent: {
                 data: {
                     name: "Opponent",
-                    health: STARTING_HEALTH,
+                    hp: STARTING_HEALTH,
                     money: STARTING_MONEY,
                     turn: STARTING_TURN,
                     drawpileCount: 0,
@@ -41,6 +41,7 @@ export const getPlaceholderGameState = (): ClientGameState => {
         shop: [NULL_ARTIFACT, NULL_ARTIFACT, NULL_ARTIFACT, NULL_ARTIFACT, NULL_ARTIFACT],
         phase: GamePhase.PLAY,
         isPlayerTurn: true,
-        selectingTarget: false
+        selectingTarget: false,
+        spellShowing: null
     };
 };

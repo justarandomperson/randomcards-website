@@ -22,3 +22,10 @@
 
     gap: 40px;
 }
+
+.spell_showing_container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -65%);
+}

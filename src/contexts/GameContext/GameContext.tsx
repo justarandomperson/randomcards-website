@@ -203,6 +203,21 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                     draft.shop = newShop;
                 }));
             },
+            onOpponentPlayedSpell: (spell: SpellData) => {
+                setState(produce(draft => {
+                    draft.spellShowing = spell;
+                }))
+
+                setTimeout(() => {
+                    setState(produce(draft => {
+                        draft.spellShowing = null;
+                    }))
+                }, 3000) // show spell for 3 seconds
+            },
+            onGameEnd: (winnerId: string) => {
+                navigate('/')
+            }
+
         };
 
         const socket = createGameSocket(gameEvents, token);

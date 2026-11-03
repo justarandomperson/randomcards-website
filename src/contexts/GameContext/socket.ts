@@ -16,8 +16,8 @@ export const createGameSocket = (events: GameSocketEvents, token: string): Socke
 
     socket.on(SOCKET_EVENTS.MATCH_START,           events.onMatchStart)
     socket.on(SOCKET_EVENTS.START_TURN,            events.onStartTurn);
-    socket.on(SOCKET_EVENTS.UPDATE_GAME_PHASE,     events.onUpdateGamePhase);
     socket.on(SOCKET_EVENTS.SELECT_TARGET,         events.onSelectTarget)
+    socket.on(SOCKET_EVENTS.UPDATE_GAME_PHASE,     events.onUpdateGamePhase);
     socket.on(SOCKET_EVENTS.UPDATE_MONEY,          events.onUpdateMoney);
     socket.on(SOCKET_EVENTS.UPDATE_HEALTH,         events.onUpdateHealth);
     socket.on(SOCKET_EVENTS.UPDATE_DRAWPILE_COUNT, events.onUpdateDrawpileCount);
@@ -27,6 +27,9 @@ export const createGameSocket = (events: GameSocketEvents, token: string): Socke
     socket.on(SOCKET_EVENTS.UPDATE_BENCH,          events.onUpdateBench);
     socket.on(SOCKET_EVENTS.UPDATE_BOARD,          events.onUpdateBoard);
     socket.on(SOCKET_EVENTS.UPDATE_SHOP,           events.onUpdateShop);
+    socket.on(SOCKET_EVENTS.OPPONENT_PLAYED_SPELL, events.onOpponentPlayedSpell)
+    socket.on(SOCKET_EVENTS.GAME_END,              events.onGameEnd)
+
     return socket;
 }
 
