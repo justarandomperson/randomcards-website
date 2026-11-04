@@ -6,10 +6,7 @@ const GamePage: React.FC = ({ }) => {
     return (
         <div className={Styles.game_page}>
             <div className={Styles.play_area}>
-
-
-                    <GameLayout/>
-
+                <GameLayout/>
             </div>
         </div>
     );

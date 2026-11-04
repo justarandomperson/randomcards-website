@@ -1,8 +1,8 @@
 .card {
     display: flex;
     flex-direction: column;
-    width: 175px;
-    height: 250px;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
 
     background-color: rgb(35, 35, 35);
@@ -11,10 +11,12 @@
     border: none;
 }
 
+
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 25px;
 
 }
 
@@ -26,6 +28,7 @@
     height: 25px;
     font-size: 12px;
     padding-left: 5px;
+    flex-shrink: 0;
     min-width: 0;
 }
 
@@ -34,29 +37,42 @@
     flex-shrink: 0;
     line-height: 32px;
     text-align: center;
-    height: 100%;
     border-left: 1px solid white;
     padding-left: 5px;
     padding-right: 5px;
 }
 
-img {
+.card img {
     width: 100%;
-    height: 100px;
-    object-fit: cover;
+    height: 70px;
+    object-fit:contain;
+    flex-shrink: 0;
+}
+
+@media (min-height: 1000px) {
+    .card img 
+    {
+        height: 90px !important;
+    }
 }
 
 .effect {
+    display: flex;
+    align-items: center;
     text-align: center;
-    font-size: 14px;
-    height: 40px;
+    
+    font-size: 12px;
+    margin: 0;
+    flex-grow: 1;
 }
+
 
 .footer {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    margin-top: auto;
+    height: 30px;
+    flex-shrink: 0;
 
 }
 

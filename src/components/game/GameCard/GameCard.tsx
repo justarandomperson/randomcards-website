@@ -39,7 +39,8 @@ const GameCard: React.FC<Props> = ({ cardData, location }) => {
         [styles.draggedCard]: isDragging,
         [styles.cardPlayerTurn]: isPlayerTurn && (hasCardSelected !== allyUnit),
         [styles.selectedCard]: selectedCard == cardData.instanceId,
-        [styles.selectableCard]: state.selectingTarget
+        [styles.selectableCard]: state.selectingTarget,
+        [styles.container]: true
     })
 
     const onSelectedHandler = () => {

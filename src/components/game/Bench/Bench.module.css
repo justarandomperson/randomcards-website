@@ -1,5 +1,12 @@
 .bench {
     display: grid;
-    grid-template-columns: repeat(2, 0fr);
-    grid-template-rows: repeat(4, 1fr);
+    grid-template-columns: repeat(2, 150px);
+    grid-template-rows: repeat(4, 180px);
+}
+
+@media (min-height: 1000px) {
+    .bench {
+    grid-template-columns: repeat(2, 150px);
+    grid-template-rows: repeat(4, 200px);
+}
 }

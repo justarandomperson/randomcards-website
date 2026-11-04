@@ -1,7 +1,8 @@
 import { UnitData, SpellData, CardType } from '../../../shared/types/card'
 import cardImg from './Card.png';
-import Styles from './Card.module.css'
+import styles from './Card.module.css'
 import { useImagesContext } from '../../../contexts/ImagesContext/ImagesContext';
+import classNames from 'classnames';
 
 
 type Props = {
@@ -13,29 +14,27 @@ const Card: React.FC<Props> = ({ cardData }) => {
     const { state: imagesState } = useImagesContext();
 
     return (
-        <div className={Styles.card}>
+        <div className={styles.card}>
 
-            <div className={Styles.header}>
-                <span className={Styles.name}  
+            <div className={styles.header}>
+                <span className={styles.name}  
                 style={{
                     fontSize: `${Math.max(11, 18 - (cardData.name.length - 3) * 0.6)}px`,
                 }}>{cardData.name}</span>
-                <span className={Styles.cost}>{cardData.cost}</span>
+                <span className={styles.cost}>{cardData.cost}</span>
             </div>
 
             <div>
                 <img src={`data:image/png;base64,${imagesState.get(cardData.id)}`} alt="dog"/>
             </div>
 
-            <div>
-                <p className={Styles.effect}>{cardData.effectDesc}</p>
-            </div>
+            <p className={styles.effect}>{cardData.effectDesc}</p>
 
-            <div className={Styles.footer}>
+            <div className={styles.footer}>
                 {cardData.type === CardType.UNIT && 
                     <>
-                        <span className={Styles.atk}>{cardData.atk}</span>
-                        <span className={Styles.hp}>{cardData.hp}</span>
+                        <span className={styles.atk}>{cardData.atk}</span>
+                        <span className={styles.hp}>{cardData.hp}</span>
                     </>
                 }
             </div>
