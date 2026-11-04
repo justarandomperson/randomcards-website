@@ -13,7 +13,7 @@ const Shop: React.FC = () => {
 
             {shop.map((artifact, index) => (
                 <div className={Styles.shop_item} key={index}>
-                    <Artifact artifactData={artifact} shopIndex={index}/>
+                    <Artifact artifactData={artifact}/>
 
                     {artifact && 
                         <span>

@@ -51,7 +51,7 @@ const GameCard: React.FC<Props> = ({ cardData, location }) => {
 
     const onSelectedHandler = () => {
         if (state.targetFilter && isTargetSelectable){
-            emitters.selectTarget(cardData.id, false)
+            emitters.selectTarget({ targetId: cardData.id, isPlayer: false })
         }
 
         if (isAllyUnit && selectedCard) { 

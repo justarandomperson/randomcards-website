@@ -40,6 +40,7 @@ export type PlayerData = {
     turn: number,
     drawpileCount: number,
     artifacts: ArtifactData[]
+    artifactsBoughtThisTurn: number
 }
 
 // actions and events
@@ -86,6 +87,7 @@ export type AttackUnitPayload = { attackerId: string, targetId: string }
 
 export type AttackPlayerPayload = { attackerId: string, isOpponent: boolean }
 
+export type SelectTargetPayload = { targetId: string, isPlayer: boolean }
 
 // from server to client
 export type GameSocketEvents = {
