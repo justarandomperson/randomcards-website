@@ -205,7 +205,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                     draft.shop = newShop;
                 }));
             },
-            onOpponentPlayedSpell: (spell: SpellData) => {
+            onPlayedSpell: (spell: SpellData) => {
                 setState(produce(draft => {
                     draft.spellShowing = spell;
                 }));
