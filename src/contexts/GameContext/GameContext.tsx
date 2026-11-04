@@ -1,11 +1,11 @@
 import { ReactNode, createContext, useContext, useState, useEffect, useRef, useCallback, useMemo } from "react"
 import { Socket } from 'socket.io-client'
 import { produce } from 'immer'
-import { AttackUnitPayload, BuyArtifactPayload, ClientGameState, GameSocketEvents, MatchStartData, PlaySpellPayload, PlayUnitPayload, SOCKET_EVENTS, UpdateArtifactData, UpdateCardData, UpdateDrawpileCountData, UpdateHealthData, UpdateMoneyData } from './types'
+import { AttackPlayerPayload, AttackUnitPayload, BuyArtifactPayload, ClientGameState, GameSocketEvents, MatchStartData, PlaySpellPayload, PlayUnitPayload, SOCKET_EVENTS, UpdateArtifactData, UpdateCardData, UpdateDrawpileCountData, UpdateHealthData, UpdateMoneyData } from './types'
 import { getPlaceholderGameState } from "../../shared/functions/game"
 import { createGameSocket, useGameSocketEmit } from "./socket"
 import { CardType, CardZone, SpellData, UnitData } from "../../shared/types/card"
-import { ArtifactData, ArtifactZone, GamePhase } from "../../shared/types/game"
+import { ArtifactData, ArtifactZone, GamePhase, selectTargetFilter } from "../../shared/types/game"
 import { useAuth } from "../AuthContext/AuthContext"
 import { isDeckFull } from "../../shared/functions/decks"
 import { useNavigate } from "react-router-dom"
@@ -29,7 +29,8 @@ type GameContextType = {
         buyArtifact: (payload: BuyArtifactPayload, artifact: ArtifactData, shopIndex: number) => void,
         endTurn: () => void,
         attackUnit: (payload: AttackUnitPayload) => void,
-        selectTarget: (targetId: string) => void
+        attackPlayer: (payload: AttackPlayerPayload) => void,
+        selectTarget: (targetId: string, isPlayer: boolean) => void
     }
 }
 
@@ -47,6 +48,7 @@ const GameContext = createContext<GameContextType>({
         buyArtifact: () => {},
         endTurn: () => {},
         attackUnit: () => {},
+        attackPlayer: () => {},
         selectTarget: () => {}
     }
 });
@@ -99,9 +101,9 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                     draft.isPlayerTurn = true;
                 }));
             },
-            onSelectTarget: () => {
+            onSelectTarget: (filter: selectTargetFilter) => {
                 setState(produce(draft => {
-                    draft.selectingTarget = true;
+                    draft.selectingTarget = filter;
                 }));
             },
             onUpdateGamePhase: () => {
@@ -260,6 +262,10 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
         emit(SOCKET_EVENTS.ATTACK_UNIT, payload)
     }, [emit])
 
+    const attackPlayer = useCallback((payload: AttackPlayerPayload) => {
+        emit(SOCKET_EVENTS.ATTACK_PLAYER, payload)
+    }, [emit]) 
+
     const buyArtifact = useCallback((payload: BuyArtifactPayload, artifact: ArtifactData, shopIndex: number) => {
         emit(SOCKET_EVENTS.BUY_ARTIFACT, payload);
     }, [emit]);
@@ -273,7 +279,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
 
     const selectTarget = useCallback((targetId: string) => {
         setState(produce(draft => {
-            draft.selectingTarget = false;
+            draft.selectingTarget = undefined;
         }));
 
         emit(SOCKET_EVENTS.SELECTED_TARGET, {instanceId: targetId})
@@ -281,8 +287,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
 
 
     const emitters = useMemo(() => ({
-        queue, dequeue, playUnit, playSpell, buyArtifact, endTurn, attackUnit, selectTarget
-    }), [queue, dequeue, playUnit, playSpell, buyArtifact, endTurn, attackUnit, selectTarget
+        queue, dequeue, playUnit, playSpell, buyArtifact, endTurn, attackUnit, attackPlayer, selectTarget
+    }), [queue, dequeue, playUnit, playSpell, buyArtifact, endTurn, attackUnit, attackPlayer,selectTarget
 
     ]);
 

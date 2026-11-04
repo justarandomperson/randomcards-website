@@ -5,6 +5,7 @@ import Card from '../Card/Card'
 import { useGameContext } from '../../../contexts/GameContext/GameContext'
 import styles from "./GameCard.module.css"
 import classNames from "classnames"
+import { targetOption } from '../../../shared/types/game'
 
 
 type Props = {
@@ -30,8 +31,11 @@ const GameCard: React.FC<Props> = ({ cardData, location }) => {
         }
     );
 
-    const allyUnit = (cardData.type == CardType.UNIT && location.index < 4) || location.insideOf == "bench"
+    const allyUnit = (cardData.type == CardType.UNIT && location.index < 4) || location.insideOf == CardZone.BENCH
     const hasCardSelected = selectedCard != undefined
+
+    const cardType = allyUnit ? (location.insideOf == CardZone.BENCH ? targetOption.BENCH : targetOption.ALLY) : targetOption.BENCH
+    const selectableTarget = state.selectingTarget ? state.selectingTarget.has(cardType) : false
 
     if (location.insideOf == "board") console.log(hasCardSelected, allyUnit, location.index, state.board)
 
@@ -39,14 +43,14 @@ const GameCard: React.FC<Props> = ({ cardData, location }) => {
         [styles.draggedCard]: isDragging,
         [styles.cardPlayerTurn]: isPlayerTurn && (hasCardSelected !== allyUnit),
         [styles.selectedCard]: selectedCard == cardData.instanceId,
-        [styles.selectableCard]: state.selectingTarget,
+        [styles.selectableCard]: selectableTarget,
         [styles.container]: true
     })
 
     const onSelectedHandler = () => {
-        if (state.selectingTarget)
+        if (state.selectingTarget && selectableTarget)
         {
-            emitters.selectTarget(cardData.id)
+            emitters.selectTarget(cardData.id, false)
         }
         if (allyUnit && selectedCard) return
         if (allyUnit)
@@ -55,7 +59,7 @@ const GameCard: React.FC<Props> = ({ cardData, location }) => {
             return
         }
         if (!selectedCard || !cardData.instanceId) return
-        emitters.attackUnit({instanceId: selectedCard, targetId: cardData.instanceId})
+        emitters.attackUnit({attackerId: selectedCard, targetId: cardData.instanceId})
     }
     
     return (

@@ -20,3 +20,13 @@ export type ArtifactLocation = {
     insideOf: ArtifactZone
     index: number
 };
+
+export enum targetOption {
+  ALLY,
+  SELF,
+  ENEMY,
+  OPPONENT,
+  BENCH
+}
+
+export type selectTargetFilter = Set<targetOption>

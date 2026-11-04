@@ -1,6 +1,13 @@
 .health {
     display: flex;
+    align-items: center;
     gap: 10px;
+}
+
+.selectable
+{
+    /* filter: grayscale(100%) brightness(30%) sepia(100%) hue-rotate(250deg) saturate(500%) contrast(1.5); */
+    filter: brightness(200%);
 }
 
 .low {

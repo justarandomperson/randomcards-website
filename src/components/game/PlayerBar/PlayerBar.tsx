@@ -16,6 +16,8 @@ const PlayerBar: React.FC<Props> = ({ isOpponent }) => {
     const player = isOpponent ? state.players.opponent : state.players.player
 
 
+    
+
     const [ artifactListShown, setArtifactListShown ] = useState<boolean>(false);
 
     const handleClickArtifacts = () => {
@@ -34,7 +36,7 @@ const PlayerBar: React.FC<Props> = ({ isOpponent }) => {
             </div>
 
             <div className={Styles.player_data_container}>
-                <Health health={player.data.hp}/>
+                <Health health={player.data.hp} isOpponent id={player.data.id}/>
                 <p className={Styles.money}>{`${player.data.money}$`}</p>
             </div>
 
