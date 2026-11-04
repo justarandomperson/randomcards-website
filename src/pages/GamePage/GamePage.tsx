@@ -1,11 +1,22 @@
+import classNames from 'classnames';
 import GameLayout from '../../components/game/GameLayout/GameLayout'
-import Styles from './GamePage.module.css'
+import { useGameContext } from '../../contexts/GameContext/GameContext';
+import styles from './GamePage.module.css'
 
 
 const GamePage: React.FC = ({ }) => {
+    const { isGameOver } = useGameContext().state
+
+
+    const playAreaClass = classNames({
+        [styles.play_area]: true,
+        [styles.game_over]: isGameOver
+    });
+
+
     return (
-        <div className={Styles.game_page}>
-            <div className={Styles.play_area}>
+        <div className={styles.game_page}>
+            <div className={playAreaClass}>
                 <GameLayout/>
             </div>
         </div>

@@ -12,7 +12,7 @@ import Card from '../Card/Card'
 
 
 const GameLayout: React.FC = () => {
-    const { spellShowing } = useGameContext().state
+    const { spellShowing, playerWonName } = useGameContext().state
     const { activeCardDrag, handleCardDragStart, handleCardDragEnd } = useCardDrag()
 
     return (
@@ -44,9 +44,15 @@ const GameLayout: React.FC = () => {
                 )}
             </DragOverlay>
 
-            {spellShowing && (
-                <div className={styles.spell_showing_container}>
+            { spellShowing && (
+                <div className={Styles.absolute_pos_container}>
                     <Card cardData={spellShowing}/>
+                </div>
+            )}
+
+            { playerWonName && (
+                <div className={Styles.absolute_pos_container}>
+                    <h1>{`${playerWonName} Won GG EZ!!!`}</h1>
                 </div>
             )}
                 

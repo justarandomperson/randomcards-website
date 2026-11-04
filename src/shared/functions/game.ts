@@ -42,6 +42,9 @@ export const getPlaceholderGameState = (): ClientGameState => {
         shop: [null, null, null, null, null],
         phase: GamePhase.PLAY,
         isPlayerTurn: true,
+        isGameOver: false,
+        targetFilter: undefined,
+        spellShowing: undefined
     };
 };
 

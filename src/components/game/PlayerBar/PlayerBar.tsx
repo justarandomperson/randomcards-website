@@ -14,6 +14,7 @@ const PlayerBar: React.FC<Props> = ({ isOpponent }) => {
     const { state, emitters } = useGameContext()
     const { endTurn } = emitters
     const player = isOpponent ? state.players.opponent : state.players.player
+
     if (!player.data.id) {
         throw new Error("player has to have a socketId");
     }
@@ -26,6 +27,7 @@ const PlayerBar: React.FC<Props> = ({ isOpponent }) => {
             </div>
 
             <div className={Styles.player_data_container}>
+                <Health health={player.data.hp} id={player.data.id} isOpponent/>
                 <Health health={player.data.hp} id={player.data.id} isOpponent/>
                 <p className={Styles.money}>{`${player.data.money}$`}</p>
             </div>

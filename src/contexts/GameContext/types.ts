@@ -8,9 +8,11 @@ export type ClientGameState = {
     board: (UnitData | null)[]
     shop: (ArtifactData | null)[]
     phase: GamePhase
-    isPlayerTurn: boolean,
+    isPlayerTurn: boolean
+    isGameOver: boolean
     targetFilter?: SelectTargetFilter
     spellShowing?: SpellData
+    playerWonName?: string
 
 };
 

@@ -23,7 +23,7 @@
     gap: 40px;
 }
 
-.spell_showing_container {
+.absolute_pos_container {
     position: absolute;
     top: 50%;
     left: 50%;
