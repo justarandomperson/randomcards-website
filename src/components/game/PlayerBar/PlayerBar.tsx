@@ -1,8 +1,6 @@
-import { useEffect, useState } from 'react'
 import { useGameContext } from '../../../contexts/GameContext/GameContext'
 import Health from '../Health/Health'
 import Styles from './PlayerBar.module.css'
-import ArtifactList from '../ArtifactList/ArtifactList'
 
 
 type Props = {

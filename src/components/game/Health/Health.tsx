@@ -33,7 +33,7 @@ const Health: React.FC<Props> = ({ health, isOpponent, id }) => {
     const onSelectedHandler = () => {
         if (state.targetFilter && selectableTarget)
         {
-            emitters.selectTarget(id, true)
+            emitters.selectTarget({ targetId: id, isPlayer: true })
         }
         else if (selectedCard) //should check if unit is selected or smth
         {

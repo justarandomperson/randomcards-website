@@ -45,13 +45,13 @@ const GameLayout: React.FC = () => {
             </DragOverlay>
 
             { spellShowing && (
-                <div className={Styles.absolute_pos_container}>
+                <div className={styles.absolute_pos_container}>
                     <Card cardData={spellShowing}/>
                 </div>
             )}
 
             { playerWonName && (
-                <div className={Styles.absolute_pos_container}>
+                <div className={styles.absolute_pos_container}>
                     <h1>{`${playerWonName} Won GG EZ!!!`}</h1>
                 </div>
             )}

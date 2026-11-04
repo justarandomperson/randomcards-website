@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { DragStartEvent, DragEndEvent } from '@dnd-kit/core'
 import { CardLocation, CardType, CardZone, DraggedCard } from '../../../shared/types/card'
 import { useGameContext } from '../../../contexts/GameContext/GameContext'
+import { PlaySpellPayload, PlayUnitPayload } from '../../../contexts/GameContext/types'
 
 
 //? i hate this type of code but this is the only way to actually typecheck these??
@@ -54,14 +55,14 @@ export const useCardDrag = () => {
 
         switch (card.cardData.type) {
             case CardType.UNIT: {
-                const payload = { instanceId: card.cardData.instanceId, boardIndex: to.index };
-                playUnit(payload, card.cardData, card.location.index);
+                const payload: PlayUnitPayload = { instanceId: card.cardData.instanceId, boardIndex: to.index };
+                playUnit(payload);
                 break;
             }
 
             case CardType.SPELL: {
-                const payload = { instanceId: card.cardData.instanceId };
-                playSpell(payload, card.cardData, card.location.index);
+                const payload: PlaySpellPayload = { instanceId: card.cardData.instanceId };
+                playSpell(payload);
                 break;
             }
         }

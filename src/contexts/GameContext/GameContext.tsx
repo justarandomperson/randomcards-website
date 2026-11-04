@@ -1,7 +1,7 @@
 import { ReactNode, createContext, useContext, useState, useEffect, useRef, useCallback, useMemo } from "react"
 import { Socket } from 'socket.io-client'
 import { produce } from 'immer'
-import { AttackPlayerPayload, AttackUnitPayload, BuyArtifactPayload, ClientGameState, GameSocketEvents, MatchStartData, PlaySpellPayload, PlayUnitPayload, SOCKET_EVENTS, UpdateArtifactData, UpdateCardData, UpdateDrawpileCountData, UpdateHealthData, UpdateMoneyData } from './types'
+import { AttackPlayerPayload, AttackUnitPayload, BuyArtifactPayload, ClientGameState, GameSocketEvents, MatchStartData, PlaySpellPayload, PlayUnitPayload, SelectTargetPayload, SOCKET_EVENTS, UpdateArtifactData, UpdateCardData, UpdateDrawpileCountData, UpdateHealthData, UpdateMoneyData } from './types'
 import { getPlaceholderGameState } from "../../shared/functions/game"
 import { createGameSocket, useGameSocketEmit } from "./socket"
 import { CardType, CardZone, SpellData, UnitData } from "../../shared/types/card"
@@ -25,13 +25,13 @@ type GameContextType = {
     emitters: {
         queue: (deck: Deck) => void,
         dequeue: () => void,
-        playUnit: (payload: PlayUnitPayload, card: UnitData, benchIndex: number) => void,
-        playSpell: (payload: PlaySpellPayload, card: SpellData, handIndex: number) => void,
-        buyArtifact: (payload: BuyArtifactPayload, artifact: ArtifactData, shopIndex: number) => void,
+        playUnit: (payload: PlayUnitPayload) => void,
+        playSpell: (payload: PlaySpellPayload) => void,
+        buyArtifact: (payload: BuyArtifactPayload) => void,
         endTurn: () => void,
         attackUnit: (payload: AttackUnitPayload) => void,
         attackPlayer: (payload: AttackPlayerPayload) => void,
-        selectTarget: (targetId: string, isPlayer: boolean) => void
+        selectTarget: (payload: SelectTargetPayload) => void
     }
 }
 
@@ -168,7 +168,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
             },
             onUpdateArtifact: (data: UpdateArtifactData) => {
                 setState(produce(draft => {
-                    removeArtifactInstance(draft, data.artifact.instanceId!);
+                    removeArtifactInstance(draft, data.artifact.instanceId);
 
                     switch (data.location.insideOf) {
                         case ArtifactZone.SHOP:
@@ -264,11 +264,11 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     }, [emit]);
 
 
-    const playUnit = useCallback((payload: PlayUnitPayload, card: UnitData, benchIndex: number) => {
+    const playUnit = useCallback((payload: PlayUnitPayload) => {
         emit(SOCKET_EVENTS.PLAY_UNIT, payload);
     }, [emit]);
 
-    const playSpell = useCallback((payload: PlaySpellPayload, card: SpellData, handIndex: number) => {
+    const playSpell = useCallback((payload: PlaySpellPayload) => {
         emit(SOCKET_EVENTS.PLAY_SPELL, payload);
     }, [emit]);
 
@@ -280,23 +280,31 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
         emit(SOCKET_EVENTS.ATTACK_PLAYER, payload)
     }, [emit]) 
 
-    const buyArtifact = useCallback((payload: BuyArtifactPayload, artifact: ArtifactData, shopIndex: number) => {
+    const buyArtifact = useCallback((payload: BuyArtifactPayload) => {
+        setState(produce(draft => {
+            draft.players.player.data.artifactsBoughtThisTurn += 1;
+        }));
+
         emit(SOCKET_EVENTS.BUY_ARTIFACT, payload);
     }, [emit]);
 
     const endTurn = useCallback(() => {
         setState(produce(draft => {
             draft.isPlayerTurn = false;
+
+            if (draft.phase === GamePhase.SHOP) {
+                draft.players.player.data.artifactsBoughtThisTurn = 0;
+            }
         }));
         emit(SOCKET_EVENTS.END_TURN);
     }, [emit]);
 
-    const selectTarget = useCallback((targetId: string, isPlayer: boolean) => {
+    const selectTarget = useCallback((payload: SelectTargetPayload) => {
         setState(produce(draft => {
             draft.targetFilter = undefined;
         }));
 
-        emit(SOCKET_EVENTS.SELECTED_TARGET, { id: targetId, isPlayer })
+        emit(SOCKET_EVENTS.SELECTED_TARGET, payload)
     }, [emit])
 
 

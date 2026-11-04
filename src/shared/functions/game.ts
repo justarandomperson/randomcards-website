@@ -22,7 +22,8 @@ export const getPlaceholderGameState = (): ClientGameState => {
                     money: STARTING_MONEY,
                     turn: STARTING_TURN,
                     drawpileCount: 0,
-                    artifacts: []
+                    artifacts: [],
+                    artifactsBoughtThisTurn: 0
                 }
             },
 
@@ -33,7 +34,8 @@ export const getPlaceholderGameState = (): ClientGameState => {
                     money: STARTING_MONEY,
                     turn: STARTING_TURN,
                     drawpileCount: 0,
-                    artifacts: []
+                    artifacts: [],
+                    artifactsBoughtThisTurn: 0
                 }
             }
         },

@@ -6,7 +6,6 @@ import { useGameContext } from '../../../contexts/GameContext/GameContext'
 import styles from "./GameCard.module.css"
 import classNames from "classnames"
 import { TargetType } from '../../../shared/types/game'
-import { getTargetType } from '../../../shared/functions/game'
 
 
 type Props = {
@@ -16,8 +15,7 @@ type Props = {
 
 
 const GameCard: React.FC<Props> = ({ cardData, location }) => {
-    const instanceId = cardData.instanceId;
-    if (location.insideOf === CardZone.NONE || !instanceId) {
+    if (location.insideOf === CardZone.NONE) {
         throw new Error('card doesnt exist');
     }
 
@@ -26,12 +24,15 @@ const GameCard: React.FC<Props> = ({ cardData, location }) => {
 
     const isAllyUnit = (cardData.type == CardType.UNIT && location.index < 4) || location.insideOf == CardZone.BENCH
     const hasCardSelected = selectedCard != undefined
-    const targetType = getTargetType(cardData, location)
+    const targetType = isAllyUnit ? 
+        (location.insideOf == CardZone.BENCH ? TargetType.BENCH : TargetType.ALLY) : TargetType.BENCH
     const isTargetSelectable = state.targetFilter ? state.targetFilter.has(targetType) : false
 
+    if (location.insideOf == "board") {
+        console.log(hasCardSelected, isAllyUnit, location.index, state.board) //* debug
+    }
 
-    const isDraggable = location.insideOf !== CardZone.BOARD 
-    && !state.targetFilter; // board cards arent draggables
+    const isDraggable = location.insideOf !== CardZone.BOARD; // board cards arent draggables
     const { attributes, listeners, setNodeRef, isDragging } = useDraggable({ 
             id: `${location.insideOf}-${location.index}`, 
             data: {cardData, location},
@@ -55,8 +56,7 @@ const GameCard: React.FC<Props> = ({ cardData, location }) => {
             return
         }
         if (state.targetFilter && isTargetSelectable){
-            emitters.selectTarget(instanceId, false)
-            return
+            emitters.selectTarget({ targetId: cardData.id, isPlayer: false })
         }
 
         if (isAllyUnit && selectedCard) { 
