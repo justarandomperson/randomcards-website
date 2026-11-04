@@ -8,9 +8,11 @@ export type ClientGameState = {
     board: (UnitData | null)[]
     shop: (ArtifactData | null)[]
     phase: GamePhase
-    isPlayerTurn: boolean,
+    isPlayerTurn: boolean
+    isGameOver: boolean
     targetFilter?: SelectTargetFilter
     spellShowing?: SpellData
+    playerWonName?: string
 
 };
 
@@ -32,7 +34,7 @@ export type OpponentState = {
 
 export type PlayerData = {
     name: string,
-    socketId?: string,
+    id?: string,
     hp: number,
     money: number,
     turn: number,

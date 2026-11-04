@@ -11,6 +11,7 @@ import { isDeckFull } from "../../shared/functions/decks"
 import { useNavigate } from "react-router-dom"
 import { Deck } from "../../shared/types/decks"
 import { getDeckIds, matchPlayerIds, removeArtifactInstance, removeCardInstance } from "./helpers"
+import { GAMEPAGE_PATH, HOMEPAGE_PATH } from "../../shared/constants/app"
 
 
 type GameContextType = {
@@ -93,7 +94,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                     draft.isPlayerTurn = data.isFirstTurn;
                 }));
 
-                navigate('/game');
+                navigate(GAMEPAGE_PATH);
             },
             onStartTurn: () => {
                 setState(produce(draft => {
@@ -207,16 +208,30 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
             onOpponentPlayedSpell: (spell: SpellData) => {
                 setState(produce(draft => {
                     draft.spellShowing = spell;
-                }))
+                }));
 
                 setTimeout(() => {
                     setState(produce(draft => {
                         draft.spellShowing = undefined;
-                    }))
-                }, 3000) // show spell for 3 seconds
+                    }));
+                }, 3000); // show spell for 3 seconds
             },
             onGameEnd: (winnerId: string) => {
-                navigate('/')
+                setState(produce(draft => {
+                    draft.isGameOver = true;
+                }));
+
+                setTimeout(() => {
+                    setState(produce(draft => {
+                        draft.playerWonName = (draft.players.player.data.id === winnerId) ?
+                            draft.players.player.data.name : draft.players.opponent.data.name;
+                    }));
+                }, 1000);
+
+                setTimeout(() => {
+                    setState(getPlaceholderGameState());
+                    navigate(HOMEPAGE_PATH);
+                }, 3000);
             }
 
         };
