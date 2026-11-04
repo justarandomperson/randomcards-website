@@ -1,6 +1,5 @@
 import { useGameContext } from '../../../contexts/GameContext/GameContext'
 import { useImagesContext } from '../../../contexts/ImagesContext/ImagesContext';
-import { NULL_ARTIFACT_ID } from '../../../shared/constants/game';
 import { ArtifactData, GamePhase } from "../../../shared/types/game";
 import Styles from './Artifact.module.css'
 

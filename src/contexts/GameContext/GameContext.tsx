@@ -5,7 +5,7 @@ import { AttackPlayerPayload, AttackUnitPayload, BuyArtifactPayload, ClientGameS
 import { getPlaceholderGameState } from "../../shared/functions/game"
 import { createGameSocket, useGameSocketEmit } from "./socket"
 import { CardType, CardZone, SpellData, UnitData } from "../../shared/types/card"
-import { ArtifactData, ArtifactZone, GamePhase, selectTargetFilter } from "../../shared/types/game"
+import { ArtifactData, ArtifactZone, GamePhase, SelectTargetFilter } from "../../shared/types/game"
 import { useAuth } from "../AuthContext/AuthContext"
 import { isDeckFull } from "../../shared/functions/decks"
 import { useNavigate } from "react-router-dom"
@@ -101,9 +101,9 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                     draft.isPlayerTurn = true;
                 }));
             },
-            onSelectTarget: (filter: selectTargetFilter) => {
+            onSelectTarget: (filter: SelectTargetFilter) => {
                 setState(produce(draft => {
-                    draft.selectingTarget = filter;
+                    draft.targetFilter = filter;
                 }));
             },
             onUpdateGamePhase: () => {
@@ -155,7 +155,6 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                             break;
 
                         case CardZone.HAND: {
-                            //! wait does it always remove stuuff no it shouldnt be like that
                             if (data.card.type === CardType.UNIT) {
                                 throw new Error(`card ${data.card.name} cannot exist in ${data.location.insideOf}`);
                             }
@@ -212,7 +211,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
 
                 setTimeout(() => {
                     setState(produce(draft => {
-                        draft.spellShowing = null;
+                        draft.spellShowing = undefined;
                     }))
                 }, 3000) // show spell for 3 seconds
             },
@@ -277,12 +276,12 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
         emit(SOCKET_EVENTS.END_TURN);
     }, [emit]);
 
-    const selectTarget = useCallback((targetId: string) => {
+    const selectTarget = useCallback((targetId: string, isPlayer: boolean) => {
         setState(produce(draft => {
-            draft.selectingTarget = undefined;
+            draft.targetFilter = undefined;
         }));
 
-        emit(SOCKET_EVENTS.SELECTED_TARGET, {instanceId: targetId})
+        emit(SOCKET_EVENTS.SELECTED_TARGET, { id: targetId, isPlayer })
     }, [emit])
 
 

@@ -1,4 +1,4 @@
-import { CardType, SpellData } from "../types/card";
+import { CardType } from "../types/card";
 import { Deck } from "../types/decks";
 import { UNITS_IN_DECK, SPELLS_IN_DECK } from '../constants/game';
 

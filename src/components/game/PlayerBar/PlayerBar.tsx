@@ -15,28 +15,19 @@ const PlayerBar: React.FC<Props> = ({ isOpponent }) => {
     const { endTurn } = emitters
     const player = isOpponent ? state.players.opponent : state.players.player
 
-
-    
-
-    const [ artifactListShown, setArtifactListShown ] = useState<boolean>(false);
-
-    const handleClickArtifacts = () => {
-        artifactListShown ? setArtifactListShown(false) : setArtifactListShown(true);
+    if (!player.data.socketId) {
+        throw new Error("player has to have a socketId");
     }
-
 
     return (
         <div className={Styles.player_bar}>
             <div>
                 <span className={Styles.player_name}>{player.data.name}</span>
-                <span onClick={handleClickArtifacts}>{`Artifacts: ${player.data.artifacts.length}`}</span>
-                { artifactListShown &&
-                    <ArtifactList artifacts={player.data.artifacts}/>
-                }
+                <span>{`Artifacts: ${player.data.artifacts.length}`}</span>
             </div>
 
             <div className={Styles.player_data_container}>
-                <Health health={player.data.hp} isOpponent id={player.data.id}/>
+                <Health health={player.data.hp} id={player.data.socketId} isOpponent/>
                 <p className={Styles.money}>{`${player.data.money}$`}</p>
             </div>
 

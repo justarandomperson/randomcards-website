@@ -1,5 +1,5 @@
 import { ClientGameState } from "../../contexts/GameContext/types";
-import { NULL_ARTIFACT, STARTING_HEALTH, STARTING_MONEY, STARTING_TURN } from "../constants/game";
+import { STARTING_HEALTH, STARTING_MONEY, STARTING_TURN } from "../constants/game";
 import { GamePhase } from "../types/game";
 
 
@@ -38,10 +38,8 @@ export const getPlaceholderGameState = (): ClientGameState => {
         },
 
         board: [null, null, null, null, null, null, null, null],
-        shop: [NULL_ARTIFACT, NULL_ARTIFACT, NULL_ARTIFACT, NULL_ARTIFACT, NULL_ARTIFACT],
+        shop: [null, null, null, null, null],
         phase: GamePhase.PLAY,
         isPlayerTurn: true,
-        selectingTarget: false,
-        spellShowing: null
     };
 };

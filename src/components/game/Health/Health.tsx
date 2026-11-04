@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { STARTING_HEALTH } from "../../../shared/constants/game";
 import styles from './Health.module.css'
 import { useGameContext } from "../../../contexts/GameContext/GameContext";
-import { targetOption } from "../../../shared/types/game";
+import { TargetType } from "../../../shared/types/game";
 
 
 type Props = {
@@ -16,8 +16,8 @@ const Health: React.FC<Props> = ({ health, isOpponent, id }) => {
     const healthPercentage = health / STARTING_HEALTH;
     const { state, selectedCard, emitters } = useGameContext()
 
-    const type = isOpponent ? targetOption.OPPONENT : targetOption.SELF
-    const selectableTarget = selectedCard && isOpponent || (state.selectingTarget ? state.selectingTarget.has(type) : false)
+    const targetType = isOpponent ? TargetType.OPPONENT : TargetType.SELF
+    const selectableTarget = selectedCard && isOpponent || (state.targetFilter ? state.targetFilter.has(targetType) : false)
 
     const containerClassName = classNames({
         [styles.health]: true,
@@ -30,8 +30,8 @@ const Health: React.FC<Props> = ({ health, isOpponent, id }) => {
         [styles.selectable]: selectableTarget
     })
 
-     const onSelectedHandler = () => {
-        if (state.selectingTarget && selectableTarget)
+    const onSelectedHandler = () => {
+        if (state.targetFilter && selectableTarget)
         {
             emitters.selectTarget(id, true)
         }
@@ -42,10 +42,10 @@ const Health: React.FC<Props> = ({ health, isOpponent, id }) => {
     }
 
     return (
-        <div className={containerClassName}>
+        <div className={containerClassName} onClick={onSelectedHandler}>
 
             <meter className={healthMeterClassName}  min='0' max={STARTING_HEALTH} value={health} 
-            low={STARTING_HEALTH/4} high={3*STARTING_HEALTH/4} optimum={STARTING_HEALTH}/>
+                low={STARTING_HEALTH/4} high={3*STARTING_HEALTH/4} optimum={STARTING_HEALTH}/>
 
             <p>{`${health}/${STARTING_HEALTH}`}</p>
 

@@ -1,7 +1,6 @@
 import { useGameContext } from '../../../contexts/GameContext/GameContext'
 import { UNITS_IN_DECK } from '../../../shared/constants/game'
 import { CardZone } from '../../../shared/types/card'
-import Card from '../Card/Card'
 import CardSlot from '../CardSlot/CardSlot.js'
 import Styles from './Bench.module.css'
 

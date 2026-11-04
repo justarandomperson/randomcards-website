@@ -21,12 +21,12 @@ export type ArtifactLocation = {
     index: number
 };
 
-export enum targetOption {
-  ALLY,
-  SELF,
-  ENEMY,
-  OPPONENT,
-  BENCH
+export enum TargetType {
+  ALLY = 'ally',
+  SELF = 'self',
+  ENEMY = 'enemy',
+  OPPONENT = 'opponent',
+  BENCH = 'bench'
 }
 
-export type selectTargetFilter = Set<targetOption>
+export type SelectTargetFilter = Set<TargetType>

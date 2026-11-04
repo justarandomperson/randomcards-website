@@ -1,5 +1,5 @@
-import { GamePhase, ArtifactData, ArtifactZone, ArtifactLocation, selectTargetFilter } from "../../shared/types/game";
-import { UnitData, SpellData, CardZone, CardLocation } from "../../shared/types/card";
+import { GamePhase, ArtifactData, ArtifactLocation, SelectTargetFilter } from "../../shared/types/game";
+import { UnitData, SpellData, CardLocation } from "../../shared/types/card";
 
 
 // context and state 
@@ -9,8 +9,8 @@ export type ClientGameState = {
     shop: (ArtifactData | null)[]
     phase: GamePhase
     isPlayerTurn: boolean,
-    selectingTarget: selectTargetFilter | undefined
-    spellShowing: SpellData | null
+    targetFilter?: SelectTargetFilter
+    spellShowing?: SpellData
 
 };
 
@@ -32,7 +32,7 @@ export type OpponentState = {
 
 export type PlayerData = {
     name: string,
-    id: string,
+    socketId?: string,
     hp: number,
     money: number,
     turn: number,
@@ -92,7 +92,7 @@ export type GameSocketEvents = {
 
     onMatchStart: (data: MatchStartData) => void;
     onStartTurn: () => void;
-    onSelectTarget: (filter: selectTargetFilter) => void;
+    onSelectTarget: (filter: SelectTargetFilter) => void;
     onUpdateGamePhase: () => void;
     onUpdateMoney: (data: UpdateMoneyData) => void;
     onUpdateHealth: (data: UpdateHealthData) => void;

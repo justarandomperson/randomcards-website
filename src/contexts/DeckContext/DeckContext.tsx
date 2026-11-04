@@ -1,7 +1,7 @@
 import { useReducer, createContext, type PropsWithChildren, useContext, useEffect, useState } from 'react'
 import { DeckAction, DeckActionType, DeckReducer } from './reducer'
 import { DeckState, localDeck } from './types'
-import { Deck, Storage } from '../../shared/types/decks'
+import { Storage } from '../../shared/types/decks'
 import { fetchStorage } from '../../api/axiosInstance'
 import { SpellData, UnitData } from '../../shared/types/card'
 

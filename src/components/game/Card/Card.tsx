@@ -1,8 +1,6 @@
 import { UnitData, SpellData, CardType } from '../../../shared/types/card'
-import cardImg from './Card.png';
 import styles from './Card.module.css'
 import { useImagesContext } from '../../../contexts/ImagesContext/ImagesContext';
-import classNames from 'classnames';
 
 
 type Props = {

@@ -1,4 +1,4 @@
-import { useReducer, createContext, type PropsWithChildren, useContext, useEffect, useState } from 'react'
+import { createContext, type PropsWithChildren, useContext, useEffect, useState } from 'react'
 import { ImagesMap } from './types';
 import { fetchImages } from '../../api/axiosInstance';
 

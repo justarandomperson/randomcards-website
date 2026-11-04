@@ -14,7 +14,7 @@ const isCardLocation = (data: unknown): data is CardLocation => {
 }
 
 
-export function useCardDrag() {
+export const useCardDrag = () => {
     const [activeCardDrag, setActiveCardDrag] = useState<DraggedCard | null>(null)
     const { emitters } = useGameContext()
     const { playUnit, playSpell } = emitters
