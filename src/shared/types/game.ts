@@ -22,12 +22,12 @@ export type ArtifactLocation = {
 };
 
 export enum TargetType {
-  ALLY,
-  SELF,
-  ENEMY,
-  OPPONENT,
-  BENCH,
-  HAND
+    ALLY,
+    SELF,
+    ENEMY,
+    OPPONENT,
+    BENCH,
+    HAND
 }
 
 export type SelectTargetFilter = Set<TargetType>

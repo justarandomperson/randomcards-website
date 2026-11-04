@@ -1,8 +1,9 @@
+import classNames from 'classnames';
 import { useGameContext } from '../../../contexts/GameContext/GameContext'
 import { useImagesContext } from '../../../contexts/ImagesContext/ImagesContext';
 import { MAX_ARTIFACTS_BOUGHT_PER_TURN, MAX_CARDS_PER_BOARD_ROW } from '../../../shared/constants/game';
 import { ArtifactData, GamePhase } from "../../../shared/types/game";
-import Styles from './Artifact.module.css'
+import styles from './Artifact.module.css'
 
 
 type Props = {
@@ -25,13 +26,19 @@ const Artifact: React.FC<Props> = ({ artifactData }) => {
         buyArtifact(payload);
     }
 
+    const artifactClass = classNames({
+        [styles.artifact]: artifactData,
+        [styles.artifact_bought]: !artifactData,
+    })
+
+
     return (
-        <span className={isPlayPhase ? undefined : Styles.artifact_container_open}>
+        <span className={isPlayPhase ? undefined : styles.artifact_container_open}>
             <button 
-                disabled={isPlayPhase || !state.isPlayerTurn || 
+                disabled={isPlayPhase || !state.isPlayerTurn ||
                     state.players.player.data.artifactsBoughtThisTurn >= MAX_ARTIFACTS_BOUGHT_PER_TURN} 
                 onClick={handleBuyArtifact} 
-                className={!artifactData ? Styles.artifact_bought : Styles.artifact}>
+                className={artifactClass}>
                     { artifactData &&
                         <img src={`data:image/png;base64,${imagesState.get(artifactData.id)}`} alt="placeholder"/>
                     }
