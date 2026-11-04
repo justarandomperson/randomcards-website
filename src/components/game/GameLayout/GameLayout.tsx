@@ -6,7 +6,7 @@ import PlayerBar from '../PlayerBar/PlayerBar'
 import Shop from '../Shop/Shop'
 import Hand from '../Hand/Hand'
 import GameCard from '../GameCard/GameCard'
-import Styles from './GameLayout.module.css'
+import styles from './GameLayout.module.css'
 import { useGameContext } from '../../../contexts/GameContext/GameContext'
 import Card from '../Card/Card'
 
@@ -18,8 +18,8 @@ const GameLayout: React.FC = () => {
     return (
         <DndContext collisionDetection={rectIntersection} onDragStart={handleCardDragStart} onDragEnd={handleCardDragEnd}>
 
-            <div className={Styles.main_components_container}>
-                <div className={Styles.bench_container}>
+            <div className={styles.main_components_container}>
+                <div className={styles.bench_container}>
                     <Bench/>
                 </div>
 
@@ -29,12 +29,12 @@ const GameLayout: React.FC = () => {
                     <PlayerBar isOpponent={false}/>
                 </div>
 
-                <div className={Styles.shop_container}>
+                <div className={styles.shop_container}>
                     <Shop/>
                 </div>
             </div>
 
-            <div className={Styles.hand_container}>
+            <div className={styles.hand_container}>
                 <Hand/>
             </div>
 
@@ -45,13 +45,13 @@ const GameLayout: React.FC = () => {
             </DragOverlay>
 
             { spellShowing && (
-                <div className={Styles.absolute_pos_container}>
+                <div className={styles.absolute_pos_container}>
                     <Card cardData={spellShowing}/>
                 </div>
             )}
 
             { playerWonName && (
-                <div className={Styles.absolute_pos_container}>
+                <div className={styles.absolute_pos_container}>
                     <h1>{`${playerWonName} Won GG EZ!!!`}</h1>
                 </div>
             )}

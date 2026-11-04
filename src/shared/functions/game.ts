@@ -1,6 +1,7 @@
 import { ClientGameState } from "../../contexts/GameContext/types";
 import { STARTING_HEALTH, STARTING_MONEY, STARTING_TURN } from "../constants/game";
-import { GamePhase } from "../types/game";
+import { CardLocation, CardType, CardZone, SpellData, UnitData } from "../types/card";
+import { GamePhase, TargetType } from "../types/game";
 
 
 export const getPlaceholderGameState = (): ClientGameState => {
@@ -47,4 +48,26 @@ export const getPlaceholderGameState = (): ClientGameState => {
         targetFilter: undefined,
         spellShowing: undefined
     };
+};
+
+export const getTargetType = (cardData: UnitData | SpellData, location: CardLocation): TargetType => {
+    if (location.insideOf === CardZone.NONE) throw new Error("Card doesn't exist")
+    if (location.insideOf === CardZone.BENCH) {
+        return TargetType.BENCH;
+    }
+
+    if (cardData.type === CardType.UNIT) {
+        if (location.index < 4) {
+            return TargetType.ALLY;
+        }
+
+        return TargetType.ENEMY;
+    }
+
+    if (cardData.type === CardType.SPELL)
+    {
+        return TargetType.HAND
+    }
+
+    return TargetType.ENEMY;
 };

@@ -26,7 +26,9 @@ const Card: React.FC<Props> = ({ cardData }) => {
                 <img src={`data:image/png;base64,${imagesState.get(cardData.id)}`} alt="placeholder (imagine dog)"/>
             </div>
 
-            <p className={styles.effect}>{cardData.effectDesc}</p>
+            <p style={{
+                    fontSize: `${Math.max(11, 18 - (cardData.effectDesc.length - 3) * 0.6)}px`,
+                }} className={styles.effect}>{cardData.effectDesc}</p>
 
             <div className={styles.footer}>
                 {cardData.type === CardType.UNIT && 
