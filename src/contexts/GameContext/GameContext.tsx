@@ -103,7 +103,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
             },
             onSelectTarget: (filter: SelectTargetFilter) => {
                 setState(produce(draft => {
-                    draft.targetFilter = filter;
+                    draft.targetFilter = new Set(filter);
                 }));
             },
             onUpdateGamePhase: () => {

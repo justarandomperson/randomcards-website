@@ -32,7 +32,7 @@ export type OpponentState = {
 
 export type PlayerData = {
     name: string,
-    socketId?: string,
+    id?: string,
     hp: number,
     money: number,
     turn: number,
