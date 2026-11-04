@@ -49,6 +49,11 @@ const GameCard: React.FC<Props> = ({ cardData, location }) => {
 
 
     const onSelectedHandler = () => {
+        if (selectedCard == cardData.instanceId)
+        {
+            setSelectedCard(undefined)
+            return
+        }
         if (state.targetFilter && isTargetSelectable){
             emitters.selectTarget(instanceId, false)
             return
@@ -67,6 +72,7 @@ const GameCard: React.FC<Props> = ({ cardData, location }) => {
 
         // if not selectingTarget and everything else then it meant to attack
         emitters.attackUnit({ attackerId: selectedCard, targetId: cardData.instanceId })
+        setSelectedCard(undefined)
     }
     
 
