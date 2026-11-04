@@ -33,7 +33,7 @@ const Artifact: React.FC<Props> = ({ artifactData, shopIndex }) => {
                 onClick={handleBuyArtifact} 
                 className={!artifactData ? Styles.artifact_bought : Styles.artifact}>
                     { artifactData &&
-                        <img src={imagesState.get(artifactData.id)}/>
+                        <img src={`data:image/png;base64,${imagesState.get(artifactData.id)}`} alt="placeholder"/>
                     }
             </button>
         </span>

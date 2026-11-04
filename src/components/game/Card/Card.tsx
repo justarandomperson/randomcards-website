@@ -25,7 +25,7 @@ const Card: React.FC<Props> = ({ cardData }) => {
             </div>
 
             <div>
-                <img src={`data:image/png;base64,${imagesState.get(cardData.id)}`} alt="dog"/>
+                <img src={`data:image/png;base64,${imagesState.get(cardData.id)}`} alt="placeholder (imagine dog)"/>
             </div>
 
             <p className={styles.effect}>{cardData.effectDesc}</p>

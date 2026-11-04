@@ -18,7 +18,7 @@ export const ImagesProvider: React.FC<PropsWithChildren> = ({ children }) => {
         const getStorage = async () => {
             const imagesObject = await fetchImages();
             const images: ImagesMap = new Map(imagesObject);
-
+            
             setImages(images);
         }
         

@@ -29,12 +29,12 @@ const GameLayout: React.FC = () => {
                     <PlayerBar isOpponent={false}/>
                 </div>
 
-                {/* <div className={Styles.shop_container}>
+                <div className={Styles.shop_container}>
                     <Shop/>
-                </div> */}
+                </div>
             </div>
 
-            {/* <div className={Styles.hand_container}>
+            <div className={Styles.hand_container}>
                 <Hand/>
             </div>
 
@@ -48,7 +48,7 @@ const GameLayout: React.FC = () => {
                 <div className={Styles.spell_showing_container}>
                     <Card cardData={spellShowing}/>
                 </div>
-            )} */}
+            )}
                 
         </DndContext>
     );
