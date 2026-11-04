@@ -14,7 +14,7 @@ type Props = {
 
 const Health: React.FC<Props> = ({ health, isOpponent, id }) => {
     const healthPercentage = health / STARTING_HEALTH;
-    const { state, selectedCard, emitters } = useGameContext()
+    const { state, selectedCard, setSelectedCard,emitters } = useGameContext()
 
     const targetType = isOpponent ? TargetType.OPPONENT : TargetType.SELF
     const selectableTarget = selectedCard && isOpponent || (state.targetFilter ? state.targetFilter.has(targetType) : false)
@@ -37,7 +37,8 @@ const Health: React.FC<Props> = ({ health, isOpponent, id }) => {
         }
         else if (selectedCard) //should check if unit is selected or smth
         {
-            emitters.attackPlayer({attackerId:selectedCard, isOpponent: true})
+            emitters.attackPlayer({attackerId:selectedCard, isOpponent: isOpponent})
+            setSelectedCard(undefined)
         }
     }
 
@@ -46,7 +47,6 @@ const Health: React.FC<Props> = ({ health, isOpponent, id }) => {
 
             <meter className={healthMeterClassName}  min='0' max={STARTING_HEALTH} value={health} 
                 low={STARTING_HEALTH/4} high={3*STARTING_HEALTH/4} optimum={STARTING_HEALTH}/>
-
             <p>{`${health}/${STARTING_HEALTH}`}</p>
 
         </div>
