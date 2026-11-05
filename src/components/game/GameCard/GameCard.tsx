@@ -1,11 +1,34 @@
 import { useDraggable } from '@dnd-kit/core'
-import { UnitData, SpellData, CardType, CardZone } from '../../../shared/types/card'
-import { CardLocation } from '../../../shared/types/card'
 import Card from '../Card/Card'
 import { useGameContext } from '../../../contexts/GameContext/GameContext'
 import styles from "./GameCard.module.css"
 import classNames from "classnames"
-import { TargetType } from '../../../shared/types/game'
+import { CardType, SpellData, UnitData } from '../Card/shared/types'
+import { CardLocation, CardZone } from './shared/types'
+import { SelectTargetFilter, TargetType } from '../../../contexts/GameContext/shared/types'
+import { getOpponentRow } from '../../../contexts/GameContext/shared/helpers'
+
+
+//! not sure this works cuz it had to use hasCardSelected before im sure no idea why this doesnt now
+const isCardSelectable = (
+    hasCardSelected: boolean, cardData: UnitData | SpellData, location: CardLocation,
+    opponentRow: (UnitData | null)[], targetFilter: SelectTargetFilter | undefined
+): { isAllyUnit: boolean, isSelectable: boolean } => {
+    const isAllyUnit = (
+        cardData.type == CardType.UNIT && 
+        !opponentRow.find((unit) => unit?.instanceId === cardData.instanceId)
+    );
+
+    const targetType = isAllyUnit ? 
+        ((location.insideOf == CardZone.BENCH) ? TargetType.BENCHED_UNIT : TargetType.ALLY_UNIT) : TargetType.BENCHED_UNIT;
+
+    const hasTaunt = (cardData.type === CardType.UNIT && cardData.statuses.silenced);
+    const canSelectAfterCheckingTaunt = (isAllyUnit || (hasTaunt || opponentRow));
+
+    const isSelectable = (targetFilter && canSelectAfterCheckingTaunt) ? targetFilter.has(targetType) : false;
+    return { isAllyUnit, isSelectable };
+}
+
 
 
 type Props = {
@@ -19,18 +42,42 @@ const GameCard: React.FC<Props> = ({ cardData, location }) => {
         throw new Error('card doesnt exist');
     }
 
-    const { state, selectedCard, setSelectedCard, emitters } = useGameContext()
-    const { isPlayerTurn } = state
+    const { state, selectedInstanceId, setSelectedInstanceId, emitters } = useGameContext();
+    const { isPlayerTurn } = state;
 
-    const isAllyUnit = (cardData.type == CardType.UNIT && location.index < 4) || location.insideOf == CardZone.BENCH
-    const hasCardSelected = selectedCard != undefined
-    const targetType = isAllyUnit ? 
-        (location.insideOf == CardZone.BENCH ? TargetType.BENCH : TargetType.ALLY) : TargetType.BENCH
-    const isTargetSelectable = state.targetFilter ? state.targetFilter.has(targetType) : false
 
-    if (location.insideOf == "board") {
-        console.log(hasCardSelected, isAllyUnit, location.index, state.board) //* debug
+    const hasSelectedInstanceId = selectedInstanceId != undefined;
+    const { isAllyUnit, isSelectable } = isCardSelectable(
+        hasSelectedInstanceId, cardData, location, getOpponentRow(state.board), state.targetFilter
+    );
+
+
+    const onSelectedHandler = () => {
+        if (selectedInstanceId == cardData.instanceId) {
+            setSelectedInstanceId(undefined);
+            return;
+        }
+
+        if (state.targetFilter && isSelectable) {
+            emitters.selectTarget({ targetId: cardData.id, isPlayer: false });
+        }
+
+        if (isAllyUnit && selectedInstanceId) { 
+            return
+        }
+        else if (isAllyUnit) {
+            setSelectedInstanceId(cardData.instanceId)
+            return
+        }
+        else if (!selectedInstanceId || !cardData.instanceId) {
+            return
+        }
+
+        // if not selectingTarget and everything else then it meant to attack
+        emitters.attackUnit({ attackerId: selectedInstanceId, targetId: cardData.instanceId });
+        setSelectedInstanceId(undefined);
     }
+
 
     const isDraggable = location.insideOf !== CardZone.BOARD; // board cards arent draggables
     const { attributes, listeners, setNodeRef, isDragging } = useDraggable({ 
@@ -42,38 +89,11 @@ const GameCard: React.FC<Props> = ({ cardData, location }) => {
 
     const cardClass = classNames({
         [styles.draggedCard]: isDragging,
-        [styles.cardPlayerTurn]: isPlayerTurn && (hasCardSelected !== isAllyUnit),
-        [styles.selectedCard]: selectedCard == cardData.instanceId,
-        [styles.selectableCard]: isTargetSelectable,
+        [styles.cardPlayerTurn]: isPlayerTurn && (hasSelectedInstanceId !== isAllyUnit),
+        [styles.selectedCard]: selectedInstanceId == cardData.instanceId,
+        [styles.selectableCard]: isSelectable,
         [styles.container]: true
-    })
-
-
-    const onSelectedHandler = () => {
-        if (selectedCard == cardData.instanceId)
-        {
-            setSelectedCard(undefined)
-            return
-        }
-        if (state.targetFilter && isTargetSelectable){
-            emitters.selectTarget({ targetId: cardData.id, isPlayer: false })
-        }
-
-        if (isAllyUnit && selectedCard) { 
-            return
-        }
-        else if (isAllyUnit) {
-            setSelectedCard(cardData.instanceId)
-            return
-        }
-        else if (!selectedCard || !cardData.instanceId) {
-            return
-        }
-
-        // if not selectingTarget and everything else then it meant to attack
-        emitters.attackUnit({ attackerId: selectedCard, targetId: cardData.instanceId })
-        setSelectedCard(undefined)
-    }
+    });
     
 
     return (

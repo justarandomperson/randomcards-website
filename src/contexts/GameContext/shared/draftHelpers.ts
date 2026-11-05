@@ -1,10 +1,8 @@
 import { Draft } from "immer";
-import { ClientGameState, DeckIds, OpponentState, PlayerState } from "./types";
-import { Deck } from "../../shared/types/decks";
+import { ClientGameState, OpponentState, PlayerState } from "./types";
 
 
-export const matchPlayerIds = (
-    draft: Draft<ClientGameState>, playerId: string, socketId: string | undefined
+export const matchPlayerIds = (draft: Draft<ClientGameState>, playerId: string, socketId: string | undefined
 ): Draft<PlayerState> | Draft<OpponentState> => {
     if (!socketId) {
         throw new Error("socketId is required");
@@ -16,21 +14,6 @@ export const matchPlayerIds = (
 
     return draft.players.opponent;
 }
-
-
-export const getDeckIds = (deck: Deck): DeckIds => {
-    const unitIds = deck.units.map((unit) => unit.id);
-    const spellIds = [];
-
-    for (const spell of deck.spells.values()) {
-        for (let i = 0; i < spell.amount; i++) {
-            spellIds.push(spell.data.id);
-        }
-    };
-
-    return { unitIds, spellIds };
-}
-
 
 export const removeCardInstance = (draft: Draft<ClientGameState>, instanceId: string): boolean => {
     const bench = draft.players.player.cards.bench;
@@ -59,7 +42,6 @@ export const removeCardInstance = (draft: Draft<ClientGameState>, instanceId: st
 
     return false;
 };
-
 
 export const removeArtifactInstance = (draft: Draft<ClientGameState>, instanceId: string): boolean => {
     const playerArtifacts = draft.players.player.data.artifacts;

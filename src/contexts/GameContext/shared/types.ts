@@ -1,5 +1,6 @@
-import { GamePhase, ArtifactData, ArtifactLocation, SelectTargetFilter } from "../../shared/types/game";
-import { UnitData, SpellData, CardLocation } from "../../shared/types/card";
+import { ArtifactData, ArtifactLocation } from "../../../components/game/Artifact/shared/types";
+import { SpellData, UnitData } from "../../../components/game/Card/shared/types";
+import { CardLocation } from "../../../components/game/GameCard/shared/types";
 
 
 // context and state 
@@ -43,6 +44,23 @@ export type PlayerData = {
     artifactsBoughtThisTurn: number
 }
 
+export enum GamePhase {
+    PLAY = 'play',
+    SHOP = 'shop'    
+}
+
+export enum TargetType {
+    ALLY_UNIT,
+    SELF,
+    ENEMY_UNIT,
+    OPPONENT,
+    BENCHED_UNIT,
+    SPELL_IN_HAND
+}
+
+export type SelectTargetFilter = Set<TargetType>
+
+
 // actions and events
 export const SOCKET_EVENTS = { // this is used both on 'emit' and on 'on'
   CONNECT: 'connect',
@@ -75,47 +93,39 @@ export const SOCKET_EVENTS = { // this is used both on 'emit' and on 'on'
   GAME_END: 'game_end'
 } as const;
 
+// payloads
+export type PlayUnitPayload = { 
+    instanceId: string, 
+    boardIndex: number
+}    
 
-// from client to server
-export type PlayUnitPayload = { instanceId: string, boardIndex: number }    
+export type PlaySpellPayload = { 
+    instanceId: string
+}
 
-export type PlaySpellPayload = { instanceId: string }
+export type BuyArtifactPayload = { 
+    instanceId: string 
+}
 
-export type BuyArtifactPayload = { instanceId: string }
+export type AttackUnitPayload = { 
+    attackerId: string, 
+    targetId: string 
+}
 
-export type AttackUnitPayload = { attackerId: string, targetId: string }
+export type AttackPlayerPayload = { 
+    attackerId: string, 
+    isOpponent: boolean 
+}
 
-export type AttackPlayerPayload = { attackerId: string, isOpponent: boolean }
+export type SelectTargetPayload = { 
+    targetId: string, 
+    isPlayer: boolean 
+}
 
-export type SelectTargetPayload = { targetId: string, isPlayer: boolean }
-
-// from server to client
-export type GameSocketEvents = {
-    onConnect: () => void;
-    onDisconnect: (reason: any) => void;
-
-    onMatchStart: (data: MatchStartData) => void;
-    onStartTurn: () => void;
-    onSelectTarget: (filter: SelectTargetFilter) => void;
-    onUpdateGamePhase: () => void;
-    onUpdateMoney: (data: UpdateMoneyData) => void;
-    onUpdateHealth: (data: UpdateHealthData) => void;
-    onUpdateDrawpileCount: (data: UpdateDrawpileCountData) => void;
-    onUpdateCard: (data: UpdateCardData) => void;
-    onUpdateArtifact: (data: UpdateArtifactData) => void;
-    onUpdateHand: (newHand: SpellData[]) => void;
-    onUpdateBench: (newBench: UnitData[]) => void;
-    onUpdateBoard: (newBoard: UnitData[]) => void;
-    onUpdateShop: (newShop: ArtifactData[]) => void;
-    onPlayedSpell: (spell: SpellData) => void;
-    onGameEnd: ( winnerId: string ) => void;
-};
-
-
+// datas
 export type MatchStartData = {
-    playerData: PlayerData, 
-    opponentData: PlayerData, 
-    isFirstTurn: boolean 
+playerData: PlayerData, 
+    opponentData: PlayerData 
 }
 
 export type UpdateMoneyData = {
@@ -145,8 +155,24 @@ export type UpdateArtifactData = {
   playerId?: string 
 }
 
-// other
-export type DeckIds = {
-    unitIds: string[],
-    spellIds: string[]
-}
+export type GameSocketEvents = {
+    onConnect: () => void;
+    onDisconnect: (reason: any) => void;
+
+    onMatchStart: (data: MatchStartData) => void;
+    onStartTurn: () => void;
+    onSelectTarget: (filter: SelectTargetFilter) => void;
+    onUpdateGamePhase: () => void;
+    onUpdateMoney: (data: UpdateMoneyData) => void;
+    onUpdateHealth: (data: UpdateHealthData) => void;
+    onUpdateDrawpileCount: (data: UpdateDrawpileCountData) => void;
+    onUpdateCard: (data: UpdateCardData) => void;
+    onUpdateArtifact: (data: UpdateArtifactData) => void;
+    onUpdateHand: (newHand: SpellData[]) => void;
+    onUpdateBench: (newBench: UnitData[]) => void;
+    onUpdateBoard: (newBoard: UnitData[]) => void;
+    onUpdateShop: (newShop: ArtifactData[]) => void;
+    onPlayedSpell: (spell: SpellData) => void;
+    onGameEnd: ( winnerId: string ) => void;
+};
+

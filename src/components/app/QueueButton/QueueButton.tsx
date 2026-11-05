@@ -4,10 +4,11 @@ import styles from "./QueueButton.module.css"
 
 
 const QueueButton: React.FC = () => {
-    const { emitters, isInQueue } = useGameContext()
-    const { queue, dequeue } = emitters
-    const { deck } = useDeckContext().state
+    const { emitters, isInQueue } = useGameContext();
+    const { queue, dequeue } = emitters;
+    const { deck } = useDeckContext().state;
 
+    
     return (
         <div className={styles.queue}>
             <button onClick={() => (!isInQueue ? queue(deck) : dequeue())}>

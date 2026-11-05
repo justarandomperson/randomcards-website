@@ -1,8 +1,7 @@
-import { DeckState } from './types'
-import { CardType, UnitData, SpellData } from '../../shared/types/card'
-import { isUnitsDeckFull, isSpellsDeckFull } from '../../shared/functions/decks';
 import { produce } from 'immer';
-import { Deck } from '../../shared/types/decks';
+import { CardType, SpellData, UnitData } from '../../components/game/Card/shared/types';
+import { Deck, DeckState } from './shared/types';
+import { isSpellsDeckFull, isUnitsDeckFull, saveDeckToLocalStorage } from './shared/helpers';
 
 
 export enum DeckActionType {
@@ -18,20 +17,6 @@ export type DeckAction =
     | { type: DeckActionType.SET_FULL_STATE; newState: DeckState }
 
     
-const saveDeckToLocalStorage = (deck: Deck) => {
-    localStorage.setItem(
-        "deck",
-        JSON.stringify({
-            units: deck.units.map(unit => unit.id),
-            spells: Array.from(
-                deck.spells,
-                ([spellId, spell]) => [spellId, spell.amount]
-            )
-        })
-    );
-};
-
-
 const addCardToDeck = (state: DeckState, card: UnitData | SpellData): DeckState => {
     const nextState = produce(state, draft => {
         switch(card.type) {
@@ -69,8 +54,8 @@ const addCardToDeck = (state: DeckState, card: UnitData | SpellData): DeckState 
         }
     });
 
-    saveDeckToLocalStorage(nextState.deck)
-    return nextState
+    saveDeckToLocalStorage(nextState.deck);
+    return nextState;
 }
 
 
@@ -107,9 +92,10 @@ const removeCardFromDeck = (state: DeckState, card: UnitData | SpellData): DeckS
         }
     });
 
-    saveDeckToLocalStorage(nextState.deck)
-    return nextState
+    saveDeckToLocalStorage(nextState.deck);
+    return nextState;
 }
+
 
 export const DeckReducer = (state: DeckState, action: DeckAction): DeckState => {
     switch (action.type) {

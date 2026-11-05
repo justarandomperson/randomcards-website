@@ -1,12 +1,13 @@
 import { NavLink } from "react-router-dom"
 import { useAuth } from "../../../contexts/AuthContext/AuthContext"
 import styles from "./Topbar.module.css"
-import { DECKSPAGE_PATH, GACHAPAGE_PATH, HOMEPAGE_PATH, LOGINPAGE_PATH, SIGNUPPAGE_PATH } from "../../../shared/constants/app";
+import { DECKSPAGE_PATH, GACHAPAGE_PATH, HOMEPAGE_PATH, LOGINPAGE_PATH, SIGNUPPAGE_PATH } from "./shared/pagePaths";
 
 
 const Topbar: React.FC = () => {
     const { isLoggedIn, logout } = useAuth()
 
+    
     return (
         <div className={styles.Topbar}>
             <nav className={styles.nav}>

@@ -9,10 +9,10 @@ type Props = {
 
 
 const PlayerBar: React.FC<Props> = ({ isOpponent }) => {
-    const { state, emitters } = useGameContext()
-    const { endTurn } = emitters
-    const player = isOpponent ? state.players.opponent : state.players.player
+    const { state, emitters } = useGameContext();
+    const { endTurn } = emitters;
 
+    const player = isOpponent ? state.players.opponent : state.players.player;
     if (!player.data.id) {
         throw new Error("player has to have a socketId");
     }

@@ -1,5 +1,5 @@
 import { createContext, type PropsWithChildren, useContext, useEffect, useState } from 'react'
-import { ImagesMap } from './types';
+import { ImagesMap } from './shared/types';
 import { fetchImages } from '../../api/axiosInstance';
 
 

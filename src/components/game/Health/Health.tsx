@@ -1,8 +1,19 @@
 import classNames from "classnames";
-import { STARTING_HEALTH } from "../../../shared/constants/game";
 import styles from './Health.module.css'
 import { useGameContext } from "../../../contexts/GameContext/GameContext";
-import { TargetType } from "../../../shared/types/game";
+import { SelectTargetFilter, TargetType } from "../../../contexts/GameContext/shared/types";
+import { STARTING_HEALTH } from "../../../contexts/GameContext/shared/constants";
+
+
+const isPlayerSelectable = (
+    hasSelected: boolean, isOpponent: boolean, targetFilter: SelectTargetFilter | undefined
+) : boolean => {
+    const targetType = isOpponent ? TargetType.OPPONENT : TargetType.SELF;
+    const filter = targetFilter?.has(targetType) ?? false;
+
+    const isSelectable = (hasSelected && isOpponent) || filter;
+    return isSelectable;
+}
 
 
 type Props = {
@@ -13,34 +24,36 @@ type Props = {
 
 
 const Health: React.FC<Props> = ({ health, isOpponent, id }) => {
+    const { state, selectedInstanceId, setSelectedInstanceId, emitters } = useGameContext();
+
+    const isSelectable = isPlayerSelectable(selectedInstanceId != undefined, isOpponent, state.targetFilter);
+
+
+    const onSelectedHandler = () => {
+        if (state.targetFilter && isSelectable) {
+            emitters.selectTarget({ targetId: id, isPlayer: true });
+        }
+
+        else if (selectedInstanceId) {
+            //? should check if unit is selected or smth
+            emitters.attackPlayer({ attackerId: selectedInstanceId, isOpponent: isOpponent });
+            setSelectedInstanceId(undefined);
+        }
+    }
+
+
     const healthPercentage = health / STARTING_HEALTH;
-    const { state, selectedCard, setSelectedCard,emitters } = useGameContext()
-
-    const targetType = isOpponent ? TargetType.OPPONENT : TargetType.SELF
-    const selectableTarget = selectedCard && isOpponent || (state.targetFilter ? state.targetFilter.has(targetType) : false)
-
     const containerClassName = classNames({
         [styles.health]: true,
         [styles.low]: healthPercentage <= .25,
         [styles.normal]: healthPercentage > .25 && healthPercentage < .75,
         [styles.high]: healthPercentage >= .75,
-    })
+    });
 
     const healthMeterClassName = classNames({
-        [styles.selectable]: selectableTarget
-    })
+        [styles.selectable]: isSelectable
+    });
 
-    const onSelectedHandler = () => {
-        if (state.targetFilter && selectableTarget)
-        {
-            emitters.selectTarget({ targetId: id, isPlayer: true })
-        }
-        else if (selectedCard) //should check if unit is selected or smth
-        {
-            emitters.attackPlayer({attackerId:selectedCard, isOpponent: isOpponent})
-            setSelectedCard(undefined)
-        }
-    }
 
     return (
         <div className={containerClassName} onClick={onSelectedHandler}>

@@ -1,31 +1,24 @@
 import { useForm } from "react-hook-form";
 import { login as loginAxios } from "../../api/axiosInstance";
 import { useAuth } from "../../contexts/AuthContext/AuthContext";
-
-
-type LoginForm = {
-    username: string;
-    password: string;
-};
+import { LoginForm } from "../SignupPage/shared/types";
+import { HttpStatusCode } from "axios";
 
 
 const LoginPage: React.FC = () => {
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isSubmitting },
-    } = useForm<LoginForm>();
-    const { login } = useAuth()
+    const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginForm>();
+    const { login } = useAuth();
+
 
     const onSubmit = async (data: LoginForm) => {
         const res = await loginAxios(data.username, data.password);
-        console.log(res.status)
-        if (res.status == 200)
-        {
-            const token =  res.data.access_token
-            login(token, data.username)
+        
+        if (res.status == HttpStatusCode.Ok) {
+            const token =  res.data.access_token;
+            login(token, data.username);
         }
     };
+
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -63,7 +56,7 @@ const LoginPage: React.FC = () => {
             </button>
         </form>
     );
-};
+}
 
 
 export default LoginPage;

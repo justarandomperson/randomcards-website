@@ -1,7 +1,7 @@
+import { UNITS_IN_DECK } from '../../../contexts/DeckContext/shared/constants'
 import { useGameContext } from '../../../contexts/GameContext/GameContext'
-import { UNITS_IN_DECK } from '../../../shared/constants/game'
-import { CardZone } from '../../../shared/types/card'
 import CardSlot from '../CardSlot/CardSlot.js'
+import { CardZone } from '../GameCard/shared/types'
 import Styles from './Bench.module.css'
 
 
@@ -11,7 +11,10 @@ const Bench: React.FC = ({ }) => {
     return (        
         <div className={Styles.bench}>
             {Array.from({ length: UNITS_IN_DECK }, (_, i) => (
-                <CardSlot cardData={bench[i]} location={{ insideOf: CardZone.BENCH, index: i }} activeCardDrag={null} key={i}/>
+                <CardSlot 
+                    cardData={bench[i]} 
+                    location={{ insideOf: CardZone.BENCH, index: i }} 
+                    activeCardDrag={null} key={i}/>
             ))}
         </div>
     );

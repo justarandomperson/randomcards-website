@@ -1,24 +1,28 @@
 import CardList from '../../components/decks/CardList/CardList'
+import { CardType } from '../../components/game/Card/shared/types';
 import { useDeckContext } from '../../contexts/DeckContext/DeckContext';
-import { UNITS_IN_DECK, SPELLS_IN_DECK } from '../../shared/constants/game';
-import { isDeckTypeFull } from '../../shared/functions/decks';
-import { CardType } from '../../shared/types/card';
-import Styles from './DecksPage.module.css'
+import { SPELLS_IN_DECK, UNITS_IN_DECK } from '../../contexts/DeckContext/shared/constants';
+import { isDeckTypeFull } from '../../contexts/DeckContext/shared/helpers';
+import styles from './DecksPage.module.css'
 
 
 const DecksPage: React.FC = ({ }) => {
     const { state, getSpellDeckLength } = useDeckContext();
 
+
+    // TODO: classNames for this 
+
+
     return (
         <div>
-        
+
             <div>
                 <h1>Deck</h1>
 
                 <div>
-                    <div className={Styles.deck_row_header}>
+                    <div className={styles.deck_row_header}>
                         <h3>Units</h3>
-                        <p className={isDeckTypeFull(CardType.UNIT, state.deck) ? Styles.full : undefined}>
+                        <p className={isDeckTypeFull(CardType.UNIT, state.deck) ? styles.full : undefined}>
                             {`${state.deck.units.length}/${UNITS_IN_DECK}`}
                         </p>
                     </div>
@@ -26,9 +30,9 @@ const DecksPage: React.FC = ({ }) => {
                 </div>
 
                 <div>
-                    <div className={Styles.deck_row_header}>
+                    <div className={styles.deck_row_header}>
                         <h3>Spells</h3>
-                        <p className={isDeckTypeFull(CardType.SPELL, state.deck) ? Styles.full : undefined}>
+                        <p className={isDeckTypeFull(CardType.SPELL, state.deck) ? styles.full : undefined}>
                             {`${getSpellDeckLength()}/${SPELLS_IN_DECK}`}
                         </p>
                     </div>

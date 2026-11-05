@@ -1,4 +1,4 @@
-import { ArtifactData } from "../../../shared/types/game"
+import { ArtifactData } from '../Artifact/shared/types'
 import Styles from './ArtifactList.module.css'
 
 

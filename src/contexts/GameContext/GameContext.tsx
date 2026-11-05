@@ -1,27 +1,27 @@
-import { ReactNode, createContext, useContext, useState, useEffect, useRef, useCallback, useMemo } from "react"
+import { ReactNode, createContext, useContext, useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { Socket } from 'socket.io-client'
 import { produce } from 'immer'
-import { AttackPlayerPayload, AttackUnitPayload, BuyArtifactPayload, ClientGameState, GameSocketEvents, MatchStartData, PlaySpellPayload, PlayUnitPayload, SelectTargetPayload, SOCKET_EVENTS, UpdateArtifactData, UpdateCardData, UpdateDrawpileCountData, UpdateHealthData, UpdateMoneyData } from './types'
-import { getPlaceholderGameState } from "../../shared/functions/game"
-import { createGameSocket, useGameSocketEmit } from "./socket"
-import { CardType, CardZone, SpellData, UnitData } from "../../shared/types/card"
-import { ArtifactData, ArtifactZone, GamePhase, SelectTargetFilter } from "../../shared/types/game"
+import { AttackPlayerPayload, AttackUnitPayload, BuyArtifactPayload, ClientGameState, GamePhase, GameSocketEvents, MatchStartData, PlaySpellPayload, PlayUnitPayload, SelectTargetFilter, SelectTargetPayload, SOCKET_EVENTS, UpdateArtifactData, UpdateCardData, UpdateDrawpileCountData, UpdateHealthData, UpdateMoneyData } from './shared/types'
 import { useAuth } from "../AuthContext/AuthContext"
-import { isDeckFull } from "../../shared/functions/decks"
 import { useNavigate } from "react-router-dom"
-import { Deck } from "../../shared/types/decks"
-import { getDeckIds, matchPlayerIds, removeArtifactInstance, removeCardInstance } from "./helpers"
-import { GAMEPAGE_PATH, HOMEPAGE_PATH } from "../../shared/constants/app"
+import { Deck } from '../DeckContext/shared/types'
+import { getPlaceholderGameState } from './shared/helpers'
+import { createGameSocket, useGameSocketEmit } from './socket'
+import { GAMEPAGE_PATH, HOMEPAGE_PATH } from '../../components/app/Topbar/shared/pagePaths'
+import { matchPlayerIds, removeArtifactInstance, removeCardInstance } from './shared/draftHelpers'
+import { CardType, SpellData, UnitData } from '../../components/game/Card/shared/types'
+import { CardZone } from '../../components/game/GameCard/shared/types'
+import { ArtifactData, ArtifactZone } from '../../components/game/Artifact/shared/types'
+import { getDeckIds, isDeckFull } from '../DeckContext/shared/helpers'
+
 
 
 type GameContextType = {
     state: ClientGameState,
     isConnected: boolean,
     isInQueue: boolean,
-    selectedCard: string | undefined,
-    setSelectedCard: (
-        instanceId: string | undefined
-    ) => void,
+    selectedInstanceId: string | undefined,
+    setSelectedInstanceId: (instanceId: string | undefined) => void,
     emitters: {
         queue: (deck: Deck) => void,
         dequeue: () => void,
@@ -39,8 +39,8 @@ const GameContext = createContext<GameContextType>({
     state: getPlaceholderGameState(),
     isConnected: false,
     isInQueue: false,
-    selectedCard: undefined,
-    setSelectedCard: () => {},
+    selectedInstanceId: undefined,
+    setSelectedInstanceId: () => {},
     emitters: {
         queue: () => {},
         dequeue: () => {},
@@ -64,7 +64,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     const [state, setState] = useState<ClientGameState>(getPlaceholderGameState());
     const [isConnected, setIsConnected] = useState(false);
     const [isInQueue, setIsInQueue] = useState(false);
-    const [selectedCard, setSelectedCard] = useState<string | undefined>(undefined)
+    const [selectedInstanceId, setSelectedInstanceId] = useState<string | undefined>(undefined)
 
     const socketRef = useRef<Socket | null>(null);
     const navigate = useNavigate();
@@ -73,8 +73,12 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
 
 
     useEffect(() => {
-        if (!token) return;
+        if (!token) {
+            return;
+        }
 
+        
+        // listeners
         const gameEvents: GameSocketEvents = {
             onConnect: () => { 
                 setIsConnected(true);
@@ -84,21 +88,18 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                 setIsInQueue(false);
                 console.log('disconnected: ', reason);
             },
-
             onMatchStart: (data: MatchStartData) => {
                 setIsInQueue(false);
 
                 setState(produce(draft => {
                     draft.players.player.data = data.playerData;
                     draft.players.opponent.data = data.opponentData;
-                    draft.isPlayerTurn = data.isFirstTurn;
                 }));
 
                 navigate(GAMEPAGE_PATH);
             },
             onStartTurn: () => {
                 setState(produce(draft => {
-                    draft.players.player.data.turn += 1;
                     draft.isPlayerTurn = true;
                 }));
             },
@@ -152,6 +153,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                             if (data.card.type === CardType.SPELL) {
                                 throw new Error(`card ${data.card.name} cannot exist in ${data.location.insideOf}`);
                             }
+
                             draft.board[data.location.index] = data.card;
                             break;
 
@@ -159,6 +161,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                             if (data.card.type === CardType.UNIT) {
                                 throw new Error(`card ${data.card.name} cannot exist in ${data.location.insideOf}`);
                             }
+
                             const hand = draft.players.player.cards.hand;
                             hand.splice(data.location.index, 0, data.card);
                             break;
@@ -174,11 +177,13 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                         case ArtifactZone.SHOP:
                             draft.shop[data.location.index] = data.artifact;
                             break;
+
                         case ArtifactZone.PLAYER: {
                             if (!data.playerId) {
                                 throw new Error('no playerId provided.');
                             }
-                            const player = matchPlayerIds(draft, data.playerId, socket.id)
+
+                            const player = matchPlayerIds(draft, data.playerId, socket.id);
                             player.data.artifacts.splice(data.location.index, 0, data.artifact);
                             break;
                         }
@@ -246,9 +251,11 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     }, [token]);
 
 
+
+    // emitters
     const queue = useCallback((deck: Deck) => {
         if (!isDeckFull(deck)) {
-            console.log('get a full deck nub')
+            alert("Get a full deck nub"); //? can be removed maybe
             return;
         }
 
@@ -262,7 +269,6 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
         setIsInQueue(false);
         emit(SOCKET_EVENTS.DEQUEUE);
     }, [emit]);
-
 
     const playUnit = useCallback((payload: PlayUnitPayload) => {
         emit(SOCKET_EVENTS.PLAY_UNIT, payload);
@@ -291,6 +297,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     const endTurn = useCallback(() => {
         setState(produce(draft => {
             draft.isPlayerTurn = false;
+            draft.players.player.data.turn += 1;
 
             if (draft.phase === GamePhase.SHOP) {
                 draft.players.player.data.artifactsBoughtThisTurn = 0;
@@ -310,24 +317,19 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
 
     const emitters = useMemo(() => ({
         queue, dequeue, playUnit, playSpell, buyArtifact, endTurn, attackUnit, attackPlayer, selectTarget
-    }), [queue, dequeue, playUnit, playSpell, buyArtifact, endTurn, attackUnit, attackPlayer,selectTarget
-
-    ]);
-
+    }), [queue, dequeue, playUnit, playSpell, buyArtifact, endTurn, attackUnit, attackPlayer, selectTarget]);
 
     const value = useMemo(() => ({
-        state, isConnected, selectedCard, setSelectedCard, isInQueue, emitters
-    }), [state, isConnected, isInQueue, selectedCard, setSelectedCard, emitters]);
+        state, isConnected, selectedInstanceId, setSelectedInstanceId, isInQueue, emitters
+    }), [state, isConnected, isInQueue, selectedInstanceId, setSelectedInstanceId, emitters]);
 
     return (
-        <GameContext.Provider value={value}>
-            {children}
-        </GameContext.Provider>
+        <GameContext.Provider value={value}> {children} </GameContext.Provider>
     );
 
 }
 
 
 export const useGameContext = () => {
-return useContext(GameContext);
+    return useContext(GameContext);
 }

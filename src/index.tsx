@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { enableMapSet } from "immer"
+import { enableArrayMethods } from "immer"
 import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import AppLayout from './components/app/AppLayout/AppLayout';
@@ -8,18 +10,14 @@ import DecksPage from './pages/DecksPage/DecksPage';
 import GachaPage from './pages/GachaPage/GachaPage';
 import GamePage from './pages/GamePage/GamePage';
 import SignupPage from './pages/SignupPage/SignupPage';
-
 import { AuthProvider } from './contexts/AuthContext/AuthContext';
-import { DeckProvider } from './contexts/DeckContext/DeckContext';
-
 import ProtectedRoute from './components/app/ProtectedRoute/ProtectedRoute';
 import PublicRoute from './components/app/PublicRoute/PublicRoute';
 import LoginPage from './pages/LoginPage/LoginPage';
-import { GameProvider } from './contexts/GameContext/GameContext';
+import { DECKSPAGE_PATH, GACHAPAGE_PATH, GAMEPAGE_PATH, LOGINPAGE_PATH, SIGNUPPAGE_PATH } from './components/app/Topbar/shared/pagePaths';
 
-import {enableMapSet} from "immer"
-import {enableArrayMethods} from "immer"
 
+// immer stuff
 enableArrayMethods()
 enableMapSet()
 
@@ -28,29 +26,24 @@ const router = createBrowserRouter([{
   path: "/",
   Component: AppLayout,
   children: [
-     {
-        element: <ProtectedRoute />,
-        children: [
-            { index: true, Component: Homepage },
-            { path: "decks", Component: DecksPage },
-            { path: "gacha", Component: GachaPage },
-            { path: "/game", Component: GamePage },
-        ],
+    {
+      element: <ProtectedRoute />,
+      children: [
+        { index: true, Component: Homepage },
+        { path: DECKSPAGE_PATH, Component: DecksPage },
+        { path: GACHAPAGE_PATH, Component: GachaPage },
+        { path: GAMEPAGE_PATH, Component: GamePage },
+      ],
     },
     {
       element: <PublicRoute/>,
       children: [
-        { path: "signup", Component: SignupPage },
-        { path: "login", Component: LoginPage }
+        { path: SIGNUPPAGE_PATH, Component: SignupPage },
+        { path: LOGINPAGE_PATH, Component: LoginPage }
       ]
     }
   ],
-},
-{
-  path: "/game",
-  Component: GamePage
-}
-]);
+}]);
 
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);

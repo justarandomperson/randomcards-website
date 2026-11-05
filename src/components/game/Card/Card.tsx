@@ -1,6 +1,6 @@
-import { UnitData, SpellData, CardType } from '../../../shared/types/card'
 import styles from './Card.module.css'
 import { useImagesContext } from '../../../contexts/ImagesContext/ImagesContext';
+import { CardType, SpellData, UnitData } from './shared/types';
 
 
 type Props = {
@@ -18,7 +18,9 @@ const Card: React.FC<Props> = ({ cardData }) => {
                 <span className={styles.name}  
                 style={{
                     fontSize: `${Math.max(11, 18 - (cardData.name.length - 3) * 0.6)}px`,
-                }}>{cardData.name}</span>
+                }}>
+                    {cardData.name}
+                </span>
                 <span className={styles.cost}>{cardData.cost}</span>
             </div>
 
@@ -28,7 +30,10 @@ const Card: React.FC<Props> = ({ cardData }) => {
 
             <p style={{
                     fontSize: `${Math.max(11, 18 - (cardData.effectDesc.length - 3) * 0.6)}px`,
-                }} className={styles.effect}>{cardData.effectDesc}</p>
+                }} 
+                className={styles.effect}>
+                    {cardData.effectDesc}
+            </p>
 
             <div className={styles.footer}>
                 {cardData.type === CardType.UNIT && 

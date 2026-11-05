@@ -12,8 +12,10 @@ import Card from '../Card/Card'
 
 
 const GameLayout: React.FC = () => {
-    const { spellShowing, playerWonName } = useGameContext().state
-    const { activeCardDrag, handleCardDragStart, handleCardDragEnd } = useCardDrag()
+    const { activeCardDrag, handleCardDragStart, handleCardDragEnd } = useCardDrag();
+    const { state } = useGameContext();
+    const { spellShowing, playerWonName } = state;
+
 
     return (
         <DndContext collisionDetection={rectIntersection} onDragStart={handleCardDragStart} onDragEnd={handleCardDragEnd}>

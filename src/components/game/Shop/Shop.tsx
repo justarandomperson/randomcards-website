@@ -1,12 +1,18 @@
 import { useGameContext } from '../../../contexts/GameContext/GameContext'
-import { GamePhase } from '../../../shared/types/game';
+import { GamePhase } from '../../../contexts/GameContext/shared/types';
 import Artifact from '../Artifact/Artifact.js'
 import Styles from './Shop.module.css'
 
 
 const Shop: React.FC = () => {
     const { shop, phase } = useGameContext().state;
-    const isPlayPhase = (phase === GamePhase.PLAY)
+
+
+    const isPlayPhase = (phase === GamePhase.PLAY);
+
+
+    // TODO: classnames
+
 
     return (
         <div className={isPlayPhase ? Styles.shop_closed : Styles.shop_open}>

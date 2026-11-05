@@ -1,9 +1,3 @@
-// card data
-export enum CardType {
-    UNIT = 'unit',
-    SPELL = 'spell'
-}
-
 export type UnitData = {
     instanceId?: string
     id: string
@@ -32,19 +26,7 @@ export type SpellData = {
 }
 
 
-// drag and drop
-export enum CardZone {
-    HAND = 'hand',
-    BENCH = 'bench',
-    BOARD = 'board',
-    NONE = 'none'
+export enum CardType {
+    UNIT = 'unit',
+    SPELL = 'spell'
 }
-
-export type CardLocation = 
-    | { insideOf: CardZone.BENCH | CardZone.BOARD | CardZone.HAND, index: number }
-    | { insideOf: CardZone.NONE }
-
-export type DraggedCard = {
-    cardData: UnitData | SpellData
-    location: CardLocation
-};

@@ -20,42 +20,47 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
 
-        useEffect(() => {
-            const validateToken = async () => {
-                const token = localStorage.getItem("token");
 
-                if (!token) {
-                    setUser(null);
-                    return;
-                }
+    useEffect(() => {
+        const validateToken = async () => {
+            const token = localStorage.getItem("token");
 
-                try {
-                    const res = await validate(token);
+            if (!token) {
+                setUser(null);
+                return;
+            }
 
-                    setUser({
-                        username: res.data.payload.username,
-                        token: token
-                    });
+            try {
+                const res = await validate(token);
 
-                } catch {
-                    localStorage.removeItem("token");
-                    setUser(null);
-                }
-            };
+                setUser({
+                    username: res.data.payload.username,
+                    token: token
+                });
 
-            validateToken();
-        }, []);
+            } 
+            catch {
+                localStorage.removeItem("token");
+                setUser(null);
+            }
+        };
+
+        validateToken();
+    }, []);
+
 
     const login = (token: string, username: string) => {
         localStorage.setItem("token", token);
         setUser({username: username, token: token});
     };
 
+
     const logout = () => {
         localStorage.removeItem("token");
         setUser(null);
     };
 
+    
     return (
         <AuthContext.Provider
             value={{
@@ -78,4 +83,4 @@ export const useAuth = () => {
     }
 
     return context;
-};
+}

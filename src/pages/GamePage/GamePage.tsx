@@ -4,13 +4,13 @@ import { useGameContext } from '../../contexts/GameContext/GameContext';
 import styles from './GamePage.module.css'
 
 
-const GamePage: React.FC = ({ }) => {
-    const { isGameOver } = useGameContext().state
+const GamePage: React.FC = () => {
+    const { state } = useGameContext();
 
 
     const playAreaClass = classNames({
         [styles.play_area]: true,
-        [styles.game_over]: isGameOver
+        [styles.game_over]: state.isGameOver
     });
 
 

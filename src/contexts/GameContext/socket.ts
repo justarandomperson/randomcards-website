@@ -1,5 +1,5 @@
 import io, { Socket } from 'socket.io-client';
-import { GameSocketEvents, SOCKET_EVENTS } from './types';
+import { GameSocketEvents, SOCKET_EVENTS } from './shared/types';
 import { RefObject, useCallback } from 'react';
 
 
@@ -35,8 +35,11 @@ export const createGameSocket = (events: GameSocketEvents, token: string): Socke
 
 
 export const useGameSocketEmit = (socketRef: RefObject<Socket | null>) => {
-    return useCallback(<T,>(event: string, payload?: T) => {
-        if (!socketRef.current) return;
+    return useCallback(<T>(event: string, payload?: T) => {
+        if (!socketRef.current) {
+            return;
+        }
+
         socketRef.current.emit(event, payload);
     }, [socketRef]);
 }
