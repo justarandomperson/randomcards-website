@@ -1,12 +1,20 @@
 .main_components_container
 {
+    display: flex;
+    justify-content: center;
     position: relative;
 }
 
 .bench_container {
+    display: flex;
     position: fixed;
     left: 0;
     top: 0%;
+}
+
+.game_board_container
+{
+    width: 45vw;
 }
 
 .shop_container {

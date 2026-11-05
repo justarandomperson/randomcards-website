@@ -22,10 +22,10 @@
     top: -60px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: rgba(78, 78, 78, 0.825);
+    background-color: black;
     color: white;
     width: 200px;
-    height: 40px;
+    height: 45px;
     font-size: var(--desc-font-size);
     padding: 5px;
     content: attr(data-artifact-desc);

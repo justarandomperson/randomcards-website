@@ -1,6 +1,7 @@
 .board {
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
 .board_opacitated {
@@ -11,6 +12,8 @@
 
 .opponent_row {
     display: flex;
+    width: 100% !important;
+    background-color: red;
 }
 
 .user_row {

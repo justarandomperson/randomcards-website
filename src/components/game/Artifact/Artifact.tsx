@@ -9,7 +9,7 @@ import React from 'react';
 
 
 type Props = {
-    artifactData: ArtifactData
+    artifactData: ArtifactData | null
 }
 
 
@@ -38,7 +38,7 @@ const Artifact: React.FC<Props> = ({ artifactData }) => {
     })
 
     const desc = `${artifactData?.name} - ${artifactData?.effectDesc}`
-    const descFontSize = `${Math.max(12, 18 - (artifactData?.effectDesc.length - 3) * 0.6)}px`
+    const descFontSize = `${Math.max(12, 18 - (artifactData?.effectDesc.length || 0 - 3) * 0.6)}px`
 
     return (
         <span className={isPlayPhase ? undefined : styles.artifact_container_open}>

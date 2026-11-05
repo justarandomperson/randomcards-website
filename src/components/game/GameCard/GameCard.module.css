@@ -3,6 +3,21 @@
     opacity: .4;
 }
 
+.container
+{
+    width: 150px;
+    height: 200px;
+}
+
+@media (min-height: 1000px)
+{
+    .container
+    {
+        width: 150px;
+        height: 230px;
+    }
+}
+
 .selectedCard
 {
     opacity: .2;

@@ -25,7 +25,7 @@ const GameLayout: React.FC = () => {
                     <Bench/>
                 </div>
 
-                <div>
+                <div className={styles.game_board_container}>
                     <PlayerBar isOpponent={true}/>
                     <Board activeCardDrag={activeCardDrag}/>
                     <PlayerBar isOpponent={false}/>

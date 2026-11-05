@@ -17,7 +17,7 @@ const Card: React.FC<Props> = ({ cardData }) => {
             <div className={styles.header}>
                 <span className={styles.name}  
                 style={{
-                    fontSize: `${Math.max(11, 18 - (cardData.name.length - 3) * 0.6)}px`,
+                   fontSize: `${Math.max(9, 18 - Math.max(0, cardData.name.length - 10) * 0.55)}px`,
                 }}>
                     {cardData.name}
                 </span>

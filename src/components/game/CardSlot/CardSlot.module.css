@@ -1,5 +1,7 @@
 .card_slot {
-    width: 150px;
+    display: flex;
+    justify-content: center;
+    width: 25% !important;
     height: 200px;
     background-color: rgb(70, 70, 70);
 
