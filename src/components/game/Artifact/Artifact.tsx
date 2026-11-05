@@ -5,10 +5,11 @@ import styles from './Artifact.module.css'
 import { ArtifactData } from './shared/types';
 import { GamePhase } from '../../../contexts/GameContext/shared/types';
 import { MAX_ARTIFACTS_BOUGHT_PER_TURN } from '../../../contexts/GameContext/shared/constants';
+import React from 'react';
 
 
 type Props = {
-    artifactData: ArtifactData | null
+    artifactData: ArtifactData
 }
 
 
@@ -36,6 +37,8 @@ const Artifact: React.FC<Props> = ({ artifactData }) => {
         [styles.artifact_bought]: !artifactData,
     })
 
+    const desc = `${artifactData?.name} - ${artifactData?.effectDesc}`
+    const descFontSize = `${Math.max(12, 18 - (artifactData?.effectDesc.length - 3) * 0.6)}px`
 
     return (
         <span className={isPlayPhase ? undefined : styles.artifact_container_open}>
@@ -46,7 +49,11 @@ const Artifact: React.FC<Props> = ({ artifactData }) => {
                     state.players.player.data.artifactsBoughtThisTurn >= MAX_ARTIFACTS_BOUGHT_PER_TURN
                 } 
                 onClick={handleBuyArtifact} 
-                className={artifactClass}>
+                style={{ '--desc-font-size': descFontSize } as React.CSSProperties} //weird thing to make font size dynamic
+                className={artifactClass}
+                data-artifact-desc={desc}  
+                data-artifact-desc-fontsize={descFontSize}
+                >
                     { artifactData &&
                         <img src={`data:image/png;base64,${imagesState.get(artifactData.id)}`} alt="placeholder"/>
                     }

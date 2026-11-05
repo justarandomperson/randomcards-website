@@ -1,5 +1,5 @@
 import { useGameContext } from '../../../contexts/GameContext/GameContext'
-import { CardZone } from '../../../shared/types/card';
+import { CardZone } from '../GameCard/shared/types'
 import GameCard from '../GameCard/GameCard.js'
 import styles from './Hand.module.css' 
 

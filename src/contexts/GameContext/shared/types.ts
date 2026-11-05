@@ -118,7 +118,7 @@ export type AttackPlayerPayload = {
 }
 
 export type SelectTargetPayload = { 
-    targetId: string, 
+    id: string, 
     isPlayer: boolean 
 }
 

@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { useGameContext } from '../../../contexts/GameContext/GameContext'
 import Health from '../Health/Health'
-import Styles from './PlayerBar.module.css'
+import styles from './PlayerBar.module.css'
+import Artifacts from '../Artifacts/Artifacts'
 
 
 type Props = {
@@ -10,6 +12,7 @@ type Props = {
 
 const PlayerBar: React.FC<Props> = ({ isOpponent }) => {
     const { state, emitters } = useGameContext();
+    const [artifactsShown, setArtifactsShown] = useState(false)
     const { endTurn } = emitters;
 
     const player = isOpponent ? state.players.opponent : state.players.player;
@@ -18,18 +21,21 @@ const PlayerBar: React.FC<Props> = ({ isOpponent }) => {
     }
 
     return (
-        <div className={Styles.player_bar}>
+        <div className={styles.player_bar}>
+            {artifactsShown && <Artifacts isOpponent={isOpponent}/>}
             <div>
-                <span className={Styles.player_name}>{player.data.name}</span>
-                <span>{`Artifacts: ${player.data.artifacts.length}`}</span>
+                <span className={styles.player_name}>{player.data.name}</span>
+               <button className={styles.artifacts_button} onClick={() => setArtifactsShown(!artifactsShown)}>
+                    <span>{`Artifacts: ${player.data.artifacts.length}`}</span>
+               </button>
             </div>
 
-            <div className={Styles.player_data_container}>
+            <div className={styles.player_data_container}>
                 <Health health={player.data.hp} id={player.data.id} isOpponent={isOpponent}/>
-                <p className={Styles.money}>{`${player.data.money}$`}</p>
+                <p className={styles.money}>{`${player.data.money}$`}</p>
             </div>
 
-            <div className={Styles.turn_container}>
+            <div className={styles.turn_container}>
 
                 <p>{player.data.drawpileCount} cards in drawpile</p>
 
@@ -37,7 +43,7 @@ const PlayerBar: React.FC<Props> = ({ isOpponent }) => {
                     <>
                         <p>Turn {player.data.turn}</p>
 
-                        <div className={Styles.end_turn_btn_container}>
+                        <div className={styles.end_turn_btn_container}>
                             {state.isPlayerTurn &&
                                 <button onClick={endTurn}>
                                     End Turn

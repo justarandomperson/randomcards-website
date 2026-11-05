@@ -1,0 +1,15 @@
+.artifacts_container
+{
+    display: flex;
+    position: absolute;
+    left: 50%;
+    top: 10%;
+    transform: translateX(-50%);
+    gap: 20px;
+
+    width: 50vw;
+    height: 75px;
+    background-color: gray;
+    border: 1px solid black;
+    z-index: 5;
+}
