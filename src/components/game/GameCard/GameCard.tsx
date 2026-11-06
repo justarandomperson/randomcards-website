@@ -83,6 +83,12 @@ const GameCard: React.FC<Props> = ({ cardData, location }) => {
             return;
         }
 
+<<<<<<< HEAD
+=======
+
+
+        // for an effect
+>>>>>>> f2a8c28 (fixed selecting and unselecting attacker logic)
 
 
         // for an effect
