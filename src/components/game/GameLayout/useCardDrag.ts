@@ -6,7 +6,7 @@ import { CardLocation, CardZone, DraggedCard } from '../GameCard/shared/types'
 import { CardType } from '../Card/shared/types'
 
 
-//? i hate this type of code but this is the only way to actually typecheck these??
+// i hate this type of code but this is the only way to actually typecheck these??
 const isDraggedCard = (data: unknown): data is DraggedCard => {
     return !!data && typeof data === 'object' && 'cardData' in data;
 }
