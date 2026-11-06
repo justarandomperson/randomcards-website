@@ -1,6 +1,8 @@
 import styles from './Card.module.css'
 import { useImagesContext } from '../../../contexts/ImagesContext/ImagesContext';
 import { CardType, SpellData, UnitData } from './shared/types';
+import Status from '../Status/Status';
+import StatusesContainer from '../StatusesContainer/StatusesContainer';
 
 
 type Props = {
@@ -34,6 +36,8 @@ const Card: React.FC<Props> = ({ cardData }) => {
                 className={styles.effect}>
                     {cardData.effectDesc}
             </p>
+
+            {cardData.type == CardType.UNIT && <StatusesContainer statuses={cardData.statuses}/>}
 
             <div className={styles.footer}>
                 {cardData.type === CardType.UNIT && 

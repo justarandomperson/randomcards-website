@@ -1,16 +1,18 @@
+export type Statuses = { 
+    haste: boolean
+    taunt: boolean
+    paralyzed: boolean
+    silenced: boolean
+    dodge: number
+}
+
 export type UnitData = {
     instanceId?: string
     id: string
     name: string
     type: CardType.UNIT
     effectDesc: string
-    statuses: { 
-        haste: boolean
-        taunt: boolean
-        paralyzed: boolean
-        silenced: boolean
-        dodge: number
-    }
+    statuses: Statuses
     cost: number
     hp: number
     atk: number

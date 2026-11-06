@@ -1,0 +1,22 @@
+.status_container
+{
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+}
+
+.status_container img 
+{
+    width: 100%;
+    object-fit: contain;
+}
+
+.status_amount
+{
+    position: absolute;
+    left: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
