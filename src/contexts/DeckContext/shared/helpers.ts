@@ -43,9 +43,8 @@ const getPopulatedDeck = (parsedLocalDeck: LocalDeck, storage: Storage): Deck =>
 
 const getUpdatedStorage = (populatedDeck: Deck, storage: Storage) => {
     const units: UnitData[] = storage.units.filter(
-        (unit) => {
-            !populatedDeck.units.some(deckUnit => deckUnit.id === unit.id)
-        }
+        (unit) => !populatedDeck.units.some(deckUnit => deckUnit.id === unit.id)
+        
     );
 
     const spells = new Map<string, { data: SpellData; amount: number }>();
