@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { validate } from "../../api/axiosInstance";
+import axios from "axios";
 
 
 type User = {
@@ -39,8 +40,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 });
 
             } 
-            catch {
-                localStorage.removeItem("token");
+            catch(error) {
+                 if (axios.isAxiosError(error) && error.response?.status === 401) {
+                    localStorage.removeItem("token");
+                }
+
                 setUser(null);
             }
         };
@@ -57,6 +61,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const logout = () => {
         localStorage.removeItem("token");
+        console.log("logout was called")
         setUser(null);
     };
 
