@@ -86,7 +86,6 @@ const GameCard: React.FC<Props> = ({ cardData, location }) => {
 
 
         // for an effect
-
         const instanceId = cardData.instanceId;
         if (!instanceId) {
             throw new Error ("target has no instanceId"); // TODO: can refactor to helper function

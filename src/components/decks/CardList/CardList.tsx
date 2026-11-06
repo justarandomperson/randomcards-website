@@ -1,7 +1,6 @@
 import { useDeckContext } from '../../../contexts/DeckContext/DeckContext'
 import { CardDeckZone } from '../../../contexts/DeckContext/shared/types'
 import { CardType } from '../../game/Card/shared/types'
-import { CardLocation } from '../../game/GameCard/shared/types'
 import DecksCard from '../DecksCard/DecksCard'
 import Styles from './CardList.module.css'
 
