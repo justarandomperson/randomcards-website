@@ -1,6 +1,6 @@
 import { CardType, SpellData, UnitData } from "../../../components/game/Card/shared/types";
 import { CardLocation, CardZone } from "../../../components/game/GameCard/shared/types";
-import { STARTING_HEALTH, STARTING_MONEY, STARTING_TURN } from "./constants";
+import { MAX_CARDS_PER_BOARD_ROW, STARTING_HEALTH, STARTING_MONEY, STARTING_TURN } from "./constants";
 import { ClientGameState, GamePhase, TargetType } from "./types";
 
 
@@ -46,7 +46,8 @@ export const getPlaceholderGameState = (): ClientGameState => {
         isPlayerTurn: false,
         isGameOver: false,
         targetFilter: undefined,
-        spellShowing: undefined
+        spellShowing: undefined,
+        attackerSelected: undefined
     };
 };
 
@@ -59,18 +60,18 @@ export const getOpponentRow = (board: (UnitData | null)[]) => {
     return board.slice(4, 8)
 }
 
-export const noTauntInRow = (boardRow: (UnitData | null)[]): boolean => {
+export const TauntInRow = (boardRow: (UnitData | null)[]): boolean => {
     for (const unit of boardRow) {
         if (unit && unit.statuses.taunt) {
-            return false;
+            return true;
         }
     }
 
-    return true;
+    return false;
 }
 
 
-export const getTargetType = (cardData: UnitData | SpellData, location: CardLocation): TargetType => {
+export const getCardTargetType = (cardData: UnitData | SpellData, location: CardLocation): TargetType => {
     if (location.insideOf === CardZone.NONE) {
         throw new Error("Card doesn't exist");
     }
@@ -80,17 +81,16 @@ export const getTargetType = (cardData: UnitData | SpellData, location: CardLoca
     }
 
     if (cardData.type === CardType.UNIT) {
-        if (location.index < 4) {
+        if (location.index < MAX_CARDS_PER_BOARD_ROW) {
             return TargetType.ALLY_UNIT;
         }
 
         return TargetType.ENEMY_UNIT;
     }
 
-    if (cardData.type === CardType.SPELL)
-    {
+    if (cardData.type === CardType.SPELL) {
         return TargetType.SPELL_IN_HAND
     }
 
-    return TargetType.ENEMY_UNIT;
+    throw new Error("Card doesn't exist");
 };

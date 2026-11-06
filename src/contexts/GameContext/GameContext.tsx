@@ -5,7 +5,7 @@ import { AttackPlayerPayload, AttackUnitPayload, BuyArtifactPayload, ClientGameS
 import { useAuth } from "../AuthContext/AuthContext"
 import { useNavigate } from "react-router-dom"
 import { Deck } from '../DeckContext/shared/types'
-import { getPlaceholderGameState } from './shared/helpers'
+import { getPlaceholderGameState, getPlayerRow } from './shared/helpers'
 import { createGameSocket, useGameSocketEmit } from './socket'
 import { GAMEPAGE_PATH, HOMEPAGE_PATH } from '../../components/app/Topbar/shared/pagePaths'
 import { matchPlayerIds, removeArtifactInstance, removeCardInstance } from './shared/draftHelpers'
@@ -20,8 +20,7 @@ type GameContextType = {
     state: ClientGameState,
     isConnected: boolean,
     isInQueue: boolean,
-    selectedInstanceId: string | undefined,
-    setSelectedInstanceId: (instanceId: string | undefined) => void,
+    setAttackerSelected: (instance: UnitData | undefined) => void,
     emitters: {
         queue: (deck: Deck) => void,
         dequeue: () => void,
@@ -39,8 +38,7 @@ const GameContext = createContext<GameContextType>({
     state: getPlaceholderGameState(),
     isConnected: false,
     isInQueue: false,
-    selectedInstanceId: undefined,
-    setSelectedInstanceId: () => {},
+    setAttackerSelected: () => {},
     emitters: {
         queue: () => {},
         dequeue: () => {},
@@ -64,7 +62,6 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     const [state, setState] = useState<ClientGameState>(getPlaceholderGameState());
     const [isConnected, setIsConnected] = useState(false);
     const [isInQueue, setIsInQueue] = useState(false);
-    const [selectedInstanceId, setSelectedInstanceId] = useState<string | undefined>(undefined)
 
     const socketRef = useRef<Socket | null>(null);
     const navigate = useNavigate();
@@ -102,6 +99,13 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                 setState(produce(draft => {
                     draft.isPlayerTurn = true;
                 }));
+
+                const playerBoard = getPlayerRow(state.board);
+                for (const unit of playerBoard) {
+                    if (unit)  {
+                        unit.canAttack = true;
+                    }
+                }
             },
             onSelectTarget: (filter: SelectTargetFilter) => {
                 setState(produce(draft => {
@@ -210,6 +214,15 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                     draft.shop = newShop;
                 }));
             },
+            onAttacked: () => {
+                const attacker = state.attackerSelected;
+                if (!attacker) {
+                    throw new Error("How did you attack if no attacker was selected");
+                }
+
+                setAttackerSelected(undefined);
+                attacker.canAttack = false;
+            },
             onPlayedSpell: (spell: SpellData) => {
                 setState(produce(draft => {
                     draft.spellShowing = spell;
@@ -279,7 +292,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     }, [emit]);
 
     const attackUnit = useCallback((payload: AttackUnitPayload) => {
-        emit(SOCKET_EVENTS.ATTACK_UNIT, payload)
+        emit(SOCKET_EVENTS.ATTACK_UNIT, payload);
     }, [emit])
 
     const attackPlayer = useCallback((payload: AttackPlayerPayload) => {
@@ -303,6 +316,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                 draft.players.player.data.artifactsBoughtThisTurn = 0;
             }
         }));
+
         emit(SOCKET_EVENTS.END_TURN);
     }, [emit]);
 
@@ -315,13 +329,17 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     }, [emit])
 
 
+    const setAttackerSelected = (instance: UnitData | undefined) => {
+        state.attackerSelected = instance;
+    }
+
     const emitters = useMemo(() => ({
         queue, dequeue, playUnit, playSpell, buyArtifact, endTurn, attackUnit, attackPlayer, selectTarget
     }), [queue, dequeue, playUnit, playSpell, buyArtifact, endTurn, attackUnit, attackPlayer, selectTarget]);
 
     const value = useMemo(() => ({
-        state, isConnected, selectedInstanceId, setSelectedInstanceId, isInQueue, emitters
-    }), [state, isConnected, isInQueue, selectedInstanceId, setSelectedInstanceId, emitters]);
+        state, isConnected, isInQueue, setAttackerSelected, emitters
+    }), [state, isConnected, isInQueue, setAttackerSelected, emitters]);
 
     return (
         <GameContext.Provider value={value}> {children} </GameContext.Provider>

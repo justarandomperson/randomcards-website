@@ -1,18 +1,33 @@
 import classNames from "classnames";
 import styles from './Health.module.css'
 import { useGameContext } from "../../../contexts/GameContext/GameContext";
-import { SelectTargetFilter, TargetType } from "../../../contexts/GameContext/shared/types";
+import { ClientGameState, SelectTargetFilter, TargetType } from "../../../contexts/GameContext/shared/types";
 import { STARTING_HEALTH } from "../../../contexts/GameContext/shared/constants";
+import { getOpponentRow, TauntInRow } from "../../../contexts/GameContext/shared/helpers";
 
 
-const isPlayerSelectable = (
-    hasSelected: boolean, isOpponent: boolean, targetFilter: SelectTargetFilter | undefined
-) : boolean => {
-    const targetType = isOpponent ? TargetType.OPPONENT : TargetType.SELF;
-    const filter = targetFilter?.has(targetType) ?? false;
+const isPlayerSelectable = (state: ClientGameState, isOpponent: boolean): boolean => {
+    // selecting for an effect
+    if (state.targetFilter) {
+        const targetType = (isOpponent) ? TargetType.OPPONENT : TargetType.SELF;
+        if (!state.targetFilter.has(targetType)) {
+            return false;
+        }
 
-    const isSelectable = (hasSelected && isOpponent) || filter;
-    return isSelectable;
+        return true;
+    }
+
+    // selecting for attacking
+    if (!state.attackerSelected) {
+        return false;
+    }
+
+    const opponentRow = getOpponentRow(state.board);
+    if (TauntInRow(opponentRow)) {
+        return false;
+    }
+
+    return true;
 }
 
 
@@ -24,20 +39,30 @@ type Props = {
 
 
 const Health: React.FC<Props> = ({ health, isOpponent, id }) => {
-    const { state, selectedInstanceId, setSelectedInstanceId, emitters } = useGameContext();
+    const { state, emitters } = useGameContext();
 
-    const isSelectable = isPlayerSelectable(selectedInstanceId != undefined, isOpponent, state.targetFilter);
+    
+    const isSelectable = isPlayerSelectable(state, isOpponent);
 
 
     const onSelectedHandler = () => {
-        if (state.targetFilter && isSelectable) {
+        if (!isSelectable) {
+            return;
+        }
+
+        // for an effect
+        if (state.targetFilter) {
             emitters.selectTarget({ id: id, isPlayer: true });
         }
 
-        else if (selectedInstanceId) {
-            //? should check if unit is selected or smth
-            emitters.attackPlayer({ attackerId: selectedInstanceId, isOpponent: isOpponent });
-            setSelectedInstanceId(undefined);
+        // for attacking
+        else if (state.attackerSelected) {
+            const instanceId = state.attackerSelected.instanceId;
+            if (!instanceId) {
+                throw new Error ("card has no instanceId"); // TODO: can refactor to helper function
+            }
+
+            emitters.attackPlayer({ attackerId: instanceId, isOpponent: isOpponent });
         }
     }
 

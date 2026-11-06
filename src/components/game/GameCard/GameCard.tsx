@@ -5,27 +5,55 @@ import styles from "./GameCard.module.css"
 import classNames from "classnames"
 import { CardType, SpellData, UnitData } from '../Card/shared/types'
 import { CardLocation, CardZone } from './shared/types'
-import { SelectTargetFilter, TargetType } from '../../../contexts/GameContext/shared/types'
-import { getOpponentRow, getTargetType } from '../../../contexts/GameContext/shared/helpers'
+import { ClientGameState, SelectTargetFilter, TargetType } from '../../../contexts/GameContext/shared/types'
+import { getCardTargetType, getOpponentRow, TauntInRow } from '../../../contexts/GameContext/shared/helpers'
 
 
-//! not sure this works cuz it had to use hasCardSelected before im sure no idea why this doesnt now
-const isCardSelectable = (
-    hasCardSelected: boolean, cardData: UnitData | SpellData, location: CardLocation,
-    opponentRow: (UnitData | null)[], targetFilter: SelectTargetFilter | undefined
-): { isAllyUnit: boolean, isSelectable: boolean } => {
-    const isAllyUnit = (
-        cardData.type == CardType.UNIT && 
-        !opponentRow.find((unit) => unit?.instanceId === cardData.instanceId)
-    );
+const isCardSelectable = (state: ClientGameState, cardData: UnitData | SpellData, location: CardLocation) => {
+    const targetType = getCardTargetType(cardData, location);
+    
+    // selecting for an effect
+    if (state.targetFilter) {
+        if (!state.targetFilter.has(targetType)) {
+            return false;
+        }
 
-    const targetType = getTargetType(cardData, location)
+        return true;
+    }
+    // selecting for attack
+    if (cardData.type !== CardType.UNIT) {
+        return false;
+    }
 
-    const hasTaunt = (cardData.type === CardType.UNIT && cardData.statuses.silenced);
-    const canSelectAfterCheckingTaunt = (isAllyUnit || (hasTaunt || opponentRow));
+    // choose attacker
+    if (!state.attackerSelected) {
+        if (targetType !== TargetType.ALLY_UNIT) {
+            return false;
+        }
 
-    const isSelectable = (targetFilter && canSelectAfterCheckingTaunt) ? targetFilter.has(targetType) : false;
-    return { isAllyUnit, isSelectable };
+        if (cardData.statuses.paralyzed) {
+            return false;
+        }
+
+        if (!cardData.canAttack && !cardData.statuses.haste){
+            return false;
+        }
+
+        return true;
+    }
+    // choose unit to attack
+    else {
+        if (targetType !== TargetType.ENEMY_UNIT) {
+            return false;
+        }
+
+        const opponentRow = getOpponentRow(state.board);
+        if (TauntInRow(opponentRow) && !cardData.statuses.taunt) {
+            return false;
+        }
+
+        return true;
+    }
 }
 
 
@@ -37,46 +65,42 @@ type Props = {
 
 
 const GameCard: React.FC<Props> = ({ cardData, location }) => {
-    const instanceId = cardData.instanceId
-    if (location.insideOf === CardZone.NONE || !instanceId) {
+    if (location.insideOf === CardZone.NONE) {
         throw new Error('card doesnt exist');
     }
 
-    const { state, selectedInstanceId, setSelectedInstanceId, emitters } = useGameContext();
-    const { isPlayerTurn } = state;
+
+    const { state, emitters } = useGameContext();
 
 
-    const hasSelectedInstanceId = selectedInstanceId != undefined;
-    const { isAllyUnit, isSelectable } = isCardSelectable(
-        hasSelectedInstanceId, cardData, location, getOpponentRow(state.board), state.targetFilter
-    );
+    const isSelectable = isCardSelectable(state, cardData, location);
 
 
     const onSelectedHandler = () => {
-        if (selectedInstanceId == cardData.instanceId) {
-            setSelectedInstanceId(undefined);
+        if (!isSelectable) {
             return;
         }
 
-        if (state.targetFilter && isSelectable) {
+        // for an effect
+
+        const instanceId = cardData.instanceId;
+        if (!instanceId) {
+            throw new Error ("target has no instanceId"); // TODO: can refactor to helper function
+        }
+
+        if (state.targetFilter) {
             emitters.selectTarget({ id: instanceId, isPlayer: false });
-            return
         }
 
-        if (isAllyUnit && selectedInstanceId) { 
-            return
-        }
-        else if (isAllyUnit) {
-            setSelectedInstanceId(cardData.instanceId)
-            return
-        }
-        else if (!selectedInstanceId || !cardData.instanceId) {
-            return
-        }
+        // for attacking
+        else if (state.attackerSelected) {
+            const attackerId = state.attackerSelected.instanceId;
+            if (!attackerId) {
+                throw new Error ("attacker has no instanceId"); // TODO: can refactor to helper function
+            }
 
-        // if not selectingTarget and everything else then it meant to attack
-        emitters.attackUnit({ attackerId: selectedInstanceId, targetId: cardData.instanceId });
-        setSelectedInstanceId(undefined);
+            emitters.attackUnit({ attackerId, targetId: instanceId });
+        }
     }
 
 
@@ -84,14 +108,16 @@ const GameCard: React.FC<Props> = ({ cardData, location }) => {
     const { attributes, listeners, setNodeRef, isDragging } = useDraggable({ 
             id: `${location.insideOf}-${location.index}`, 
             data: {cardData, location},
-            disabled: !isDraggable || !isPlayerTurn
+            disabled: !isDraggable || !state.isPlayerTurn
         }
     );
 
+    const isAllyUnit = (getCardTargetType(cardData, location) === TargetType.ALLY_UNIT);
+    const hasAttackerSelected = state.attackerSelected ? true : false;
     const cardClass = classNames({
         [styles.draggedCard]: isDragging,
-        [styles.cardPlayerTurn]: isPlayerTurn && (hasSelectedInstanceId !== isAllyUnit),
-        [styles.selectedCard]: selectedInstanceId == cardData.instanceId,
+        [styles.cardPlayerTurn]: state.isPlayerTurn && (hasAttackerSelected !== isAllyUnit),
+        [styles.selectedCard]: state.attackerSelected == cardData.instanceId,
         [styles.selectableCard]: isSelectable,
         [styles.container]: true
     });

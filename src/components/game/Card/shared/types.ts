@@ -16,6 +16,7 @@ export type UnitData = {
     cost: number
     hp: number
     atk: number
+    canAttack?: boolean
 }
 
 export type SpellData = {

@@ -14,7 +14,7 @@ export type ClientGameState = {
     targetFilter?: SelectTargetFilter
     spellShowing?: SpellData
     playerWonName?: string
-
+    attackerSelected?: UnitData,
 };
 
 export type PlayerState = {
@@ -89,6 +89,7 @@ export const SOCKET_EVENTS = { // this is used both on 'emit' and on 'on'
   UPDATE_BENCH: 'update_bench',
   UPDATE_BOARD: 'update_board',
   UPDATE_SHOP: 'update_shop',
+  ATTACKED: 'attacked',
   PLAYED_SPELL: 'played_spell',
   GAME_END: 'game_end'
 } as const;
@@ -172,6 +173,7 @@ export type GameSocketEvents = {
     onUpdateBench: (newBench: UnitData[]) => void;
     onUpdateBoard: (newBoard: UnitData[]) => void;
     onUpdateShop: (newShop: ArtifactData[]) => void;
+    onAttacked: () => void;
     onPlayedSpell: (spell: SpellData) => void;
     onGameEnd: ( winnerId: string ) => void;
 };
