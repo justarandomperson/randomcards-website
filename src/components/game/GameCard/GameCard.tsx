@@ -117,7 +117,7 @@ const GameCard: React.FC<Props> = ({ cardData, location }) => {
     }
 
 
-    const isDraggable = location.insideOf !== CardZone.BOARD; // board cards arent draggables
+    const isDraggable = location.insideOf !== CardZone.BOARD && !state.targetFilter; // board cards arent draggables
     const { attributes, listeners, setNodeRef, isDragging } = useDraggable({ 
             id: `${location.insideOf}-${location.index}`, 
             data: {cardData, location},
