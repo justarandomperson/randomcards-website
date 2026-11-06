@@ -1,7 +1,8 @@
+import classNames from 'classnames';
 import { useGameContext } from '../../../contexts/GameContext/GameContext'
 import { GamePhase } from '../../../contexts/GameContext/shared/types';
 import Artifact from '../Artifact/Artifact.js'
-import Styles from './Shop.module.css'
+import styles from './Shop.module.css'
 
 
 const Shop: React.FC = () => {
@@ -10,20 +11,23 @@ const Shop: React.FC = () => {
 
     const isPlayPhase = (phase === GamePhase.PLAY);
 
-
-    // TODO: classnames
+    const className = classNames({
+        [styles.shop_open]: !isPlayPhase,
+        [styles.shop_closed]: isPlayPhase,
+        [styles.shop]: true
+    })
 
 
     return (
-        <div className={isPlayPhase ? Styles.shop_closed : Styles.shop_open}>
+        <div className={className}>
 
             {shop.map((artifact, index) => (
-                <div className={Styles.shop_item} key={index}>
+                <div className={styles.shop_item} key={index}>
                     <Artifact artifactData={artifact}/>
 
                     {artifact && 
                         <span>
-                            <p className={Styles.artifact_cost}>{`${artifact.cost}$`}</p>
+                            <p className={styles.artifact_cost}>{`${artifact.cost}$`}</p>
                         </span>
                     }
                 </div>  

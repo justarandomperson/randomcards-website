@@ -4,7 +4,7 @@ import { RefObject, useCallback } from 'react';
 
 
 export const createGameSocket = (events: GameSocketEvents, token: string): Socket => {
-    const socket = io(import.meta.env.VITE_SOCKET_URL, {
+    const socket = io(import.meta.env.VITE_BACKEND_URL, {
         auth: {
             token: token
         }

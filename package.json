@@ -12,6 +12,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.20.0",
     "classnames": "^2.5.1",
+    "idb": "^8.0.4",
     "immer": "^11.1.18",
     "immer-reducer": "^0.7.13",
     "react": "^19.2.7",
