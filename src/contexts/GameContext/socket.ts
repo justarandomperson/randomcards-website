@@ -4,7 +4,7 @@ import { RefObject, useCallback } from 'react';
 
 
 export const createGameSocket = (events: GameSocketEvents, token: string): Socket => {
-    const socket = io("http://localhost:3000", {
+    const socket = io("socketip", {
         auth: {
             token: token
         }

@@ -11,7 +11,8 @@ import { getCardTargetType, getOpponentRow, TauntInRow } from '../../../contexts
 
 const isCardSelectable = (state: ClientGameState, cardData: UnitData | SpellData, location: CardLocation) => {
     const targetType = getCardTargetType(cardData, location);
-    
+    //for deselecting an attacker
+    if (state.attackerSelected && state.attackerSelected.instanceId == cardData.instanceId) return true
     // selecting for an effect
     if (state.targetFilter) {
         if (!state.targetFilter.has(targetType)) {
@@ -25,6 +26,7 @@ const isCardSelectable = (state: ClientGameState, cardData: UnitData | SpellData
         return false;
     }
 
+
     // choose attacker
     if (!state.attackerSelected) {
         if (targetType !== TargetType.ALLY_UNIT) {
@@ -34,6 +36,7 @@ const isCardSelectable = (state: ClientGameState, cardData: UnitData | SpellData
         if (cardData.statuses.paralyzed) {
             return false;
         }
+
 
         if (!cardData.canAttack && !cardData.statuses.haste){
             return false;
@@ -70,8 +73,7 @@ const GameCard: React.FC<Props> = ({ cardData, location }) => {
     }
 
 
-    const { state, emitters } = useGameContext();
-
+    const { state, emitters, setAttackerSelected } = useGameContext();
 
     const isSelectable = isCardSelectable(state, cardData, location);
 
@@ -80,6 +82,8 @@ const GameCard: React.FC<Props> = ({ cardData, location }) => {
         if (!isSelectable) {
             return;
         }
+
+
 
         // for an effect
 
@@ -94,12 +98,21 @@ const GameCard: React.FC<Props> = ({ cardData, location }) => {
 
         // for attacking
         else if (state.attackerSelected) {
-            const attackerId = state.attackerSelected.instanceId;
-            if (!attackerId) {
-                throw new Error ("attacker has no instanceId"); // TODO: can refactor to helper function
-            }
+            if (state.attackerSelected.instanceId !== cardData.instanceId)
+            {
+                const attackerId = state.attackerSelected.instanceId;
+                if (!attackerId) {
+                    throw new Error ("attacker has no instanceId"); // TODO: can refactor to helper function
+                }
 
-            emitters.attackUnit({ attackerId, targetId: instanceId });
+                emitters.attackUnit({ attackerId, targetId: instanceId });
+            }
+            setAttackerSelected(undefined)
+        }
+        //no attacker selected
+        else 
+        {
+            setAttackerSelected(cardData as UnitData)
         }
     }
 
@@ -114,10 +127,11 @@ const GameCard: React.FC<Props> = ({ cardData, location }) => {
 
     const isAllyUnit = (getCardTargetType(cardData, location) === TargetType.ALLY_UNIT);
     const hasAttackerSelected = state.attackerSelected ? true : false;
+
     const cardClass = classNames({
         [styles.draggedCard]: isDragging,
         [styles.cardPlayerTurn]: state.isPlayerTurn && (hasAttackerSelected !== isAllyUnit),
-        [styles.selectedCard]: state.attackerSelected == cardData.instanceId,
+        [styles.selectedCard]: state.attackerSelected?.instanceId == cardData.instanceId,
         [styles.selectableCard]: isSelectable,
         [styles.container]: true
     });

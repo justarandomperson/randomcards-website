@@ -98,14 +98,15 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
             onStartTurn: () => {
                 setState(produce(draft => {
                     draft.isPlayerTurn = true;
-                }));
 
-                const playerBoard = getPlayerRow(state.board);
-                for (const unit of playerBoard) {
-                    if (unit)  {
-                        unit.canAttack = true;
+                    const playerBoard = getPlayerRow(draft.board);
+
+                    for (const unit of playerBoard) {
+                        if (unit) {
+                            unit.canAttack = true;
+                        }
                     }
-                }
+                }));
             },
             onSelectTarget: (filter: SelectTargetFilter) => {
                 setState(produce(draft => {
@@ -330,7 +331,9 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
 
 
     const setAttackerSelected = (instance: UnitData | undefined) => {
-        state.attackerSelected = instance;
+        setState(produce(draft => {
+            draft.attackerSelected = instance;
+        }));
     }
 
     const emitters = useMemo(() => ({

@@ -39,7 +39,7 @@ type Props = {
 
 
 const Health: React.FC<Props> = ({ health, isOpponent, id }) => {
-    const { state, emitters } = useGameContext();
+    const { state, emitters, setAttackerSelected } = useGameContext();
 
     
     const isSelectable = isPlayerSelectable(state, isOpponent);
@@ -63,6 +63,7 @@ const Health: React.FC<Props> = ({ health, isOpponent, id }) => {
             }
 
             emitters.attackPlayer({ attackerId: instanceId, isOpponent: isOpponent });
+            setAttackerSelected(undefined)
         }
     }
 
