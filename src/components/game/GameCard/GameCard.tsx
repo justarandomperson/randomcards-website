@@ -10,6 +10,7 @@ import { getCardTargetType, getOpponentRow, TauntInRow } from '../../../contexts
 
 
 const isCardSelectable = (state: ClientGameState, cardData: UnitData | SpellData, location: CardLocation) => {
+    if (!state.isPlayerTurn) return
     const targetType = getCardTargetType(cardData, location);
     //for deselecting an attacker
     if (state.attackerSelected && state.attackerSelected.instanceId == cardData.instanceId) return true
