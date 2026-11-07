@@ -47,8 +47,8 @@ const GameLayout: React.FC = () => {
             </DragOverlay>
 
             { spellShowing && (
-                <div className={styles.absolute_pos_container}>
-                    <Card cardData={spellShowing}/>
+                <div className={`${spellShowing.self ? styles.self_spell : styles.opponent_spell} ${styles.spell_showing_container}`}>
+                    <Card cardData={spellShowing.spell}/>
                 </div>
             )}
 
