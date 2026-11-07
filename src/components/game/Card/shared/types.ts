@@ -4,6 +4,7 @@ export type Statuses = {
     paralyzed: boolean
     silenced: boolean
     dodge: number
+    cooldown: number
 }
 
 export type UnitData = {

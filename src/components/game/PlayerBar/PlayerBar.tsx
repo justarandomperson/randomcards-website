@@ -45,8 +45,10 @@ const PlayerBar: React.FC<Props> = ({ isOpponent }) => {
 
                         <div className={styles.end_turn_btn_container}>
                             {state.isPlayerTurn &&
-                                <button onClick={endTurn}>
-                                    End Turn
+                                <button 
+                                    onClick={endTurn} 
+                                    disabled={state.targetFilter !== undefined || state.attackerSelected !== undefined}>
+                                        End Turn
                                 </button>
                             }
                         </div>    
