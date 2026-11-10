@@ -12,7 +12,7 @@ export type ClientGameState = {
     isPlayerTurn: boolean
     isGameOver: boolean
     targetFilter?: SelectTargetFilter
-    spellShowing?: SpellData
+    spellShowing?: {spell: SpellData, self: boolean}
     playerWonName?: string
     attackerSelected?: UnitData,
 };
@@ -156,6 +156,13 @@ export type UpdateArtifactData = {
   playerId?: string 
 }
 
+
+export type PlayedSpellData = { 
+  spell: SpellData,
+  ownerId: string
+}
+
+
 export type GameSocketEvents = {
     onConnect: () => void;
     onDisconnect: (reason: any) => void;
@@ -174,7 +181,7 @@ export type GameSocketEvents = {
     onUpdateBoard: (newBoard: UnitData[]) => void;
     onUpdateShop: (newShop: ArtifactData[]) => void;
     onAttacked: () => void;
-    onPlayedSpell: (spell: SpellData) => void;
+    onPlayedSpell: (data: PlayedSpellData) => void;
     onGameEnd: ( winnerId: string ) => void;
 };
 

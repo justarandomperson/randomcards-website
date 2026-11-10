@@ -37,3 +37,23 @@
     left: 50%;
     transform: translate(-50%, -65%);
 }
+
+.self_spell {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -65%);
+}
+
+.opponent_spell {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -65%);
+}
+
+.spell_showing_container
+{
+    width: 150px;
+    height: 200px;
+}

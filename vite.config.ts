@@ -6,7 +6,7 @@ export default defineConfig(({ mode }) => {
     return {
         server: {
             host: '0.0.0.0',
-            port: Number(env.PORT) || 5173
+            port: Number(env.PORT) || 1225
         }
     };
 });

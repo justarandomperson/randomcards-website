@@ -7,6 +7,7 @@ import { getOpponentRow, TauntInRow } from "../../../contexts/GameContext/shared
 
 
 const isPlayerSelectable = (state: ClientGameState, isOpponent: boolean): boolean => {
+    if (!isOpponent) return false
     // selecting for an effect
     if (state.targetFilter) {
         const targetType = (isOpponent) ? TargetType.OPPONENT : TargetType.SELF;

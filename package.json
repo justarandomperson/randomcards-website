@@ -25,7 +25,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "vite --port 3001",
+    "start": "vite --port 1225",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
