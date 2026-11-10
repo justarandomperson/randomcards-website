@@ -250,7 +250,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                 setTimeout(() => {
                     setState(getPlaceholderGameState());
                     navigate(HOMEPAGE_PATH);
-                }, 3000);
+                }, 4000);
             }
 
         };
