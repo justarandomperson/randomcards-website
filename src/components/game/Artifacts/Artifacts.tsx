@@ -12,7 +12,7 @@ const Artifacts: React.FC<Props> = ({isOpponent}) => {
 
     return (
         <div className={styles.artifacts_container}>
-            {playerData.artifacts.map((artifact) => <Artifact artifactData={artifact}/>)}
+            {playerData.artifacts.map((artifact) => <Artifact artifactData={artifact} inInventory/>)}
         </div>
     );
 }

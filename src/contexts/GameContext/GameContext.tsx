@@ -1,7 +1,7 @@
 import { ReactNode, createContext, useContext, useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { Socket } from 'socket.io-client'
 import { produce } from 'immer'
-import { AttackPlayerPayload, AttackUnitPayload, BuyArtifactPayload, ClientGameState, GamePhase, GameSocketEvents, MatchStartData, PlayedSpellData, PlaySpellPayload, PlayUnitPayload, SelectTargetData, SelectTargetFilter, SelectTargetPayload, SOCKET_EVENTS, UpdateArtifactData, UpdateCardData, UpdateDrawpileCountData, UpdateHealthData, UpdateMoneyData } from './shared/types'
+import { AttackPlayerPayload, AttackUnitPayload, BuyArtifactPayload, ClientGameState, GameEndData, GamePhase, GameSocketEvents, MatchStartData, PlayedSpellData, PlaySpellPayload, PlayUnitPayload, SelectTargetData, SelectTargetFilter, SelectTargetPayload, SOCKET_EVENTS, UpdateArtifactData, UpdateCardData, UpdateDrawpileCountData, UpdateHealthData, UpdateMoneyData } from './shared/types'
 import { useAuth } from "../AuthContext/AuthContext"
 import { useNavigate } from "react-router-dom"
 import { Deck } from '../DeckContext/shared/types'
@@ -241,14 +241,14 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                     }));
                 }, 3000); // show spell for 3 seconds
             },
-            onGameEnd: (winnerId: string) => {
+            onGameEnd: (data: GameEndData) => {
                 setState(produce(draft => {
                     draft.isGameOver = true;
                 }));
 
                 setTimeout(() => {
                     setState(produce(draft => {
-                        draft.playerWonName = (draft.players.player.data.id === winnerId) ?
+                        draft.playerWonName = (draft.players.player.data.id === data.winnerId) ?
                             draft.players.player.data.name : draft.players.opponent.data.name;
                     }));
                 }, 1000);
