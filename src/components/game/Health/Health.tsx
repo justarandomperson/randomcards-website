@@ -23,6 +23,10 @@ const isPlayerSelectable = (state: ClientGameState, isOpponent: boolean): boolea
         return false;
     }
 
+    if (!state.attackerSelected.canAttack) {
+        return false;
+    }
+
     const opponentRow = getOpponentRow(state.board);
     if (TauntInRow(opponentRow)) {
         return false;
