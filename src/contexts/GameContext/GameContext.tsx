@@ -93,6 +93,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                     draft.players.opponent.data = data.opponentData;
                 }));
 
+                console.log("this"+state.players.player.data.id);
+
                 navigate(GAMEPAGE_PATH);
             },
             onStartTurn: () => {

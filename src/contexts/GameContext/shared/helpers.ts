@@ -18,6 +18,7 @@ export const getPlaceholderGameState = (): ClientGameState => {
                 },
                 data: {
                     name: "Player",
+                    id: "",
                     hp: STARTING_HEALTH,
                     money: STARTING_MONEY,
                     turn: STARTING_TURN,
@@ -30,6 +31,7 @@ export const getPlaceholderGameState = (): ClientGameState => {
             opponent: {
                 data: {
                     name: "Opponent",
+                    id: "",
                     hp: STARTING_HEALTH,
                     money: STARTING_MONEY,
                     turn: STARTING_TURN,

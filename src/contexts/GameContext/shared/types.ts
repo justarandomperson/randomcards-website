@@ -125,7 +125,7 @@ export type SelectTargetPayload = {
 
 // datas
 export type MatchStartData = {
-playerData: PlayerData, 
+    playerData: PlayerData, 
     opponentData: PlayerData 
 }
 
