@@ -31,7 +31,7 @@ const Card: React.FC<Props> = ({ cardData }) => {
             </div>
 
             <p style={{
-                    fontSize: `${Math.max(11, 18 - (cardData.effectDesc.length - 3) * 0.6)}px`,
+                    fontSize: `${12 - (cardData.effectDesc.length - 34) * (3 / 76)}px`,
                 }} 
                 className={styles.effect}>
                     {cardData.effectDesc}

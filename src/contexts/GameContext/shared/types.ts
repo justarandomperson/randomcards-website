@@ -170,6 +170,12 @@ export type SelectTargetData =
 }
 
 
+export type GameEndData =
+{
+    winnerId: string
+}
+
+
 export type GameSocketEvents = {
     onConnect: () => void;
     onDisconnect: (reason: any) => void;
@@ -189,6 +195,6 @@ export type GameSocketEvents = {
     onUpdateShop: (newShop: ArtifactData[]) => void;
     onAttacked: () => void;
     onPlayedSpell: (data: PlayedSpellData) => void;
-    onGameEnd: ( winnerId: string ) => void;
+    onGameEnd: ( data: GameEndData ) => void;
 };
 

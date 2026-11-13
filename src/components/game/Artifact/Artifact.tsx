@@ -9,11 +9,12 @@ import React from 'react';
 
 
 type Props = {
-    artifactData: ArtifactData | null
+    artifactData: ArtifactData | null,
+    inInventory?: boolean
 }
 
 
-const Artifact: React.FC<Props> = ({ artifactData }) => {
+const Artifact: React.FC<Props> = ({ artifactData, inInventory }) => {
     const { emitters, state } = useGameContext();
     const { buyArtifact } = emitters;
     const { state: imagesState } = useImagesContext();
@@ -35,6 +36,7 @@ const Artifact: React.FC<Props> = ({ artifactData }) => {
     const artifactClass = classNames({
         [styles.artifact]: artifactData,
         [styles.artifact_bought]: !artifactData,
+        [styles.artifact_inventory]: inInventory 
     })
 
     const desc = `${artifactData?.name} - ${artifactData?.effectDesc}`
