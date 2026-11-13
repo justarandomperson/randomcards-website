@@ -18,6 +18,16 @@
     }
 }
 
+.selectingTargetForSpell
+{
+    position: absolute;
+    height: 200px !important;
+    left: 50%;
+    top: 20%;
+    transform: translateX(-50%);
+    opacity: .5;
+}
+
 .selectedCard
 {
     opacity: .2;
