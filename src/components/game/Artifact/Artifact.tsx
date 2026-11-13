@@ -38,7 +38,7 @@ const Artifact: React.FC<Props> = ({ artifactData }) => {
     })
 
     const desc = `${artifactData?.name} - ${artifactData?.effectDesc}`
-    const descFontSize = `${Math.max(12, 18 - (artifactData?.effectDesc.length || 0 - 3) * 0.6)}px`
+    const descFontSize = `${Math.max(11, 18 - (artifactData?.effectDesc.length || 0 - 3) * 0.6)}px`
 
     return (
         <span className={isPlayPhase ? undefined : styles.artifact_container_open}>

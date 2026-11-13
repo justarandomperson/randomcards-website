@@ -12,7 +12,8 @@ export type ClientGameState = {
     isPlayerTurn: boolean
     isGameOver: boolean
     targetFilter?: SelectTargetFilter
-    spellShowing?: {spell: SpellData, self: boolean}
+    spellShowing?: {spell: SpellData, self: boolean},
+    targetSourceId?: string
     playerWonName?: string
     attackerSelected?: UnitData,
 };
@@ -120,7 +121,7 @@ export type AttackPlayerPayload = {
 
 export type SelectTargetPayload = { 
     id: string, 
-    isPlayer: boolean 
+    isPlayer: boolean,
 }
 
 // datas
@@ -162,6 +163,12 @@ export type PlayedSpellData = {
   ownerId: string
 }
 
+export type SelectTargetData =
+{
+    filter: SelectTargetFilter,
+    sourceId?: string
+}
+
 
 export type GameSocketEvents = {
     onConnect: () => void;
@@ -169,7 +176,7 @@ export type GameSocketEvents = {
 
     onMatchStart: (data: MatchStartData) => void;
     onStartTurn: () => void;
-    onSelectTarget: (filter: SelectTargetFilter) => void;
+    onSelectTarget: (data: SelectTargetData) => void;
     onUpdateGamePhase: () => void;
     onUpdateMoney: (data: UpdateMoneyData) => void;
     onUpdateHealth: (data: UpdateHealthData) => void;

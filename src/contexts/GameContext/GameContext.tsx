@@ -1,7 +1,7 @@
 import { ReactNode, createContext, useContext, useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { Socket } from 'socket.io-client'
 import { produce } from 'immer'
-import { AttackPlayerPayload, AttackUnitPayload, BuyArtifactPayload, ClientGameState, GamePhase, GameSocketEvents, MatchStartData, PlayedSpellData, PlaySpellPayload, PlayUnitPayload, SelectTargetFilter, SelectTargetPayload, SOCKET_EVENTS, UpdateArtifactData, UpdateCardData, UpdateDrawpileCountData, UpdateHealthData, UpdateMoneyData } from './shared/types'
+import { AttackPlayerPayload, AttackUnitPayload, BuyArtifactPayload, ClientGameState, GamePhase, GameSocketEvents, MatchStartData, PlayedSpellData, PlaySpellPayload, PlayUnitPayload, SelectTargetData, SelectTargetFilter, SelectTargetPayload, SOCKET_EVENTS, UpdateArtifactData, UpdateCardData, UpdateDrawpileCountData, UpdateHealthData, UpdateMoneyData } from './shared/types'
 import { useAuth } from "../AuthContext/AuthContext"
 import { useNavigate } from "react-router-dom"
 import { Deck } from '../DeckContext/shared/types'
@@ -108,9 +108,10 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
                     }
                 }));
             },
-            onSelectTarget: (filter: SelectTargetFilter) => {
+            onSelectTarget: (data: SelectTargetData) => {
                 setState(produce(draft => {
-                    draft.targetFilter = new Set(filter);
+                    draft.targetFilter = new Set(data.filter);
+                    draft.targetSourceId = data.sourceId
                 }));
             },
             onUpdateGamePhase: () => {

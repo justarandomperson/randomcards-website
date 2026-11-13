@@ -57,6 +57,8 @@ export const useCardDrag = () => {
             throw new Error(`card drag to has no location`)
         }
 
+
+
         switch (card.cardData.type) {
             case CardType.UNIT: {
                 const payload: PlayUnitPayload = { instanceId: card.cardData.instanceId, boardIndex: to.index };
