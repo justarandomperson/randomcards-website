@@ -3,6 +3,16 @@
     opacity: .4;
 }
 
+.allySelectableCard
+{
+    border: 1px solid green;
+}
+
+.enemySelectableCard
+{
+    border: 1px solid red;
+}
+
 .container
 {
     width: 150px;
@@ -18,15 +28,6 @@
     }
 }
 
-.selectingTargetForSpell
-{
-    position: absolute;
-    height: 200px !important;
-    left: 50%;
-    top: 20%;
-    transform: translateX(-50%);
-    opacity: .5;
-}
 
 .selectedCard
 {

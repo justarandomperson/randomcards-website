@@ -113,7 +113,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
             onSelectTarget: (data: SelectTargetData) => {
                 setState(produce(draft => {
                     draft.targetFilter = new Set(data.filter);
-                    draft.targetSourceId = data.sourceId
+                    draft.targetSource = data.source
                 }));
             },
             onUpdateGamePhase: () => {
@@ -330,6 +330,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     const selectTarget = useCallback((payload: SelectTargetPayload) => {
         setState(produce(draft => {
             draft.targetFilter = undefined;
+            draft.targetSource = undefined
         }));
 
         emit(SOCKET_EVENTS.SELECTED_TARGET, payload)

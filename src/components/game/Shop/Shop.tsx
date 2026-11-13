@@ -6,14 +6,14 @@ import styles from './Shop.module.css'
 
 
 const Shop: React.FC = () => {
-    const { shop, phase } = useGameContext().state;
+    const { shop, phase, isPlayerTurn } = useGameContext().state;
 
 
     const isPlayPhase = (phase === GamePhase.PLAY);
 
     const className = classNames({
-        [styles.shop_open]: !isPlayPhase,
-        [styles.shop_closed]: isPlayPhase,
+        [styles.shop_open]: !isPlayPhase && isPlayerTurn,
+        [styles.shop_closed]: isPlayPhase || !isPlayerTurn,
         [styles.shop]: true
     })
 

@@ -1,5 +1,5 @@
 import { ArtifactData, ArtifactLocation } from "../../../components/game/Artifact/shared/types";
-import { SpellData, UnitData } from "../../../components/game/Card/shared/types";
+import { AnyInstance, SpellData, UnitData } from "../../../components/game/Card/shared/types";
 import { CardLocation } from "../../../components/game/GameCard/shared/types";
 
 
@@ -13,7 +13,7 @@ export type ClientGameState = {
     isGameOver: boolean
     targetFilter?: SelectTargetFilter
     spellShowing?: {spell: SpellData, self: boolean},
-    targetSourceId?: string
+    targetSource?: AnyInstance
     playerWonName?: string
     attackerSelected?: UnitData,
 };
@@ -163,10 +163,11 @@ export type PlayedSpellData = {
   ownerId: string
 }
 
+
 export type SelectTargetData =
 {
     filter: SelectTargetFilter,
-    sourceId?: string
+    source: AnyInstance
 }
 
 

@@ -10,7 +10,6 @@ import { GAMEPAGE_PATH } from "../Topbar/shared/pagePaths"
 const AppLayout: React.FC = ({ }) => {
     const currentPage = useLocation();
 
-
     return (
         <ImagesProvider>
         <DeckProvider>

@@ -95,3 +95,24 @@
     border-left: 1px solid white;
     font-size: 17px;
 }
+
+
+.increase {
+    animation: increase 0.5s;
+}
+
+.decrease {
+    animation: decrease 0.5s;
+}
+
+@keyframes increase {
+    0% { color: inherit; }
+    50% { color: #4cff75; }
+    100% { color: inherit;}
+}
+
+@keyframes decrease {
+    0% { color: inherit;  }
+    50% { color: #ff4545; }
+    100% { color: inherit; }
+}

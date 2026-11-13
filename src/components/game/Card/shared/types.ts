@@ -7,6 +7,8 @@ export type Statuses = {
     cooldown: number
 }
 
+export type AnyInstance = UnitData | SpellData
+
 export type UnitData = {
     instanceId?: string
     id: string

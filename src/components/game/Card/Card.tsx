@@ -3,6 +3,7 @@ import { useImagesContext } from '../../../contexts/ImagesContext/ImagesContext'
 import { CardType, SpellData, UnitData } from './shared/types';
 import Status from '../Status/Status';
 import StatusesContainer from '../StatusesContainer/StatusesContainer';
+import StatValue from './Stat';
 
 
 type Props = {
@@ -42,8 +43,8 @@ const Card: React.FC<Props> = ({ cardData }) => {
             <div className={styles.footer}>
                 {cardData.type === CardType.UNIT && 
                     <>
-                        <span className={styles.atk}>{cardData.atk}</span>
-                        <span className={styles.hp}>{cardData.hp}</span>
+                    <StatValue className={styles.atk}  value={cardData.atk}/>
+                    <StatValue className={styles.hp}  value={cardData.hp}/>
                     </>
                 }
             </div>

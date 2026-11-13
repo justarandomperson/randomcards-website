@@ -9,12 +9,13 @@ import GameCard from '../GameCard/GameCard'
 import styles from './GameLayout.module.css'
 import { useGameContext } from '../../../contexts/GameContext/GameContext'
 import Card from '../Card/Card'
+import { CardType } from '../Card/shared/types'
 
 
 const GameLayout: React.FC = () => {
     const { activeCardDrag, handleCardDragStart, handleCardDragEnd } = useCardDrag();
     const { state } = useGameContext();
-    const { spellShowing, playerWonName } = state;
+    const { spellShowing, playerWonName, targetSource } = state;
 
 
     return (
@@ -51,6 +52,13 @@ const GameLayout: React.FC = () => {
                     <Card cardData={spellShowing.spell}/>
                 </div>
             )}
+
+            { (targetSource && targetSource.type == CardType.SPELL) && (
+                <div className={`${styles.cardSelectingTargetForSpell} ${styles.spell_showing_container}`}>
+                    <Card cardData={targetSource}/>
+                </div>
+            )}
+
 
             { playerWonName && (
                 <div className={styles.absolute_pos_container}>

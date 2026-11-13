@@ -78,7 +78,6 @@ const GameCard: React.FC<Props> = ({ cardData, location }) => {
 
     const isSelectable = isCardSelectable(state, cardData, location);
 
-
     const onSelectedHandler = () => {
         if (!isSelectable) {
             return;
@@ -128,15 +127,15 @@ const GameCard: React.FC<Props> = ({ cardData, location }) => {
     const cardTargetType = getCardTargetType(cardData, location)
 
     const isAllyUnit = (cardTargetType === TargetType.ALLY_UNIT);
+    const isAlly = isAllyUnit || (cardTargetType === TargetType.BENCHED_UNIT) || (cardTargetType === TargetType.SPELL_IN_HAND)
     const hasAttackerSelected = state.attackerSelected ? true : false;
-
 
     const cardClass = classNames({
         [styles.draggedCard]: isDragging,
         [styles.cardPlayerTurn]: state.isPlayerTurn && (hasAttackerSelected !== isAllyUnit),
         [styles.selectedCard]: state.attackerSelected?.instanceId == cardData.instanceId,
-        [styles.selectableCard]: isSelectable,
-        [styles.selectingTargetForSpell]: cardTargetType === TargetType.SPELL_IN_HAND && state.targetSourceId === cardData.instanceId,
+        [styles.allySelectableCard]: isSelectable && isAlly ,
+        [styles.enemySelectableCard]: isSelectable && cardTargetType === TargetType.ENEMY_UNIT,
         [styles.container]: true
     });
     
