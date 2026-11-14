@@ -23,7 +23,7 @@ const CardList: React.FC<Props> = ({ location, type }) => {
     return (
         <ul className={Styles.card_list}>
             {items.map((item, i) => {
-                return (<DecksCard cardData={item} location={location} key={i}></DecksCard>);
+                return (<DecksCard cardData={item} location={location} key={item.id}></DecksCard>);
             })}
         </ul>
     );

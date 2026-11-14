@@ -5,12 +5,12 @@ import styles from "./GameCard.module.css"
 import classNames from "classnames"
 import { CardType, SpellData, UnitData } from '../Card/shared/types'
 import { CardLocation, CardZone } from './shared/types'
-import { ClientGameState, SelectTargetFilter, TargetType } from '../../../contexts/GameContext/shared/types'
+import { ClientGameState, GamePhase, SelectTargetFilter, TargetType } from '../../../contexts/GameContext/shared/types'
 import { getCardTargetType, getOpponentRow, TauntInRow } from '../../../contexts/GameContext/shared/helpers'
 
 
 const isCardSelectable = (state: ClientGameState, cardData: UnitData | SpellData, location: CardLocation) => {
-    if (!state.isPlayerTurn) return
+    if (!state.isPlayerTurn || state.phase === GamePhase.SHOP) return
     const targetType = getCardTargetType(cardData, location);
     //for deselecting an attacker
     if (state.attackerSelected && state.attackerSelected.instanceId == cardData.instanceId) return true
@@ -116,7 +116,7 @@ const GameCard: React.FC<Props> = ({ cardData, location }) => {
 
     const isUnitInCooldown = (cardData.type === CardType.UNIT && cardData.statuses.cooldown)
     
-    const isDraggable = location.insideOf !== CardZone.BOARD && !state.targetFilter && !isUnitInCooldown;
+    const isDraggable = location.insideOf !== CardZone.BOARD && !state.targetFilter && !isUnitInCooldown && !(state.phase === GamePhase.SHOP);
     const { attributes, listeners, setNodeRef, isDragging } = useDraggable({ 
             id: `${location.insideOf}-${location.index}`, 
             data: {cardData, location},

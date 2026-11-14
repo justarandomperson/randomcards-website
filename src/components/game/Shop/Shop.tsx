@@ -25,11 +25,11 @@ const Shop: React.FC = () => {
                 <div className={styles.shop_item} key={index}>
                     <Artifact artifactData={artifact}/>
 
-                    {artifact && 
-                        <span>
-                            <p className={styles.artifact_cost}>{`${artifact.cost}$`}</p>
-                        </span>
-                    }
+                  
+                    <span>
+                        <p className={styles.artifact_cost}>{`${artifact ? artifact.cost+"$" : "Sold"}`}</p>
+                    </span>
+                    
                 </div>  
             ))}
 

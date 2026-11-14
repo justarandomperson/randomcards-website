@@ -5,18 +5,19 @@
 
 .allySelectableCard
 {
-    border: 1px solid green;
+    border: 1px solid green !important;
 }
 
 .enemySelectableCard
 {
-    border: 1px solid red;
+    border: 1px solid red !important;
 }
 
 .container
 {
     width: 150px;
     height: 200px;
+    border: 1px solid black;
 }
 
 @media (min-height: 1000px)
