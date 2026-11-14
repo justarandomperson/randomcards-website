@@ -4,7 +4,7 @@ export const STARTING_TURN = 0; // Im pretty sure it doesn't actually matter. an
 
 export const MAX_CARDS_PER_BOARD_ROW = 4;
 
-export const MAX_HAND_SIZE = 6;
+export const MAX_HAND_SIZE = 7;
 
 export const MAX_ARTIFACTS_BOUGHT_PER_TURN = 2;
 
